@@ -1,6 +1,13 @@
 import {gql} from '@apollo/client';
 
 export default {
+    GET_USER: gql`
+        query {
+            getUser {
+                id
+            }
+        }
+    `,
     CHECK_EMAIL: gql`
         query($email: String!) {
             checkEmail(email: $email)

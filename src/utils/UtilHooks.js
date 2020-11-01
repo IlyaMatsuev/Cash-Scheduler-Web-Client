@@ -1,6 +1,7 @@
 import {useMutation} from '@apollo/client';
 import {useHistory} from 'react-router-dom';
 import mutations from '../mutations';
+import errorDefs from './ErrorDefinitions';
 
 
 export function useLogin(variables, onError) {
@@ -21,4 +22,18 @@ export function useLogin(variables, onError) {
         onError,
         variables: variables
     });
+}
+
+export function handleGraphQLError(error, setErrors, errors) {
+    if (error.graphQLErrors?.length > 0 && error.graphQLErrors[0].extensions?.data.fields) {
+        const newError = error.graphQLErrors[0];
+        newError.extensions.data.fields.forEach(fieldName => {
+            errors[fieldName] = newError.message;
+        });
+    } else {
+        Object.keys(errors).forEach(errorField => {
+            errors[errorField] = errorDefs.CONNECTION_ERROR
+        });
+    }
+    setErrors({...errors});
 }

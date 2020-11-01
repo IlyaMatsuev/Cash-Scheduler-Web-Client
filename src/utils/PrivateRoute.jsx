@@ -5,9 +5,8 @@ import {Redirect, Route} from 'react-router-dom';
 const PrivateRoute = ({component: Component, ...props}) => {
 
     const isAuthenticated = () => {
+        // TODO: verify the user has access with the tokens
         const accessToken = localStorage.getItem('accessToken');
-        const refreshToken = localStorage.getItem('refreshToken');
-
         return accessToken;
     };
 
