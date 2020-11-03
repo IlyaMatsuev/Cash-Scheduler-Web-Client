@@ -5,17 +5,14 @@ import {useSpring, animated} from 'react-spring';
 import queries from '../../../queries';
 import errorDefs from '../../../utils/ErrorDefinitions';
 import ErrorsList from '../ErrorsList/ErrorsList';
+import {dev} from '../../../config';
 
-
-const testUser = {
-    email: 'sglasscott5i@example.com'
-};
 
 const ForgotPasswordForm = ({goToResetPassword, goBackToLogin}) => {
 
     const [errors, setErrors] = useState({});
     const [state, setState] = useState({
-        email: testUser.email,
+        email: dev.user.email,
         code: '',
         emailSent: false
     });

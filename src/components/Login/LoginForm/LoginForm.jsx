@@ -4,19 +4,15 @@ import errorDefs from '../../../utils/ErrorDefinitions';
 import ErrorsList from '../ErrorsList/ErrorsList';
 import {useLogin} from '../../../utils/UtilHooks';
 import SecretField from "../../../utils/SecretField";
+import {dev} from '../../../config';
 
-
-const testUser = {
-    email: 'sglasscott5i@example.com',
-    password: 'adminAdmin1@'
-};
 
 const LoginForm = ({goToRegister, goToRestorePassword}) => {
 
     const [errors, setErrors] = useState({});
     const [state, setState] = useState({
-        email: testUser.email,
-        password: testUser.password,
+        email: dev.user.email,
+        password: dev.user.password,
         remember: false,
         passwordShown: false
     });
@@ -44,13 +40,15 @@ const LoginForm = ({goToRegister, goToRestorePassword}) => {
         login();
     };
 
-    const onChange = event => {
-        const {name, value} = event.target;
-        setState({...state, [name]: value});
+    const onChange = (event, data) => {
+        const {name, value, checked} = data;
+        if (data.type === 'checkbox') {
+            setState({...state, [name]: checked});
+        } else {
+            setState({...state, [name]: value});
+        }
         setErrors({...errors, [name]: undefined});
     };
-
-
 
     return (
         <Container>
@@ -65,7 +63,7 @@ const LoginForm = ({goToRegister, goToRestorePassword}) => {
                     <Grid padded="vertically">
                         <Grid.Column width={7}>
                             <Form.Checkbox label="Remember" type="checkbox" className="mt-2" name="remember"
-                                           onChange={onChange}/>
+                                           checked={state.remember} onChange={onChange}/>
                         </Grid.Column>
                         <Grid.Column width={9}>
                             <Button color="purple" basic className="compact" onClick={goToRestorePassword} animated>

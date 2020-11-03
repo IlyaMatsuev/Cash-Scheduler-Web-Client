@@ -36,5 +36,13 @@ export default {
                 email
             }
         }
+    `,
+    REFRESH_TOKEN: gql`
+        mutation($email: String!, $refreshToken: String!) {
+            token(email: $email, refreshToken: $refreshToken) {
+                accessToken
+                refreshToken
+            }
+        }
     `
 };

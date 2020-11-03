@@ -2,29 +2,29 @@ import {useMutation} from '@apollo/client';
 import {useHistory} from 'react-router-dom';
 import mutations from '../mutations';
 import errorDefs from './ErrorDefinitions';
+import {auth, pages} from '../config';
 
 
 export function useLogin(variables, onError) {
     const history = useHistory();
     return useMutation(mutations.LOGIN_USER, {
         update(proxy, result) {
-            localStorage.setItem('accessToken', result.data.login.accessToken);
+            localStorage.setItem(auth.accessTokenName, result.data.login.accessToken);
             if (variables.remember) {
-                localStorage.setItem('email', variables.email);
-                localStorage.setItem('refreshToken', result.data.login.refreshToken);
+                localStorage.setItem(auth.emailName, variables.email);
+                localStorage.setItem(auth.refreshTokenName, result.data.login.refreshToken);
             } else {
-                localStorage.removeItem('email');
-                localStorage.removeItem('refreshToken');
+                localStorage.removeItem(auth.emailName);
+                localStorage.removeItem(auth.refreshTokenName);
             }
-
-            history.push('/home');
+            history.push(pages.homeUrl);
         },
         onError,
         variables: variables
     });
 }
 
-export function handleGraphQLError(error, setErrors, errors) {
+export function handleLoginUIErrors(error, setErrors, errors) {
     if (error.graphQLErrors?.length > 0 && error.graphQLErrors[0].extensions?.data.fields) {
         const newError = error.graphQLErrors[0];
         newError.extensions.data.fields.forEach(fieldName => {

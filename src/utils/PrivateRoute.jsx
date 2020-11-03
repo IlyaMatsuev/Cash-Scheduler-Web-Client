@@ -1,20 +1,36 @@
 import React from 'react';
-import {Redirect, Route} from 'react-router-dom';
-
+import {Route} from 'react-router-dom';
+import decode from 'jwt-decode';
+import {useQuery} from '@apollo/client';
+import queries from '../queries';
 
 const PrivateRoute = ({component: Component, ...props}) => {
 
-    const isAuthenticated = () => {
-        // TODO: verify the user has access with the tokens
+    const {loading: loadingUser, data: getUserData, error} = useQuery(queries.GET_USER);
+
+    const hasTokens = () => {
         const accessToken = localStorage.getItem('accessToken');
-        return accessToken;
+        const refreshToken = localStorage.getItem('refreshToken');
+        let authenticated;
+        try {
+            let decodedAccessToken = decode(accessToken);
+            let decodedRefreshToken;
+            if (refreshToken) {
+                decodedRefreshToken = decode(refreshToken);
+            }
+            authenticated = decodedAccessToken.exp * 1000 > Date.now()
+                || decodedRefreshToken.exp * 1000 > Date.now();
+        } catch {
+            authenticated = false;
+        }
+        return authenticated;
     };
 
     let destination;
-    if (isAuthenticated()) {
+    if (!loadingUser && !error && getUserData?.getUser && hasTokens()) {
         destination = <Component {...props} />;
     } else {
-        destination = <Redirect to={{pathname: '/'}}/>
+        destination = null;
     }
 
     return <Route {...props} render={() => destination}/>
