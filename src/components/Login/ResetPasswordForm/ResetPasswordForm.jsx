@@ -5,11 +5,13 @@ import mutations from '../../../mutations';
 import errorDefs from '../../../utils/ErrorDefinitions';
 import ErrorsList from '../ErrorsList/ErrorsList';
 import SecretField from '../../../utils/SecretField';
+import {onLoginUIErrors} from '../../../utils/UtilHooks';
 
 
 const ResetPasswordForm = ({email, code, goBackToLogin}) => {
 
-    const [errors, setErrors] = useState({});
+    const initErrorsState = {email: '', password: '', confirmPassword: ''};
+    const [errors, setErrors] = useState(initErrorsState);
     const [state, setState] = useState({
         email,
         code,
@@ -35,24 +37,15 @@ const ResetPasswordForm = ({email, code, goBackToLogin}) => {
         update() {
             goBackToLogin(null, 100);
         },
-        onError(err) {
-            if (Object.keys(err.networkError).length === 0 || !err.networkError.result.errors[0].extensions?.data) {
-                Object.keys(state).forEach(error => errors[error] = errorDefs.CONNECTION_ERROR);
-                setErrors({...errors});
-            } else {
-                const newError = err.networkError.result.errors[0];
-                newError.extensions.data.fields.forEach(fieldName => {
-                    errors[fieldName] = newError.message;
-                });
-                setErrors({...errors});
-            }
+        onError(error) {
+            onLoginUIErrors(error, setErrors, errors);
         },
         variables: state
     });
 
     const onSubmit = event => {
         event.preventDefault();
-        setErrors({});
+        setErrors(initErrorsState);
         if (validate()) {
             resetPassword();
         }

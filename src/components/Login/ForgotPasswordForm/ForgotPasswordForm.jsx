@@ -3,14 +3,15 @@ import {Button, Container, Form, Header, Segment} from 'semantic-ui-react';
 import {useLazyQuery} from '@apollo/client';
 import {useSpring, animated} from 'react-spring';
 import queries from '../../../queries';
-import errorDefs from '../../../utils/ErrorDefinitions';
 import ErrorsList from '../ErrorsList/ErrorsList';
 import {dev} from '../../../config';
+import {onLoginUIErrors} from '../../../utils/UtilHooks';
 
 
 const ForgotPasswordForm = ({goToResetPassword, goBackToLogin}) => {
 
-    const [errors, setErrors] = useState({});
+    const initErrorsState = {email: ''};
+    const [errors, setErrors] = useState(initErrorsState);
     const [state, setState] = useState({
         email: dev.user.email,
         code: '',
@@ -19,17 +20,7 @@ const ForgotPasswordForm = ({goToResetPassword, goBackToLogin}) => {
 
     const [codeFieldAnimation, setCodeFieldAnimation] = useSpring(() => ({opacity: 0, height: '0rem', display: 'none'}));
 
-    const onError = error => {
-        if (error.graphQLErrors?.length > 0) {
-            const newError = error.graphQLErrors[0];
-            newError.extensions.data.fields.forEach(fieldName => {
-                errors[fieldName] = newError.message;
-            });
-            setErrors({...errors});
-        } else if (Object.keys(error.networkError).length === 0 || !error.networkError.result.errors[0].extensions?.data) {
-            setErrors({email: errorDefs.CONNECTION_ERROR});
-        }
-    };
+    const onError = error => onLoginUIErrors(error, setErrors, errors);
 
     const [checkEmail, {loading: checkEmailLoading}] = useLazyQuery(queries.CHECK_EMAIL, {
         onCompleted(data) {
@@ -53,8 +44,7 @@ const ForgotPasswordForm = ({goToResetPassword, goBackToLogin}) => {
 
     const onSubmit = event => {
         event.preventDefault();
-        setErrors({});
-
+        setErrors(initErrorsState);
         if (state.emailSent) {
             checkCode({variables: state});
         } else {

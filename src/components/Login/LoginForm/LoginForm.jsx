@@ -1,15 +1,16 @@
 import React, {useState} from 'react';
 import {Button, Container, Form, Grid, Header, Icon, Message, Segment} from 'semantic-ui-react';
-import errorDefs from '../../../utils/ErrorDefinitions';
 import ErrorsList from '../ErrorsList/ErrorsList';
 import {useLogin} from '../../../utils/UtilHooks';
 import SecretField from "../../../utils/SecretField";
 import {dev} from '../../../config';
+import {onLoginUIErrors} from '../../../utils/UtilHooks';
 
 
 const LoginForm = ({goToRegister, goToRestorePassword}) => {
 
-    const [errors, setErrors] = useState({});
+    const initErrorsState = {email: '', password: ''};
+    const [errors, setErrors] = useState(initErrorsState);
     const [state, setState] = useState({
         email: dev.user.email,
         password: dev.user.password,
@@ -17,26 +18,11 @@ const LoginForm = ({goToRegister, goToRestorePassword}) => {
         passwordShown: false
     });
 
-    const onError = err => {
-        if (Object.keys(err.networkError).length === 0 || !err.networkError.result.errors[0].extensions?.data) {
-            setErrors({
-                email: errorDefs.CONNECTION_ERROR,
-                password: errorDefs.CONNECTION_ERROR
-            });
-        } else {
-            const newError = err.networkError.result.errors[0];
-            newError.extensions.data.fields.forEach(fieldName => {
-                errors[fieldName] = newError.message;
-            });
-            setErrors({...errors});
-        }
-    }
-
-    const [login, {loading}] = useLogin(state, onError);
+    const [login, {loading}] = useLogin(state, error => onLoginUIErrors(error, setErrors, errors));
 
     const onSubmit = event => {
         event.preventDefault();
-        setErrors({});
+        setErrors(initErrorsState);
         login();
     };
 

@@ -4,13 +4,14 @@ import {Form, Button, Container, Segment, Header, Message} from 'semantic-ui-rea
 import mutations from '../../../mutations';
 import ErrorsList from '../ErrorsList/ErrorsList';
 import errorDefs from '../../../utils/ErrorDefinitions';
-import {useLogin} from '../../../utils/UtilHooks';
+import {onLoginUIErrors, useLogin} from '../../../utils/UtilHooks';
 import SecretField from '../../../utils/SecretField';
 
 
 const RegisterForm = ({goToLogin}) => {
 
-    const [errors, setErrors] = useState({});
+    const initErrorsState = {email: '', password: '', confirmPassword: ''};
+    const [errors, setErrors] = useState(initErrorsState);
     const [state, setState] = useState({
         firstName: '',
         lastName: '',
@@ -34,21 +35,7 @@ const RegisterForm = ({goToLogin}) => {
         return noErrors;
     };
 
-    const onError = err => {
-        if (Object.keys(err.networkError).length === 0 || !err.networkError.result.errors[0].extensions?.data) {
-            setErrors({
-                email: errorDefs.CONNECTION_ERROR,
-                password: errorDefs.CONNECTION_ERROR,
-                confirmPassword: errorDefs.CONNECTION_ERROR
-            });
-        } else {
-            const newError = err.networkError.result.errors[0];
-            newError.extensions.data.fields.forEach(fieldName => {
-                errors[fieldName] = newError.message;
-            });
-            setErrors({...errors});
-        }
-    }
+    const onError = error => onLoginUIErrors(error, setErrors, errors)
 
     const [login, {loading: loginLoading}] = useLogin({email: state.email, password: state.password}, onError);
 
@@ -62,7 +49,7 @@ const RegisterForm = ({goToLogin}) => {
 
     const onSubmit = event => {
         event.preventDefault();
-        setErrors({});
+        setErrors(initErrorsState);
         if (validate()) {
             register();
         }
