@@ -3,10 +3,11 @@ import * as serviceWorker from './serviceWorker';
 import {render} from 'react-dom';
 import {ApolloClient, InMemoryCache, ApolloProvider, createHttpLink, ApolloLink} from '@apollo/client';
 import {setContext} from '@apollo/client/link/context';
-import 'semantic-ui-css/semantic.min.css';
+import {onError} from '@apollo/client/link/error';
 import Routes from './routes';
-import {onError} from "@apollo/client/link/error";
 import {refreshTokens, setAuthHeaders} from './utils/Auth';
+import 'semantic-ui-css/semantic.min.css';
+import './index.css';
 
 
 let apolloClient;

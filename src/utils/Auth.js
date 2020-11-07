@@ -13,6 +13,12 @@ export function setAuthHeaders(headers) {
     };
 }
 
+export function logout(apolloClient) {
+    localStorage.clear();
+    apolloClient.resetStore();
+    window.location.replace(pages.loginUrl);
+}
+
 export function refreshTokens(apolloClient, operation, forward) {
     return fromPromise(
         apolloClient.mutate({
@@ -29,9 +35,7 @@ export function refreshTokens(apolloClient, operation, forward) {
                 throw new Error();
             }
         }).catch(() => {
-            localStorage.clear();
-            apolloClient.resetStore();
-            window.location.href = pages.loginUrl;
+            logout(apolloClient);
         })
     ).flatMap(() => {
         operation.setContext(({headers}) => setAuthHeaders(headers));

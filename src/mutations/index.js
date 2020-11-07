@@ -44,5 +44,8 @@ export default {
                 refreshToken
             }
         }
+    `,
+    LOGOUT_USER: gql`
+        mutation { logout {id} }
     `
 };
