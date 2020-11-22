@@ -47,5 +47,28 @@ export default {
     `,
     LOGOUT_USER: gql`
         mutation { logout {id} }
+    `,
+    CREATE_TRANSACTION: gql`
+        mutation($transaction: NewTransactionInput!) {
+            createTransaction(transaction: $transaction) {
+                id
+                amount
+                date
+            }
+        }
+    `,
+    CREATE_RECURRING_TRANSACTION: gql`
+        mutation($transaction: NewRegularTransactionInput!) {
+            createRegularTransaction(transaction: $transaction) {
+                id
+                amount
+                nextTransactionDate
+                category {
+                    transactionType {
+                        typeName
+                    }
+                }
+            }
+        }
     `
 };

@@ -3,9 +3,9 @@ import {Button, Container, Form, Header, Segment} from 'semantic-ui-react';
 import {useLazyQuery} from '@apollo/client';
 import {useSpring, animated} from 'react-spring';
 import queries from '../../../queries';
-import ErrorsList from '../ErrorsList/ErrorsList';
+import ErrorsList from '../../../utils/ErrorsList/ErrorsList';
 import {dev} from '../../../config';
-import {onLoginUIErrors} from '../../../utils/UtilHooks';
+import {onUIErrors} from '../../../utils/UtilHooks';
 
 
 const ForgotPasswordForm = ({goToResetPassword, goBackToLogin}) => {
@@ -20,7 +20,7 @@ const ForgotPasswordForm = ({goToResetPassword, goBackToLogin}) => {
 
     const [codeFieldAnimation, setCodeFieldAnimation] = useSpring(() => ({opacity: 0, height: '0rem', display: 'none'}));
 
-    const onError = error => onLoginUIErrors(error, setErrors, errors);
+    const onError = error => onUIErrors(error, setErrors, errors);
 
     const [checkEmail, {loading: checkEmailLoading}] = useLazyQuery(queries.CHECK_EMAIL, {
         onCompleted(data) {

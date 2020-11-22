@@ -3,9 +3,9 @@ import {Button, Container, Form, Header, Segment} from 'semantic-ui-react';
 import {useMutation} from '@apollo/client';
 import mutations from '../../../mutations';
 import errorDefs from '../../../utils/ErrorDefinitions';
-import ErrorsList from '../ErrorsList/ErrorsList';
+import ErrorsList from '../../../utils/ErrorsList/ErrorsList';
 import SecretField from '../../../utils/SecretField';
-import {onLoginUIErrors} from '../../../utils/UtilHooks';
+import {onUIErrors} from '../../../utils/UtilHooks';
 
 
 const ResetPasswordForm = ({email, code, goBackToLogin}) => {
@@ -38,7 +38,7 @@ const ResetPasswordForm = ({email, code, goBackToLogin}) => {
             goBackToLogin(null, 100);
         },
         onError(error) {
-            onLoginUIErrors(error, setErrors, errors);
+            onUIErrors(error, setErrors, errors);
         },
         variables: state
     });

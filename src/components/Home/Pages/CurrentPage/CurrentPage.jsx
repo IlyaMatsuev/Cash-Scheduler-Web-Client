@@ -24,7 +24,7 @@ const CurrentPage = ({index}) => {
 
     return pagesTransitions.map(({item: pageIndex, props, key}) => {
         const Page = () => pages[pageIndex];
-        return <animated.div key={key} style={props}><Page/></animated.div>
+        return <animated.div key={key} style={props} className="fullHeight"><Page/></animated.div>
     });
 };
 

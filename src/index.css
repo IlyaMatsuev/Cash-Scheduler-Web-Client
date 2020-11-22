@@ -1,3 +1,17 @@
 .fullHeight, #root {
     height: 100%;
 }
+
+.ui.dimmer {
+    z-index: 0 !important;
+}
+
+.dateFieldError input[name="date"] {
+    background-color: #fff6f6;
+    border-color: #e0b4b4;
+    color: #9f3a38;
+}
+
+.dateFieldError input[name="date"]::placeholder {
+    color: #f2d7d7;
+}

@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import {Button, Container, Form, Grid, Header, Icon, Message, Segment} from 'semantic-ui-react';
-import ErrorsList from '../ErrorsList/ErrorsList';
+import ErrorsList from '../../../utils/ErrorsList/ErrorsList';
 import {useLogin} from '../../../utils/UtilHooks';
 import SecretField from "../../../utils/SecretField";
 import {dev} from '../../../config';
-import {onLoginUIErrors} from '../../../utils/UtilHooks';
+import {onUIErrors} from '../../../utils/UtilHooks';
 
 
 const LoginForm = ({goToRegister, goToRestorePassword}) => {
@@ -18,7 +18,7 @@ const LoginForm = ({goToRegister, goToRestorePassword}) => {
         passwordShown: false
     });
 
-    const [login, {loading}] = useLogin(state, error => onLoginUIErrors(error, setErrors, errors));
+    const [login, {loading}] = useLogin(state, error => onUIErrors(error, setErrors, errors));
 
     const onSubmit = event => {
         event.preventDefault();

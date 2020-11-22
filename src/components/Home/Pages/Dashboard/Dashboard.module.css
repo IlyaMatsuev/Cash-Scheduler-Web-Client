@@ -1,0 +1,28 @@
+.calendarWrapper {
+    height: 80%;
+}
+
+.displayedDate {
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.transactionModal {
+    z-index: 1 !important;
+    height: 25rem;
+    margin: auto !important;
+}
+
+.transactionModalBody {
+    height: 16rem;
+}
+
+.recurringTransactionModal {
+    z-index: 1 !important;
+    height: 31rem;
+    margin: auto !important;
+}
+
+.recurringTransactionModalBody {
+    height: 22rem;
+}

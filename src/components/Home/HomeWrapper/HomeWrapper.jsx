@@ -25,7 +25,7 @@ const HomeWrapper = () => {
     const onHideMenu = () => setState({...state, visible: false});
 
     const onMenuItemSelected = (event, data) => {
-        setState({...state, pageIndex: pagesByIndexes[data.name]});
+        setState({...state, visible: false, pageIndex: pagesByIndexes[data.name]});
     };
 
     return (

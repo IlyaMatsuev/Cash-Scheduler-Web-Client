@@ -2,9 +2,9 @@ import React, {useState} from 'react';
 import {useMutation} from '@apollo/client';
 import {Form, Button, Container, Segment, Header, Message} from 'semantic-ui-react';
 import mutations from '../../../mutations';
-import ErrorsList from '../ErrorsList/ErrorsList';
+import ErrorsList from '../../../utils/ErrorsList/ErrorsList';
 import errorDefs from '../../../utils/ErrorDefinitions';
-import {onLoginUIErrors, useLogin} from '../../../utils/UtilHooks';
+import {onUIErrors, useLogin} from '../../../utils/UtilHooks';
 import SecretField from '../../../utils/SecretField';
 
 
@@ -35,7 +35,7 @@ const RegisterForm = ({goToLogin}) => {
         return noErrors;
     };
 
-    const onError = error => onLoginUIErrors(error, setErrors, errors)
+    const onError = error => onUIErrors(error, setErrors, errors)
 
     const [login, {loading: loginLoading}] = useLogin({email: state.email, password: state.password}, onError);
 
