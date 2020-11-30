@@ -17,7 +17,7 @@ const pagesByIndexes = {
 const HomeWrapper = () => {
     const initialState = {
         visible: false,
-        pageIndex: 3,
+        pageIndex: 0,
         user: null,
         settings: {
             activeUnit: 'general',

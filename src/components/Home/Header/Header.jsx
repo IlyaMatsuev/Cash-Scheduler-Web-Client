@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './Header.module.css';
-import {Button, Grid, Segment} from 'semantic-ui-react';
+import {Button, Grid} from 'semantic-ui-react';
 import {useMutation} from '@apollo/client';
 import mutations from '../../../mutations';
 import {withApollo} from '@apollo/client/react/hoc';
@@ -32,7 +32,6 @@ const Header = ({client, showBalance, user, onToggleMenu}) => {
                         </Button>
                     </Grid.Column>
                 </Grid>
-
             </div>
         </nav>
     );
