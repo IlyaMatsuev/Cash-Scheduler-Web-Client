@@ -1,13 +1,13 @@
 import React from 'react';
 import styles from './Header.module.css';
-import {Button} from 'semantic-ui-react';
+import {Button, Grid, Segment} from 'semantic-ui-react';
 import {useMutation} from '@apollo/client';
 import mutations from '../../../mutations';
 import {withApollo} from '@apollo/client/react/hoc';
 import {logout} from '../../../utils/Auth';
 
 
-const Header = ({client, onToggleMenu}) => {
+const Header = ({client, showBalance, user, onToggleMenu}) => {
 
     const [logoutFromServer, {loading}] = useMutation(mutations.LOGOUT_USER);
 
@@ -20,9 +20,19 @@ const Header = ({client, onToggleMenu}) => {
                 <a className="navbar-brand ml-3" href="/home">Cash Scheduler</a>
             </div>
             <div>
-                <Button fluid inverted color="grey" onClick={onLogOut} loading={loading}>
-                    Log Out
-                </Button>
+                <Grid columns={2}>
+                    <Grid.Column>
+                        {showBalance && <div className={styles.balanceContainer}>
+                            Balance: <span>{user.balance}</span>
+                        </div>}
+                    </Grid.Column>
+                    <Grid.Column>
+                        <Button inverted color="grey" onClick={onLogOut} loading={loading}>
+                            Log Out
+                        </Button>
+                    </Grid.Column>
+                </Grid>
+
             </div>
         </nav>
     );

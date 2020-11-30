@@ -6,14 +6,14 @@ import Categories from '../Categories/Categories';
 import Settings from '../Settings/Settings';
 
 
-const pages = [
-    <Dashboard/>,
-    <Transactions/>,
-    <Categories/>,
-    <Settings/>
-];
+const CurrentPage = ({index, settings, onSettingChange, onCancelSettingsChanges}) => {
 
-const CurrentPage = ({index}) => {
+    const pages = [
+        <Dashboard/>,
+        <Transactions/>,
+        <Categories/>,
+        <Settings settings={settings} onSettingChange={onSettingChange} onCancelChanges={onCancelSettingsChanges}/>
+    ];
 
     const pagesTransitions = useTransition(index, k => k, {
         from: {opacity: 0, transform: 'translate3d(0,100%,0)', position: 'absolute'},
@@ -24,7 +24,11 @@ const CurrentPage = ({index}) => {
 
     return pagesTransitions.map(({item: pageIndex, props, key}) => {
         const Page = () => pages[pageIndex];
-        return <animated.div key={key} style={props} className="fullHeight"><Page/></animated.div>
+        return (
+            <animated.div key={key} style={props} className="fullHeight">
+                <Page/>
+            </animated.div>
+        );
     });
 };
 

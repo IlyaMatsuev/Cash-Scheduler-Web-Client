@@ -70,5 +70,25 @@ export default {
                 }
             }
         }
+    `,
+    UPDATE_SETTING: gql`
+        mutation($setting: UpdateUserSettingInput!) {
+            updateUserSetting(setting: $setting) {
+                id
+                name
+                value
+                unitName
+            }
+        }
+    `,
+    UPDATE_SETTINGS: gql`
+        mutation($settings: [UpdateUserSettingInput!]) {
+            updateUserSettings(settings: $settings) {
+                id
+                name
+                value
+                unitName
+            }
+        }
     `
 };

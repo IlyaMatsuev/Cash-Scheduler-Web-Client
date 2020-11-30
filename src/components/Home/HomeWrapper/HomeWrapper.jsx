@@ -3,12 +3,9 @@ import {Icon, Menu, Segment, Sidebar} from 'semantic-ui-react';
 import HomeHeader from '../Header/Header';
 import styles from './HomeWrapper.module.css';
 import CurrentPage from '../Pages/CurrentPage/CurrentPage';
+import {useQuery} from "@apollo/client";
+import queries from "../../../queries";
 
-
-const initialState = {
-    visible: false,
-    pageIndex: 0
-};
 
 const pagesByIndexes = {
     dashboard: 0,
@@ -18,7 +15,35 @@ const pagesByIndexes = {
 };
 
 const HomeWrapper = () => {
+    const initialState = {
+        visible: false,
+        pageIndex: 3,
+        user: null,
+        settings: {
+            activeUnit: 'general',
+            changesMade: false,
+            showBalance: false,
+            turnNotificationsOn: false,
+            duplicateToEmail: false,
+            turnSoundOn: false
+        }
+    };
     const [state, setState] = useState(initialState);
+
+    useQuery(queries.GET_SETTINGS, {
+        onCompleted({getUserSettings: settings}) {
+            settings.forEach(setting => {
+                state.settings[setting.name] = setting.value === 'true';
+            });
+            setState({...state, settings: state.settings});
+        }
+    });
+
+    useQuery(queries.GET_USER, {
+        onCompleted({getUser: user}) {
+            setState({...state, user});
+        }
+    });
 
     const onToggleMenu = () => setState({...state, visible: !state.visible});
 
@@ -27,6 +52,19 @@ const HomeWrapper = () => {
     const onMenuItemSelected = (event, data) => {
         setState({...state, visible: false, pageIndex: pagesByIndexes[data.name]});
     };
+
+    const onSettingChange = ({name, checked, value}) => {
+        if (checked !== undefined) {
+            setState({...state, settings: {...state.settings, changesMade: true, [name]: checked}});
+        } else if (value !== undefined) {
+            setState({...state, settings: {...state.settings, [name]: value}});
+        }
+    };
+
+    const onCancelSettingsChanges = () => {
+        setState({...state, settings: {...initialState.settings, activeUnit: state.settings.activeUnit}});
+    };
+
 
     return (
         <Sidebar.Pushable as={Segment} className={styles.sidebar}>
@@ -52,8 +90,10 @@ const HomeWrapper = () => {
 
             <Sidebar.Pusher dimmed={state.visible} className="fullHeight">
                 <Segment basic className="fullHeight p-0">
-                    <HomeHeader onToggleMenu={onToggleMenu}/>
-                    <CurrentPage index={state.pageIndex}/>
+                    <HomeHeader onToggleMenu={onToggleMenu} showBalance={state.settings.showBalance} user={state.user}/>
+                    <CurrentPage index={state.pageIndex}
+                                 settings={state.settings} onSettingChange={onSettingChange}
+                                 onCancelSettingsChanges={onCancelSettingsChanges}/>
                 </Segment>
             </Sidebar.Pusher>
         </Sidebar.Pushable>

@@ -5,6 +5,9 @@ export default {
         query {
             getUser {
                 id
+                firstName
+                lastName
+                balance
             }
         }
     `,
@@ -67,6 +70,16 @@ export default {
                 id
                 name
                 iconUrl
+            }
+        }
+    `,
+    GET_SETTINGS: gql`
+        query($unitName: String) {
+            getUserSettings(unitName: $unitName) {
+                id
+                name
+                value
+                unitName
             }
         }
     `

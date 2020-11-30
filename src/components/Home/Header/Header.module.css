@@ -1,3 +1,19 @@
 .navbar {
     background-color: #2b3134;
 }
+
+.navbar > div {
+    width: 20%;
+}
+
+.balanceContainer {
+    color: white;
+    text-align: center;
+    font-size: 16px;
+    margin-top: .5rem;
+}
+
+.balanceContainer > span {
+    font-size: 18px;
+    font-weight: 400;
+}
