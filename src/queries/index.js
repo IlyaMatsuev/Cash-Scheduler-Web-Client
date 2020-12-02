@@ -82,5 +82,23 @@ export default {
                 unitName
             }
         }
+    `,
+    GET_CATEGORIES_BY_TYPES: gql`
+        query {
+            getCustomCategories {
+                id
+                name
+                transactionTypeName
+                isCustom
+                iconUrl
+            }
+            getStandardCategories {
+                id
+                name
+                transactionTypeName
+                isCustom
+                iconUrl
+            }
+        }
     `
 };

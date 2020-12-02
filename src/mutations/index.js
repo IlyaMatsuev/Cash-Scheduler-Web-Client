@@ -1,5 +1,7 @@
 import {gql} from '@apollo/client';
 
+// TODO: split all mutations by folders by objects they work with
+
 export default {
     REGISTER_USER: gql`
         mutation(
@@ -88,6 +90,27 @@ export default {
                 name
                 value
                 unitName
+            }
+        }
+    `,
+    CREATE_CATEGORY: gql`
+        mutation($category: NewCategoryInput!) {
+            createCategory(category: $category) {
+                id
+            }
+        }
+    `,
+    UPDATE_CATEGORY: gql`
+        mutation($category: UpdateCategoryInput!) {
+            updateCategory(category: $category) {
+                id
+            }
+        }
+    `,
+    DELETE_CATEGORY: gql`
+        mutation($id: Int!) {
+            deleteCategory(id: $id) {
+                id
             }
         }
     `
