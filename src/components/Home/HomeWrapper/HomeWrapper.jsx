@@ -3,8 +3,8 @@ import {Icon, Menu, Segment, Sidebar} from 'semantic-ui-react';
 import HomeHeader from '../Header/Header';
 import styles from './HomeWrapper.module.css';
 import CurrentPage from '../Pages/CurrentPage/CurrentPage';
-import {useQuery} from "@apollo/client";
-import queries from "../../../queries";
+import {useQuery} from '@apollo/client';
+import queries from '../../../queries';
 
 
 const pagesByIndexes = {
@@ -17,7 +17,7 @@ const pagesByIndexes = {
 const HomeWrapper = () => {
     const initialState = {
         visible: false,
-        pageIndex: 2,
+        pageIndex: 0,
         user: null,
         settings: {
             activeUnit: 'general',
