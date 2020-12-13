@@ -147,19 +147,17 @@ const Categories = () => {
                         <Button basic color="grey" onClick={onCategoryEditToggle}>
                             Cancel
                         </Button>
-                        <Button basic color="red" loading={false} disabled={state.category && !state.category.isCustom}
+                        <Button basic color="red" disabled={state.category && !state.category.isCustom}
                                 onClick={onCategoryDeleteConfirmationToggle}>
                             Delete
-
                             <Confirm className={styles.categoryDeleteConfirmationModalWrapper}
                                      content={
-                                         `You\'re about to delete the "${state.category.name}" category. 
+                                         `You're about to delete the "${state.category.name}" category. 
                                          All your related transactions will be deleted as well. Proceed?`}
                                      confirmButton={<Button basic negative>Yes, delete it</Button>}
                                      open={state.categoryDeleteConfirmationOpen}
                                      onCancel={onCategoryDeleteConfirmationToggle} onConfirm={onCategoryEditDelete}
                             />
-
                         </Button>
                         <Button primary loading={false} disabled={state.category && !state.category.isCustom}
                                 onClick={onCategoryEditSave}>

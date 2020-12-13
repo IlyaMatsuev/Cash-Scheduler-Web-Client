@@ -6,13 +6,21 @@ import Categories from '../Categories/Categories';
 import Settings from '../Settings/Settings';
 
 
-const CurrentPage = ({index, settings, onSettingChange, onCancelSettingsChanges}) => {
+const CurrentPage = ({
+                         index,
+                         settings,
+                         onSettingChange,
+                         onCancelSettingsChange,
+                         transactionsProps,
+                         onTransactionPropsChange
+}) => {
 
     const pages = [
-        <Dashboard/>,
-        <Transactions/>,
+        <Dashboard currentDate={transactionsProps.currentDate} onTransactionPropsChange={onTransactionPropsChange}/>,
+        <Transactions currentDate={transactionsProps.currentDate} isRecurringView={transactionsProps.isRecurringView}
+                      onTransactionPropsChange={onTransactionPropsChange}/>,
         <Categories/>,
-        <Settings settings={settings} onSettingChange={onSettingChange} onCancelChanges={onCancelSettingsChanges}/>
+        <Settings settings={settings} onSettingChange={onSettingChange} onCancelChanges={onCancelSettingsChange}/>
     ];
 
     const pagesTransitions = useTransition(index, k => k, {

@@ -14,15 +14,6 @@ const getSummaryByDate = (transactions, date, type, key = 'date') => {
     return summary > 0 ? summary : null;
 };
 
-// TODO: utilize this function to improve the algorithm of counting summaries
-// noinspection JSUnusedLocalSymbols
-const groupTransactionsByDate = (transactions, key = 'date') => {
-    return transactions.reduce((a, b) => {
-        (a[b[key]] = a[b[key]] || []).push(b);
-        return a;
-    }, {});
-};
-
 const getCalendarDays = (targetDate, startDate, transactions, recurringTransactions) => {
     const todayDate = moment();
     let currentDate = startDate.clone();

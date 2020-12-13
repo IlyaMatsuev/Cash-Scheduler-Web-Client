@@ -7,7 +7,7 @@ import {withApollo} from '@apollo/client/react/hoc';
 import {logout} from '../../../utils/Auth';
 
 
-const Header = ({client, showBalance, user, onToggleMenu}) => {
+const Header = ({client, showBalance, user, onToggleMenu, onBalanceClick}) => {
 
     const [logoutFromServer, {loading}] = useMutation(mutations.LOGOUT_USER);
 
@@ -22,7 +22,7 @@ const Header = ({client, showBalance, user, onToggleMenu}) => {
             <div>
                 <Grid columns={2}>
                     <Grid.Column>
-                        {showBalance && <div className={styles.balanceContainer}>
+                        {showBalance && user && <div className={styles.balanceContainer} onClick={onBalanceClick}>
                             Balance: <span>{user.balance}</span>
                         </div>}
                     </Grid.Column>

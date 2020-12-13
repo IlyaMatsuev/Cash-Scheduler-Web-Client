@@ -1,5 +1,7 @@
 import {gql} from '@apollo/client';
 
+// TODO: split all queries by folders by objects they work with
+
 export default {
     GET_USER: gql`
         query {
@@ -22,7 +24,7 @@ export default {
         }
     `,
     GET_TRANSACTIONS_BY_MONTH: gql`
-        query($month: Int!, $size: Int!) {
+        query($month: Int!, $size: Int) {
             getTransactionsByMonth(month: $month) {
                 id
                 title
@@ -38,7 +40,7 @@ export default {
                 amount
                 date
             }
-            getAllRegularTransactions(size: $size) {
+            getAllRegularTransactions(size: $size, month: $month) {
                 id
                 title
                 category {
@@ -53,6 +55,7 @@ export default {
                 amount
                 date
                 nextTransactionDate
+                interval
             }
         }
     `,

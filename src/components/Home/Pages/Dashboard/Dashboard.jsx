@@ -13,9 +13,8 @@ import errorDefs from '../../../../utils/ErrorDefinitions';
 
 const DATE_FORMAT = 'YYYY-MM-DD';
 
-const Dashboard = () => {
+const Dashboard = ({currentDate, onTransactionPropsChange}) => {
     const initialState = {
-        targetDate: moment(),
         transactionModalOpened: false,
         recurringTransactionModalOpened: false,
         transaction: {
@@ -33,17 +32,20 @@ const Dashboard = () => {
     const [transactionErrors, setTransactionErrors] = useState(initialTransactionErrors);
 
     const {loading: transactionsLoading, error: transactionsError, data: transactions} = useQuery(queries.GET_TRANSACTIONS_BY_MONTH, {
-        variables: {month: state.targetDate.month() + 1, size: 100}
+        variables: {month: currentDate.month() + 1, size: 100}
     });
 
     const [createTransaction, {loading: createTransactionLoading}] = useMutation(mutations.CREATE_TRANSACTION, {
-        update() {
+        onCompleted() {
             setState({...state, transactionModalOpened: false, transaction: initialState.transaction});
         },
         onError(error) {
             onUIErrors(error, setTransactionErrors, transactionErrors);
         },
-        refetchQueries: [{query: queries.GET_TRANSACTIONS_BY_MONTH, variables: {month: state.targetDate.month() + 1, size: 100}}],
+        refetchQueries: [{
+            query: queries.GET_TRANSACTIONS_BY_MONTH,
+            variables: {month: currentDate.month() + 1, size: 100}
+        }, {query: queries.GET_USER}],
         variables: {
             transaction: {
                 title: state.transaction.title,
@@ -55,15 +57,17 @@ const Dashboard = () => {
     });
 
     const [createRecurringTransaction, {loading: createRecurringTransactionLoading}] = useMutation(mutations.CREATE_RECURRING_TRANSACTION, {
-        update() {
+        onCompleted() {
             // TODO: try to update cache instead of refetching the query
             setState({...state, recurringTransactionModalOpened: false, transaction: initialState.transaction});
         },
         onError(error) {
-            console.log(JSON.stringify(error, null, '  '));
             onUIErrors(error, setTransactionErrors, transactionErrors);
         },
-        refetchQueries: [{query: queries.GET_TRANSACTIONS_BY_MONTH, variables: {month: state.targetDate.month() + 1, size: 100}}],
+        refetchQueries: [{
+            query: queries.GET_TRANSACTIONS_BY_MONTH,
+            variables: {month: currentDate.month() + 1, size: 100}
+        }, {query: queries.GET_USER}],
         variables: {
             transaction: {
                 title: state.transaction.title,
@@ -94,11 +98,11 @@ const Dashboard = () => {
     };
 
     const onTurnLeft = () => {
-        setState({...state, targetDate: state.targetDate.add(-1, 'month')});
+        onTransactionPropsChange({name: 'currentDate', value: currentDate.subtract(1, 'month')});
     };
 
     const onTurnRight = () => {
-        setState({...state, targetDate: state.targetDate.add(1, 'month')});
+        onTransactionPropsChange({name: 'currentDate', value: currentDate.add(1, 'month')});
     };
 
     const onTransactionToggle = () => {
@@ -149,9 +153,9 @@ const Dashboard = () => {
         <div className="fullHeight">
             <Segment>
                 <Container>
-                    <Button active={state.targetDate.isSame(moment(), 'month')} onClick={onToday}>Today</Button>
+                    <Button active={currentDate.isSame(moment(), 'month')} onClick={onToday}>Today</Button>
                     <Button icon="chevron left" className="ml-2 mr-3" onClick={onTurnLeft}/>
-                    <span className={styles.displayedDate}>{state.targetDate.format('MMMM, YYYY')}</span>
+                    <span className={styles.displayedDate}>{currentDate.format('MMMM, YYYY')}</span>
                     <Button icon="chevron right" className="ml-3 mr-2" onClick={onTurnRight}/>
 
                     <Button.Group color="blue" floated="right">
@@ -163,7 +167,7 @@ const Dashboard = () => {
             <Segment padded textAlign="center" className={styles.calendarWrapper}
                      loading={transactionsLoading || transactionsError}>
                 {transactions && (
-                    <Calendar targetDate={state.targetDate} transactions={transactions.getTransactionsByMonth}
+                    <Calendar targetDate={currentDate} transactions={transactions.getTransactionsByMonth}
                               recurringTransactions={transactions.getAllRegularTransactions}/>
                 )}
             </Segment>
