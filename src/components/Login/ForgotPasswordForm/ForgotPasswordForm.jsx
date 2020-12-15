@@ -4,7 +4,6 @@ import {useLazyQuery} from '@apollo/client';
 import {useSpring, animated} from 'react-spring';
 import queries from '../../../queries';
 import ErrorsList from '../../../utils/ErrorsList/ErrorsList';
-import {dev} from '../../../config';
 import {onUIErrors} from '../../../utils/UtilHooks';
 
 
@@ -13,7 +12,7 @@ const ForgotPasswordForm = ({goToResetPassword, goBackToLogin}) => {
     const initErrorsState = {email: ''};
     const [errors, setErrors] = useState(initErrorsState);
     const [state, setState] = useState({
-        email: dev.user.email,
+        email: '',
         code: '',
         emailSent: false
     });

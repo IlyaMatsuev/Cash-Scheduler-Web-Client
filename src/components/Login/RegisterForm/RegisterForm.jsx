@@ -72,7 +72,7 @@ const RegisterForm = ({goToLogin}) => {
                                 name="firstName" value={state.firstName} error={!!errors.lastName} onChange={onChange}/>
                     <Form.Input fluid icon="user" iconPosition="left" placeholder="Last Name" type="text"
                                 name="lastName" value={state.lastName} error={!!errors.lastName} onChange={onChange}/>
-                    <Form.Input fluid icon="dollar" iconPosition="left" placeholder="Current Balance" type="currency"
+                    <Form.Input fluid icon="dollar" iconPosition="left" placeholder="Current Balance" type="number"
                                 name="balance" value={state.balance} error={!!errors.balance} onChange={onChange}/>
 
                     <Form.Input fluid icon="mail" iconPosition="left" placeholder="Email" type="email"
