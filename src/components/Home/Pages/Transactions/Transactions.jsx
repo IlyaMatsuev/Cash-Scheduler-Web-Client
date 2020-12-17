@@ -195,11 +195,11 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
                                  onTransactionsViewChange={onTransactionsViewChange}/>
 
                 <div>
-                    <Modal dimmer size="small" className={styles.transactionModal}
+                    <Modal dimmer size="small" className={styles.transactionModal + ' modalContainer'}
                            closeOnEscape closeOnDimmerClick
                            open={state.transactionModalOpened} onClose={onSelectedTransactionToggle}>
                         <Modal.Header>Edit {isRecurringView && 'Recurring'} Transaction</Modal.Header>
-                        <Modal.Content className={styles.transactionModalBody}>
+                        <Modal.Content>
                             <TransactionForm transaction={state.selectedTransaction} errors={errors}
                                              isRecurring={isRecurringView} onChange={onSelectedTransactionChange}/>
                         </Modal.Content>
@@ -210,7 +210,7 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
                             <Button basic color="red" disabled={state.category && !state.category.isCustom}
                                     onClick={onTransactionDeleteToggle}>
                                 Delete
-                                <Confirm className={styles.categoryDeleteConfirmationModalWrapper}
+                                <Confirm className="modalContainer"
                                          content={`Are you sure you want to delete the transaction?`}
                                          confirmButton={<Button basic negative>Yes, delete it</Button>}
                                          open={state.transactionDeleteModalOpened}

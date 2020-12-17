@@ -1,13 +1,3 @@
-.categoryModalWrapper {
-    margin: auto !important;
-    max-height: 23rem;
-}
-
-.categoryDeleteConfirmationModalWrapper {
-    margin: auto !important;
-    max-height: 9rem;
-}
-
 .categoryModalLoader {
     z-index: 2 !important;
 }

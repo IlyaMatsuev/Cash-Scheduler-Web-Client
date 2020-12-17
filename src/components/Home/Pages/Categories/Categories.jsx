@@ -131,7 +131,7 @@ const Categories = () => {
             </Grid>
 
             <div>
-                <Modal dimmer size="small" className={styles.categoryModalWrapper}
+                <Modal dimmer size="small" className="modalContainer"
                        closeOnEscape={true} closeOnDimmerClick={true}
                        open={state.categoryEditModalOpen} onClose={onCategoryEditToggle}>
                     <Modal.Header>Edit Category</Modal.Header>
@@ -150,7 +150,7 @@ const Categories = () => {
                         <Button basic color="red" disabled={state.category && !state.category.isCustom}
                                 onClick={onCategoryDeleteConfirmationToggle}>
                             Delete
-                            <Confirm className={styles.categoryDeleteConfirmationModalWrapper}
+                            <Confirm className="modalContainer"
                                      content={
                                          `You're about to delete the "${state.category.name}" category. 
                                          All your related transactions will be deleted as well. Proceed?`}

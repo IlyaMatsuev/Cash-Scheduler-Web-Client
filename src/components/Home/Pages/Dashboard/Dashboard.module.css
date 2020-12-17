@@ -9,20 +9,4 @@
 
 .transactionModal {
     z-index: 1 !important;
-    height: 25rem;
-    margin: auto !important;
-}
-
-.transactionModalBody {
-    height: 16rem;
-}
-
-.recurringTransactionModal {
-    z-index: 1 !important;
-    height: 31rem;
-    margin: auto !important;
-}
-
-.recurringTransactionModalBody {
-    height: 22rem;
 }

@@ -5,9 +5,10 @@ import {useMutation} from '@apollo/client';
 import mutations from '../../../mutations';
 import {withApollo} from '@apollo/client/react/hoc';
 import {logout} from '../../../utils/Auth';
+import Account from '../Account/Account';
 
 
-const Header = ({client, showBalance, user, onToggleMenu, onBalanceClick}) => {
+const Header = ({client, showBalance, actualUser, user, settings, onToggleMenu, onBalanceClick, onUserChange}) => {
 
     const [logoutFromServer, {loading}] = useMutation(mutations.LOGOUT_USER);
 
@@ -20,11 +21,14 @@ const Header = ({client, showBalance, user, onToggleMenu, onBalanceClick}) => {
                 <a className="navbar-brand ml-3" href="/home">Cash Scheduler</a>
             </div>
             <div>
-                <Grid columns={2}>
+                <Grid columns={3}>
                     <Grid.Column>
-                        {showBalance && user && <div className={styles.balanceContainer} onClick={onBalanceClick}>
-                            Balance: <span>{user.balance}</span>
+                        {showBalance && actualUser && <div className={styles.balanceContainer} onClick={onBalanceClick}>
+                            Balance: <span>{actualUser.balance}</span>
                         </div>}
+                    </Grid.Column>
+                    <Grid.Column>
+                        {user && <Account user={user} onUserChange={onUserChange} settings={settings}/>}
                     </Grid.Column>
                     <Grid.Column>
                         <Button inverted color="grey" onClick={onLogOut} loading={loading}>

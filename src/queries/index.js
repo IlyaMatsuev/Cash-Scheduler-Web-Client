@@ -9,6 +9,7 @@ export default {
                 id
                 firstName
                 lastName
+                email
                 balance
             }
         }
@@ -101,6 +102,16 @@ export default {
                 transactionTypeName
                 isCustom
                 iconUrl
+            }
+        }
+    `,
+    GET_NOTIFICATIONS: gql`
+        query {
+            getAllNotifications { 
+                id
+                title
+                content
+                read
             }
         }
     `

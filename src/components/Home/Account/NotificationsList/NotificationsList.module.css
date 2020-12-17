@@ -1,0 +1,11 @@
+.notificationsListContainer {
+    max-height: 25rem;
+    overflow-y: auto;
+}
+
+.notificationEntry {
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

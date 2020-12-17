@@ -50,6 +50,13 @@ export default {
     LOGOUT_USER: gql`
         mutation { logout {id} }
     `,
+    UPDATE_USER: gql`
+        mutation($user: UpdateUserInput!) {
+            updateUser(user: $user) {
+                id
+            }
+        }
+    `,
     CREATE_TRANSACTION: gql`
         mutation($transaction: NewTransactionInput!) {
             createTransaction(transaction: $transaction) {
@@ -141,6 +148,20 @@ export default {
     DELETE_CATEGORY: gql`
         mutation($id: Int!) {
             deleteCategory(id: $id) {
+                id
+            }
+        }
+    `,
+    READ_NOTIFICATION: gql`
+        mutation($id: Int!) {
+            readNotification(id: $id) {
+                id
+            }
+        }
+    `,
+    UNREAD_NOTIFICATION: gql`
+        mutation($id: Int!) {
+            unreadNotification(id: $id) {
                 id
             }
         }

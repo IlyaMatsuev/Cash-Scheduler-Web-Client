@@ -94,7 +94,7 @@ const Dashboard = ({currentDate, onTransactionPropsChange}) => {
 
 
     const onToday = () => {
-        setState({...initialState});
+        onTransactionPropsChange({name: 'currentDate', value: moment()});
     };
 
     const onTurnLeft = () => {
@@ -173,11 +173,11 @@ const Dashboard = ({currentDate, onTransactionPropsChange}) => {
             </Segment>
 
             <div>
-                <Modal dimmer size="small" className={styles.transactionModal}
+                <Modal dimmer size="small" className={styles.transactionModal + ' modalContainer'}
                        closeOnEscape={true} closeOnDimmerClick={true}
                        open={state.transactionModalOpened} onClose={onTransactionToggle}>
                     <Modal.Header>New Transaction</Modal.Header>
-                    <Modal.Content className={styles.transactionModalBody}>
+                    <Modal.Content className="modalContainer">
                         <TransactionForm transaction={state.transaction} errors={transactionErrors}
                                          onChange={onTransactionChange} isRecurring={false}/>
                     </Modal.Content>
@@ -191,11 +191,11 @@ const Dashboard = ({currentDate, onTransactionPropsChange}) => {
                     </Modal.Actions>
                 </Modal>
 
-                <Modal dimmer size="small" className={styles.recurringTransactionModal}
+                <Modal dimmer size="small" className={styles.transactionModal + ' modalContainer'}
                        closeOnEscape={true} closeOnDimmerClick={true}
                        open={state.recurringTransactionModalOpened} onClose={onRecurringTransactionToggle}>
                     <Modal.Header>New Recurring Transaction</Modal.Header>
-                    <Modal.Content className={styles.recurringTransactionModalBody}>
+                    <Modal.Content className="modalContainer">
                         <TransactionForm transaction={state.transaction} errors={transactionErrors}
                                          onChange={onTransactionChange} isRecurring={true}/>
                     </Modal.Content>

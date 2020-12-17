@@ -19,6 +19,12 @@ const HomeWrapper = () => {
     const initialState = {
         visible: false,
         pageIndex: 0,
+        user: {
+            firstName: '',
+            lastName: '',
+            email: '',
+            balance: 0
+        },
         transactions: {
             currentDate: moment(),
             isRecurringView: false
@@ -40,10 +46,16 @@ const HomeWrapper = () => {
                 state.settings[setting.name] = setting.value === 'true';
             });
             setState({...state, settings: state.settings});
-        }
+        },
+        fetchPolicy: 'cache-and-network'
     });
 
-    const {data: userData} = useQuery(queries.GET_USER);
+    const {data: userData} = useQuery(queries.GET_USER, {
+        onCompleted({getUser}) {
+            setState({...state, user: getUser});
+        },
+        fetchPolicy: 'cache-and-network'
+    });
 
     const onBalanceClick = () => {
         setState({
@@ -82,6 +94,10 @@ const HomeWrapper = () => {
         setState({...state, transactions: {...state.transactions, [name]: value}});
     };
 
+    const onUserChange = (event, {name, value}) => {
+        setState({...state, user: {...state.user, [name]: value}});
+    };
+
 
     return (
         <Sidebar.Pushable as={Segment} className={styles.sidebar}>
@@ -108,14 +124,15 @@ const HomeWrapper = () => {
             <Sidebar.Pusher dimmed={state.visible} className="fullHeight">
                 <Segment basic className="fullHeight p-0">
                     <Header onToggleMenu={onToggleMenu} showBalance={state.settings.showBalance}
-                                user={userData && userData.getUser} onBalanceClick={onBalanceClick}/>
+                            actualUser={userData && userData.getUser} user={state.user} onUserChange={onUserChange}
+                            onBalanceClick={onBalanceClick} settings={state.settings}/>
                     <CurrentPage index={state.pageIndex}
                                  settings={state.settings} onSettingChange={onSettingChange} onCancelSettingsChange={onCancelSettingsChange}
                                  transactionsProps={state.transactions} onTransactionPropsChange={onTransactionPropsChange}/>
                 </Segment>
             </Sidebar.Pusher>
         </Sidebar.Pushable>
-    )
+    );
 };
 
 export default HomeWrapper;
