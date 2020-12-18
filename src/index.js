@@ -1,18 +1,31 @@
 import React from 'react';
 import * as serviceWorker from './serviceWorker';
 import {render} from 'react-dom';
-import {ApolloClient, InMemoryCache, ApolloProvider, createHttpLink, ApolloLink} from '@apollo/client';
+import {ApolloClient, InMemoryCache, ApolloProvider, createHttpLink, ApolloLink, split} from '@apollo/client';
+import {getMainDefinition} from '@apollo/client/utilities';
+import {WebSocketLink} from '@apollo/client/link/ws';
 import {setContext} from '@apollo/client/link/context';
 import {onError} from '@apollo/client/link/error';
 import Routes from './routes';
 import {refreshTokens, setAuthHeaders} from './utils/Auth';
+import {server, auth} from './config';
 import 'semantic-ui-css/semantic.min.css';
 import './index.css';
 
 
 let apolloClient;
 
-const httpLink = createHttpLink({uri: 'https://localhost:8001/graphql'});
+const httpLink = createHttpLink({uri: server.apiEndpoint});
+
+const wsLink = new WebSocketLink({
+    uri: server.apiWSEndpoint,
+    options: {
+        reconnect: true,
+        connectionParams: {
+            authToken: localStorage.getItem(auth.accessTokenName)
+        }
+    }
+});
 
 const setTokensLink = setContext((_, {headers}) => setAuthHeaders(headers));
 
@@ -22,9 +35,18 @@ const errorLink = onError(({networkError, operation, forward}) => {
     }
 });
 
+const protocolSplitLink = split(
+    ({query}) => {
+        const definition = getMainDefinition(query);
+        return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
+    },
+    wsLink,
+    httpLink
+);
+
 
 apolloClient = new ApolloClient({
-    link: ApolloLink.from([setTokensLink, errorLink, httpLink]),
+    link: ApolloLink.from([setTokensLink, errorLink, protocolSplitLink]),
     cache: new InMemoryCache()
 });
 

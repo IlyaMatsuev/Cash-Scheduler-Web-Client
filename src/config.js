@@ -1,4 +1,8 @@
 
+export const server = {
+    apiEndpoint: 'https://localhost:8001/graphql',
+    apiWSEndpoint: 'ws://localhost:8001/graphql'
+};
 export const auth = {
     emailName: 'email',
     accessTokenName: 'accessToken',
