@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Header, Button, Container, Popup, Grid, Divider, Segment, Modal} from 'semantic-ui-react';
+import {Header, Button, Container, Popup, Grid, Divider, Segment} from 'semantic-ui-react';
 import styles from './Account.module.css';
 import UserForm from './UserForm/UserForm';
 import {useMutation, useQuery} from '@apollo/client';
@@ -85,13 +85,13 @@ const Account = ({user, settings, onUserChange}) => {
                     <Divider/>
                 </Popup.Header>
                 <Popup.Content className={styles.accountPopupContainer}>
-                    <Grid columns={settings.turnNotificationsOn ? 2 : 1}>
+                    <Grid columns={settings.TurnNotificationsOn ? 2 : 1}>
                         <Grid.Column>
                             <Segment loading={updateUserLoading}>
                                 <UserForm user={user} errors={errors} onUserChange={onUserChange} onUserUpdate={onUserUpdate}/>
                             </Segment>
                         </Grid.Column>
-                        {settings.turnNotificationsOn && <Grid.Column>
+                        {settings.TurnNotificationsOn && <Grid.Column>
                             <Segment basic className="content scrolling" loading={notificationsLoading || notificationsError}>
                                 <NotificationsList notifications={notifications && notifications.getAllNotifications}
                                                    onNotificationRead={onNotificationRead}/>

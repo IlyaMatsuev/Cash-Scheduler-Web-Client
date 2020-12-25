@@ -32,10 +32,10 @@ const HomeWrapper = () => {
         settings: {
             activeUnit: 'general',
             changesMade: false,
-            showBalance: false,
-            turnNotificationsOn: false,
-            duplicateToEmail: false,
-            turnSoundOn: false
+            ShowBalance: false,
+            TurnNotificationsOn: false,
+            DuplicateToEmail: false,
+            TurnNotificationsSoundOn: false
         }
     };
     const [state, setState] = useState(initialState);
@@ -123,7 +123,7 @@ const HomeWrapper = () => {
 
             <Sidebar.Pusher dimmed={state.visible} className="fullHeight">
                 <Segment basic className="fullHeight p-0">
-                    <Header onToggleMenu={onToggleMenu} showBalance={state.settings.showBalance}
+                    <Header onToggleMenu={onToggleMenu} showBalance={state.settings.ShowBalance}
                             actualUser={userData && userData.getUser} user={state.user} onUserChange={onUserChange}
                             onBalanceClick={onBalanceClick} settings={state.settings}/>
                     <CurrentPage index={state.pageIndex}

@@ -12,13 +12,13 @@ import mutations from '../../../../mutations';
 const Settings = ({settings, onSettingChange, onCancelChanges}) => {
     const state = {
         general: {
-            showBalance: settings.showBalance,
+            ShowBalance: settings.ShowBalance,
             settingDescriptionStyle: styles.settingDescription
         },
         notifications: {
-            turnNotificationsOn: settings.turnNotificationsOn,
-            duplicateToEmail: settings.duplicateToEmail,
-            turnSoundOn: settings.turnSoundOn,
+            TurnNotificationsOn: settings.TurnNotificationsOn,
+            DuplicateToEmail: settings.DuplicateToEmail,
+            TurnNotificationsSoundOn: settings.TurnNotificationsSoundOn,
             settingDescriptionStyle: styles.settingDescription
         },
         developers: {
@@ -33,10 +33,10 @@ const Settings = ({settings, onSettingChange, onCancelChanges}) => {
         },
         variables: {
             settings: [
-                {name: 'showBalance', unitName: 'general', value: String(state.general.showBalance)},
-                {name: 'turnNotificationsOn', unitName: 'notifications', value: String(state.notifications.turnNotificationsOn)},
-                {name: 'duplicateToEmail', unitName: 'notifications', value: String(state.notifications.duplicateToEmail)},
-                {name: 'turnSoundOn', unitName: 'notifications', value: String(state.notifications.turnSoundOn)}
+                {name: 'ShowBalance', unitName: 'General', value: String(state.general.ShowBalance)},
+                {name: 'TurnNotificationsOn', unitName: 'Notifications', value: String(state.notifications.TurnNotificationsOn)},
+                {name: 'DuplicateToEmail', unitName: 'Notifications', value: String(state.notifications.DuplicateToEmail)},
+                {name: 'TurnNotificationsSoundOn', unitName: 'Notifications', value: String(state.notifications.TurnNotificationsSoundOn)}
             ]
         },
         refetchQueries: [{query: queries.GET_SETTINGS}]
