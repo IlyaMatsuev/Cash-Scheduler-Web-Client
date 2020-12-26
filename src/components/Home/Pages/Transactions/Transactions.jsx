@@ -11,10 +11,7 @@ import queries from '../../../../queries';
 import mutations from '../../../../mutations';
 import styles from './Transactions.module.css';
 import errorDefs from '../../../../utils/ErrorDefinitions';
-
-
-// TODO: move to global constants
-const DATE_FORMAT = 'YYYY-MM-DD';
+import {global} from '../../../../config';
 
 
 // TODO: add more charts
@@ -37,11 +34,13 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
             query: queries.GET_TRANSACTIONS_BY_MONTH,
             variables: {
                 month: currentDate.month() + 1,
+                year: currentDate.year(),
             },
         }, {
             query: queries.GET_TRANSACTIONS_BY_MONTH,
             variables: {
                 month: moment(state.selectedTransaction.date).month() + 1,
+                year: moment(state.selectedTransaction.date).year(),
             }
         },
         {query: queries.GET_USER}
@@ -54,7 +53,8 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
         data: transactionsData
     } = useQuery(queries.GET_TRANSACTIONS_BY_MONTH, {
         variables: {
-            month: currentDate.month() + 1
+            month: currentDate.month() + 1,
+            year: currentDate.year()
         }
     });
 
@@ -104,7 +104,7 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
     const validateTransaction = () => {
         let valid = true;
         if (!state.selectedTransaction.date
-            || moment(state.selectedTransaction.date, DATE_FORMAT).format(DATE_FORMAT) !== state.selectedTransaction.date) {
+            || moment(state.selectedTransaction.date, global.dateFormat).format(global.dateFormat) !== state.selectedTransaction.date) {
             setErrors({
                 ...errors,
                 date: errorDefs.INVALID_TRANSACTION_DATE_ERROR
@@ -170,13 +170,13 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
             <Grid.Column width={10}>
                 <Segment>
                     <LineTransactions transactions={transactionsData && transactionsData.getTransactionsByMonth}
-                                      recurringTransactions={transactionsData && transactionsData.getAllRegularTransactions}
+                                      recurringTransactions={transactionsData && transactionsData.getRegularTransactionsByMonth}
                                       transactionsLoading={transactionsLoading} transactionsError={transactionsError}
                                       isRecurring={isRecurringView}/>
                 </Segment>
                 <Segment>
                     <DoughnutTransactions transactions={transactionsData && transactionsData.getTransactionsByMonth}
-                                          recurringTransactions={transactionsData && transactionsData.getAllRegularTransactions}
+                                          recurringTransactions={transactionsData && transactionsData.getRegularTransactionsByMonth}
                                           transactionsLoading={transactionsLoading} transactionsError={transactionsError}
                                           isRecurring={isRecurringView}/>
                 </Segment>
@@ -188,7 +188,7 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
                 </Dimmer>
                 <TransactionList date={currentDate} isRecurring={isRecurringView}
                                  transactions={transactionsData && transactionsData.getTransactionsByMonth}
-                                 recurringTransactions={transactionsData && transactionsData.getAllRegularTransactions}
+                                 recurringTransactions={transactionsData && transactionsData.getRegularTransactionsByMonth}
                                  transactionsLoading={transactionsLoading} transactionsError={transactionsError}
                                  onPrevMonth={onPrevMonth} onNextMonth={onNextMonth}
                                  onTransactionSelected={onSelectedTransactionToggle}

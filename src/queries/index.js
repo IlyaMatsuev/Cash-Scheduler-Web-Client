@@ -24,9 +24,9 @@ export default {
             checkCode(email: $email, code: $code)
         }
     `,
-    GET_TRANSACTIONS_BY_MONTH: gql`
-        query($month: Int!, $size: Int) {
-            getTransactionsByMonth(month: $month) {
+    GET_DASHBOARD_TRANSACTIONS: gql`
+        query($month: Int!, $year: Int!) {
+            getDashboardTransactions(month: $month, year: $year) {
                 id
                 title
                 category {
@@ -41,7 +41,43 @@ export default {
                 amount
                 date
             }
-            getAllRegularTransactions(size: $size, month: $month) {
+            getDashboardRegularTransactions(month: $month, year: $year) {
+                id
+                title
+                category {
+                    id
+                    name
+                    transactionType {
+                        typeName
+                        iconUrl
+                    }
+                    iconUrl
+                }
+                amount
+                date
+                nextTransactionDate
+                interval
+            }
+        }
+    `,
+    GET_TRANSACTIONS_BY_MONTH: gql`
+        query($month: Int!, $year: Int!) {
+            getTransactionsByMonth(month: $month, year: $year) {
+                id
+                title
+                category {
+                    id
+                    name
+                    transactionType {
+                        typeName
+                        iconUrl
+                    }
+                    iconUrl
+                }
+                amount
+                date
+            }
+            getRegularTransactionsByMonth(month: $month, year: $year) {
                 id
                 title
                 category {

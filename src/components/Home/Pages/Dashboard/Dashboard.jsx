@@ -9,9 +9,8 @@ import queries from '../../../../queries';
 import mutations from '../../../../mutations';
 import {onUIErrors} from '../../../../utils/UtilHooks';
 import errorDefs from '../../../../utils/ErrorDefinitions';
+import {global} from '../../../../config';
 
-
-const DATE_FORMAT = 'YYYY-MM-DD';
 
 const Dashboard = ({currentDate, onTransactionPropsChange}) => {
     const initialState = {
@@ -20,8 +19,8 @@ const Dashboard = ({currentDate, onTransactionPropsChange}) => {
         transaction: {
             title: '',
             amount: 0,
-            date: moment().format(DATE_FORMAT),
-            nextTransactionDate: moment().add(1, 'month').format(DATE_FORMAT),
+            date: moment().format(global.dateFormat),
+            nextTransactionDate: moment().add(1, 'month').format(global.dateFormat),
             categoryId: 0,
             type: 'Expense',
             interval: 'month'
@@ -31,8 +30,8 @@ const Dashboard = ({currentDate, onTransactionPropsChange}) => {
     const [state, setState] = useState(initialState);
     const [transactionErrors, setTransactionErrors] = useState(initialTransactionErrors);
 
-    const {loading: transactionsLoading, error: transactionsError, data: transactions} = useQuery(queries.GET_TRANSACTIONS_BY_MONTH, {
-        variables: {month: currentDate.month() + 1, size: 100}
+    const {loading: transactionsLoading, error: transactionsError, data: transactions} = useQuery(queries.GET_DASHBOARD_TRANSACTIONS, {
+        variables: {month: currentDate.month() + 1, year: currentDate.year()}
     });
 
     const [createTransaction, {loading: createTransactionLoading}] = useMutation(mutations.CREATE_TRANSACTION, {
@@ -43,8 +42,8 @@ const Dashboard = ({currentDate, onTransactionPropsChange}) => {
             onUIErrors(error, setTransactionErrors, transactionErrors);
         },
         refetchQueries: [{
-            query: queries.GET_TRANSACTIONS_BY_MONTH,
-            variables: {month: currentDate.month() + 1, size: 100}
+            query: queries.GET_DASHBOARD_TRANSACTIONS,
+            variables: {month: currentDate.month() + 1, year: currentDate.year()}
         }, {query: queries.GET_USER}],
         variables: {
             transaction: {
@@ -65,8 +64,8 @@ const Dashboard = ({currentDate, onTransactionPropsChange}) => {
             onUIErrors(error, setTransactionErrors, transactionErrors);
         },
         refetchQueries: [{
-            query: queries.GET_TRANSACTIONS_BY_MONTH,
-            variables: {month: currentDate.month() + 1, size: 100}
+            query: queries.GET_DASHBOARD_TRANSACTIONS,
+            variables: {month: currentDate.month() + 1, year: currentDate.year()}
         }, {query: queries.GET_USER}],
         variables: {
             transaction: {
@@ -82,7 +81,7 @@ const Dashboard = ({currentDate, onTransactionPropsChange}) => {
 
     const validateTransaction = () => {
         let valid = true;
-        if (!state.transaction.date || moment(state.transaction.date, DATE_FORMAT).format(DATE_FORMAT) !== state.transaction.date) {
+        if (!state.transaction.date || moment(state.transaction.date, global.dateFormat).format(global.dateFormat) !== state.transaction.date) {
             setTransactionErrors({
                 ...initialTransactionErrors,
                 date: errorDefs.INVALID_TRANSACTION_DATE_ERROR
@@ -142,7 +141,7 @@ const Dashboard = ({currentDate, onTransactionPropsChange}) => {
             state.transaction.category = '';
         }
         if (name === 'interval') {
-            state.transaction.nextTransactionDate = moment().add(1, value).format(DATE_FORMAT);
+            state.transaction.nextTransactionDate = moment().add(1, value).format(global.dateFormat);
         }
         setTransactionErrors({...transactionErrors, [name]: undefined});
         setState({...state, transaction: {...state.transaction, [name]: value}})
@@ -167,8 +166,8 @@ const Dashboard = ({currentDate, onTransactionPropsChange}) => {
             <Segment padded textAlign="center" className={styles.calendarWrapper}
                      loading={transactionsLoading || transactionsError}>
                 {transactions && (
-                    <Calendar targetDate={currentDate} transactions={transactions.getTransactionsByMonth}
-                              recurringTransactions={transactions.getAllRegularTransactions}/>
+                    <Calendar targetDate={currentDate} transactions={transactions.getDashboardTransactions}
+                              recurringTransactions={transactions.getDashboardRegularTransactions}/>
                 )}
             </Segment>
 

@@ -1,7 +1,7 @@
 
 export const server = {
     apiEndpoint: 'https://localhost:8001/graphql',
-    apiWSEndpoint: 'ws://localhost:8001/graphql'
+    apiWSEndpoint: 'ws://localhost:8000/graphql'
 };
 export const auth = {
     emailName: 'email',
@@ -12,6 +12,9 @@ export const auth = {
 export const pages = {
     loginUrl: '/',
     homeUrl: '/home'
+};
+export const global = {
+    dateFormat: 'YYYY-MM-DD'
 };
 export const dev = {
     user: {
