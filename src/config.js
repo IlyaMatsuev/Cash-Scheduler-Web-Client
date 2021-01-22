@@ -18,7 +18,7 @@ export const global = {
 };
 export const dev = {
     user: {
-        email: 'sglasscott5i@example.com',
+        email: 'mirotvorec542546@gmail.com',
         password: 'adminAdmin1@'
     }
 };

@@ -4,6 +4,7 @@ import ErrorsList from '../../../utils/ErrorsList/ErrorsList';
 import {useLogin} from '../../../utils/UtilHooks';
 import SecretField from '../../../utils/SecretField';
 import {onUIErrors} from '../../../utils/UtilHooks';
+import {dev} from '../../../config';
 
 
 const LoginForm = ({goToRegister, goToRestorePassword}) => {
@@ -11,8 +12,8 @@ const LoginForm = ({goToRegister, goToRestorePassword}) => {
     const initErrorsState = {email: '', password: ''};
     const [errors, setErrors] = useState(initErrorsState);
     const [state, setState] = useState({
-        email: '',
-        password: '',
+        email: dev.user.email,
+        password: dev.user.password,
         remember: false,
         passwordShown: false
     });
