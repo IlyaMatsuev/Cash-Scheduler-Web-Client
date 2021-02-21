@@ -1,13 +1,14 @@
 import React, {useState} from 'react';
 import {Button, Container, Grid, Modal, Segment, Tab, Dimmer, Loader, Confirm} from 'semantic-ui-react';
 import NewCategoryForm from './NewCategory/NewCategoryForm';
-import mutations from '../../../../mutations';
 import {useMutation, useQuery} from '@apollo/client';
 import {onUIErrors} from '../../../../utils/UtilHooks';
-import queries from '../../../../queries';
 import CategoriesList from './CategoriesList/CategoriesList';
 import EditCategoryForm from './EditCategory/EditCategoryForm';
 import styles from './Categories.module.css';
+import transactionTypesQueries from '../../../../queries/transactionTypes';
+import categoriesQueries from '../../../../queries/categories';
+import categoryMutations from '../../../../mutations/categories';
 
 
 const Categories = () => {
@@ -33,21 +34,21 @@ const Categories = () => {
 
 
     // TODO: THIS CAN BE MOVED IN A SINGLE CALL RETRIEVING TRANSACTION TYPES AND ALL USER'S RELATED CATEGORIES
-    const transactionTypesQuery = useQuery(queries.GET_TRANSACTION_TYPES);
-    const categoriesQuery = useQuery(queries.GET_CATEGORIES_BY_TYPES);
+    const transactionTypesQuery = useQuery(transactionTypesQueries.GET_TRANSACTION_TYPES);
+    const categoriesQuery = useQuery(categoriesQueries.GET_CATEGORIES_BY_TYPES);
 
 
-    const [createCategory, {loading: createCategoryLoading}] = useMutation(mutations.CREATE_CATEGORY, {
+    const [createCategory, {loading: createCategoryLoading}] = useMutation(categoryMutations.CREATE_CATEGORY, {
         onCompleted: () => setState(initialState),
         onError: error => onUIErrors(error, setErrors, errors),
-        refetchQueries: [{query: queries.GET_CATEGORIES_BY_TYPES}],
+        refetchQueries: [{query: categoriesQueries.GET_CATEGORIES_BY_TYPES}],
         variables: {category: state.newCategory}
     });
 
-    const [updateCategory, {loading: updateCategoryLoading}] = useMutation(mutations.UPDATE_CATEGORY, {
+    const [updateCategory, {loading: updateCategoryLoading}] = useMutation(categoryMutations.UPDATE_CATEGORY, {
         onCompleted: () => setState(initialState),
         onError: error => onUIErrors(error, setErrors, errors),
-        refetchQueries: [{query: queries.GET_CATEGORIES_BY_TYPES}],
+        refetchQueries: [{query: categoriesQueries.GET_CATEGORIES_BY_TYPES}],
         variables: {
             category: {
                 id: state.category.id,
@@ -57,10 +58,10 @@ const Categories = () => {
         }
     });
 
-    const [deleteCategory, {loading: deleteCategoryLoading}] = useMutation(mutations.DELETE_CATEGORY, {
+    const [deleteCategory, {loading: deleteCategoryLoading}] = useMutation(categoryMutations.DELETE_CATEGORY, {
         onCompleted: () => setState(initialState),
         onError: error => onUIErrors(error, setErrors, errors),
-        refetchQueries: [{query: queries.GET_CATEGORIES_BY_TYPES}],
+        refetchQueries: [{query: categoriesQueries.GET_CATEGORIES_BY_TYPES}],
         variables: {id: state.category.id}
     });
 
@@ -106,9 +107,9 @@ const Categories = () => {
 
 
     const standardCategoriesTab = <CategoriesList transactionTypes={transactionTypesQuery} categories={categoriesQuery}
-                                                  categoryType="getStandardCategories" onCategoryClick={onCategoryEditToggle}/>;
+                                                  categoryType="standardCategories" onCategoryClick={onCategoryEditToggle}/>;
     const customCategoriesTab = <CategoriesList transactionTypes={transactionTypesQuery} categories={categoriesQuery}
-                                                categoryType="getCustomCategories" onCategoryClick={onCategoryEditToggle}/>;
+                                                categoryType="customCategories" onCategoryClick={onCategoryEditToggle}/>;
 
     const panels = [
         {menuItem: 'Standard Categories', render: () => <Tab.Pane>{standardCategoriesTab}</Tab.Pane>},

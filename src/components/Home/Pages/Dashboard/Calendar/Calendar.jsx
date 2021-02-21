@@ -9,7 +9,7 @@ const DISPLAY_DAYS = 7;
 
 const getSummaryByDate = (transactions, date, type, key = 'date') => {
     const summary = transactions
-        .filter(t => t.category.transactionType.typeName === type && t[key] === date)
+        .filter(t => t.category.type.name === type && t[key] === date)
         .reduce((a, b) => a + b.amount, 0);
     return summary > 0 ? summary : null;
 };

@@ -1,5 +1,5 @@
 import {fromPromise} from '@apollo/client';
-import mutations from '../mutations';
+import userMutations from '../mutations/users';
 import {auth, pages} from '../config';
 
 
@@ -22,7 +22,7 @@ export function logout(apolloClient) {
 export function refreshTokens(apolloClient, operation, forward) {
     return fromPromise(
         apolloClient.mutate({
-            mutation: mutations.REFRESH_TOKEN,
+            mutation: userMutations.REFRESH_TOKEN,
             variables: {
                 email: localStorage.getItem(auth.emailName),
                 refreshToken: localStorage.getItem(auth.refreshTokenName)

@@ -28,7 +28,7 @@ const LineTransactions = ({transactions = [], recurringTransactions = [], transa
 
     const getDatasetByTransactionType = (dates, transactionsByDate, type) => {
         const summary = dates.filter(date => transactionsByDate[date]).map(date => transactionsByDate[date].reduce((a, b) => {
-            return b.category.transactionType.typeName === type ? a + b.amount : a;
+            return b.category.type.name === type ? a + b.amount : a;
         }, 0).toFixed(2));
         return {
             data: summary,

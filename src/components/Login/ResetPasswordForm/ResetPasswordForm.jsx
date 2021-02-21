@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Button, Container, Form, Header, Segment} from 'semantic-ui-react';
 import {useMutation} from '@apollo/client';
-import mutations from '../../../mutations';
+import userMutations from '../../../mutations/users';
 import errorDefs from '../../../utils/ErrorDefinitions';
 import ErrorsList from '../../../utils/ErrorsList/ErrorsList';
 import SecretField from '../../../utils/SecretField';
@@ -33,7 +33,7 @@ const ResetPasswordForm = ({email, code, goBackToLogin}) => {
         return noErrors;
     };
 
-    const [resetPassword, {loading}] = useMutation(mutations.RESET_PASSWORD, {
+    const [resetPassword, {loading}] = useMutation(userMutations.RESET_PASSWORD, {
         update() {
             goBackToLogin(null, 100);
         },

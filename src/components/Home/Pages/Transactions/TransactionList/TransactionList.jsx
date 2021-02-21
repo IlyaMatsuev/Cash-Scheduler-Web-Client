@@ -2,6 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import {Button, Container, Divider, Grid, Segment, Header, Item, Placeholder} from 'semantic-ui-react';
 import styles from './TransactionList.module.css';
+import {convertToValidIconUrl} from '../../../../../utils/UtilHooks';
 
 
 const TransactionList = ({
@@ -20,9 +21,9 @@ const TransactionList = ({
     const getTransactionsDaySummary = transactions => {
         return transactions.reduce((a, b) => {
             let delta = 0;
-            if (b.category.transactionType.typeName === 'Income') {
+            if (b.category.type.name === 'Income') {
                 delta = a + b.amount;
-            } else if (b.category.transactionType.typeName === 'Expense') {
+            } else if (b.category.type.name === 'Expense') {
                 delta = a - b.amount;
             }
             return delta;
@@ -58,10 +59,10 @@ const TransactionList = ({
                 <Segment attached>
                     <Item.Group>
                         {transactions.map(t => {
-                            const isIncome = t.category.transactionType.typeName === 'Income';
+                            const isIncome = t.category.type.name === 'Income';
                             return (
                                 <Item key={t.id} onClick={() => onTransactionSelected(t)} className={styles.transactionEntry}>
-                                    <Item.Image size="tiny" src={t.category.iconUrl}/>
+                                    <Item.Image size="tiny" src={convertToValidIconUrl(t.category.iconUrl)}/>
                                     <Item.Content>
                                         <Item.Header>{t.title ? t.title : t.category.name}</Item.Header>
                                         <Item.Meta>{t.category.name}</Item.Meta>

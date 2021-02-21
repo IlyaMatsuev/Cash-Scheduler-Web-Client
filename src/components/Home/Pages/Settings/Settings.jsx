@@ -5,8 +5,8 @@ import NotificationsTab from './Notifications/NotificationsTab';
 import DevelopersTab from './Developers/DevelopersTab';
 import styles from './Settings.module.css';
 import {useMutation} from '@apollo/client';
-import queries from '../../../../queries';
-import mutations from '../../../../mutations';
+import settingQueries from '../../../../queries/settings';
+import settingMutations from '../../../../mutations/settings';
 
 
 const Settings = ({settings, onSettingChange, onCancelChanges}) => {
@@ -27,19 +27,34 @@ const Settings = ({settings, onSettingChange, onCancelChanges}) => {
     };
 
 
-    const [updateSettings, {loading: settingsUpdateLoading, error: settingsUpdateError}] = useMutation(mutations.UPDATE_SETTINGS, {
+    const [
+        updateSettings,
+        {loading: settingsUpdateLoading, error: settingsUpdateError}
+    ] = useMutation(settingMutations.UPDATE_SETTINGS, {
         update() {
             onSettingChange({name: 'changesMade', checked: false});
         },
         variables: {
             settings: [
                 {name: 'ShowBalance', unitName: 'General', value: String(state.general.ShowBalance)},
-                {name: 'TurnNotificationsOn', unitName: 'Notifications', value: String(state.notifications.TurnNotificationsOn)},
-                {name: 'DuplicateToEmail', unitName: 'Notifications', value: String(state.notifications.DuplicateToEmail)},
-                {name: 'TurnNotificationsSoundOn', unitName: 'Notifications', value: String(state.notifications.TurnNotificationsSoundOn)}
+                {
+                    name: 'TurnNotificationsOn',
+                    unitName: 'Notifications',
+                    value: String(state.notifications.TurnNotificationsOn)
+                },
+                {
+                    name: 'DuplicateToEmail',
+                    unitName: 'Notifications',
+                    value: String(state.notifications.DuplicateToEmail)
+                },
+                {
+                    name: 'TurnNotificationsSoundOn',
+                    unitName: 'Notifications',
+                    value: String(state.notifications.TurnNotificationsSoundOn)
+                }
             ]
         },
-        refetchQueries: [{query: queries.GET_SETTINGS}]
+        refetchQueries: [{query: settingQueries.GET_SETTINGS}]
     });
 
 
@@ -68,7 +83,7 @@ const Settings = ({settings, onSettingChange, onCancelChanges}) => {
     return (
         <Grid centered padded className="fullHeight">
             <Grid.Column width={2}>
-                <Menu color="blue" fluid pointing size="large" stackable  secondary vertical>
+                <Menu color="blue" fluid pointing size="large" stackable secondary vertical>
                     <Menu.Item
                         name="general"
                         active={settings.activeUnit === 'general'}
@@ -90,7 +105,9 @@ const Settings = ({settings, onSettingChange, onCancelChanges}) => {
                 <Segment loading={settingsUpdateLoading || settingsUpdateError}>
                     <CurrentTab/>
                     <Segment>
-                        <Button disabled={!settings.changesMade} color="red" inverted onClick={onCancelChanges}>Cancel Changes</Button>
+                        <Button disabled={!settings.changesMade} color="red" inverted onClick={onCancelChanges}>
+                            Cancel Changes
+                        </Button>
                         <Button disabled={!settings.changesMade} primary onClick={onSaveChanges}>Save Changes</Button>
                     </Segment>
                 </Segment>

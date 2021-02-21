@@ -5,11 +5,12 @@ import TransactionForm from './Transactions/TransactionForm';
 import styles from './Dashboard.module.css';
 import moment from 'moment';
 import {useMutation, useQuery} from '@apollo/client';
-import queries from '../../../../queries';
-import mutations from '../../../../mutations';
 import {onUIErrors} from '../../../../utils/UtilHooks';
 import errorDefs from '../../../../utils/ErrorDefinitions';
 import {global} from '../../../../config';
+import userQueries from '../../../../queries/users';
+import transactionQueries from '../../../../queries/transactions';
+import transactionMutations from '../../../../mutations/transactions';
 
 
 const Dashboard = ({currentDate, onTransactionPropsChange}) => {
@@ -30,11 +31,15 @@ const Dashboard = ({currentDate, onTransactionPropsChange}) => {
     const [state, setState] = useState(initialState);
     const [transactionErrors, setTransactionErrors] = useState(initialTransactionErrors);
 
-    const {loading: transactionsLoading, error: transactionsError, data: transactions} = useQuery(queries.GET_DASHBOARD_TRANSACTIONS, {
+    const {
+        loading: transactionsLoading,
+        error: transactionsError,
+        data: transactions
+    } = useQuery(transactionQueries.GET_DASHBOARD_TRANSACTIONS, {
         variables: {month: currentDate.month() + 1, year: currentDate.year()}
     });
 
-    const [createTransaction, {loading: createTransactionLoading}] = useMutation(mutations.CREATE_TRANSACTION, {
+    const [createTransaction, {loading: createTransactionLoading}] = useMutation(transactionMutations.CREATE_TRANSACTION, {
         onCompleted() {
             setState({...state, transactionModalOpened: false, transaction: initialState.transaction});
         },
@@ -42,35 +47,37 @@ const Dashboard = ({currentDate, onTransactionPropsChange}) => {
             onUIErrors(error, setTransactionErrors, transactionErrors);
         },
         refetchQueries: [{
-            query: queries.GET_DASHBOARD_TRANSACTIONS,
+            query: transactionQueries.GET_DASHBOARD_TRANSACTIONS,
             variables: {month: currentDate.month() + 1, year: currentDate.year()}
-        }, {query: queries.GET_USER}],
+        }, {query: userQueries.GET_USER}],
         variables: {
             transaction: {
                 title: state.transaction.title,
-                amount: state.transaction.amount,
+                amount: Number(state.transaction.amount),
                 categoryId: state.transaction.categoryId,
                 date: state.transaction.date
             }
         }
     });
 
-    const [createRecurringTransaction, {loading: createRecurringTransactionLoading}] = useMutation(mutations.CREATE_RECURRING_TRANSACTION, {
+    const [
+        createRecurringTransaction,
+        {loading: createRecurringTransactionLoading}
+    ] = useMutation(transactionMutations.CREATE_RECURRING_TRANSACTION, {
         onCompleted() {
-            // TODO: try to update cache instead of refetching the query
             setState({...state, recurringTransactionModalOpened: false, transaction: initialState.transaction});
         },
         onError(error) {
             onUIErrors(error, setTransactionErrors, transactionErrors);
         },
         refetchQueries: [{
-            query: queries.GET_DASHBOARD_TRANSACTIONS,
+            query: transactionQueries.GET_DASHBOARD_TRANSACTIONS,
             variables: {month: currentDate.month() + 1, year: currentDate.year()}
-        }, {query: queries.GET_USER}],
+        }, {query: userQueries.GET_USER}],
         variables: {
             transaction: {
                 title: state.transaction.title,
-                amount: state.transaction.amount,
+                amount: Number(state.transaction.amount),
                 categoryId: state.transaction.categoryId,
                 nextTransactionDate: state.transaction.nextTransactionDate,
                 interval: state.transaction.interval
@@ -164,10 +171,10 @@ const Dashboard = ({currentDate, onTransactionPropsChange}) => {
                 </Container>
             </Segment>
             <Segment padded textAlign="center" className={styles.calendarWrapper}
-                     loading={transactionsLoading || transactionsError}>
+                     loading={transactionsLoading || !!transactionsError}>
                 {transactions && (
-                    <Calendar targetDate={currentDate} transactions={transactions.getDashboardTransactions}
-                              recurringTransactions={transactions.getDashboardRegularTransactions}/>
+                    <Calendar targetDate={currentDate} transactions={transactions.dashboardTransactions}
+                              recurringTransactions={transactions.dashboardRecurringTransactions}/>
                 )}
             </Segment>
 
@@ -202,7 +209,8 @@ const Dashboard = ({currentDate, onTransactionPropsChange}) => {
                         <Button basic onClick={onRecurringTransactionToggle}>
                             Cancel
                         </Button>
-                        <Button primary loading={createRecurringTransactionLoading} onClick={onRecurringTransactionSave}>
+                        <Button primary loading={createRecurringTransactionLoading}
+                                onClick={onRecurringTransactionSave}>
                             Save
                         </Button>
                     </Modal.Actions>

@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './Header.module.css';
 import {Button, Grid} from 'semantic-ui-react';
 import {useMutation} from '@apollo/client';
-import mutations from '../../../mutations';
+import userMutations from '../../../mutations/users';
 import {withApollo} from '@apollo/client/react/hoc';
 import {logout} from '../../../utils/Auth';
 import Account from '../Account/Account';
@@ -10,7 +10,7 @@ import Account from '../Account/Account';
 
 const Header = ({client, showBalance, actualUser, user, settings, onToggleMenu, onBalanceClick, onUserChange}) => {
 
-    const [logoutFromServer, {loading}] = useMutation(mutations.LOGOUT_USER);
+    const [logoutFromServer, {loading}] = useMutation(userMutations.LOGOUT_USER);
 
     const onLogOut = () => logoutFromServer().then(() => logout(client));
 

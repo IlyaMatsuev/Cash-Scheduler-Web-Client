@@ -35,7 +35,7 @@ const DoughnutTransactions = ({transactions = [], recurringTransactions = [], tr
     };
 
     const getDataByType = (transactions, type) => {
-        const records = transactions.filter(t => t.category.transactionType.typeName === type);
+        const records = transactions.filter(t => t.category.type.name === type);
         if (!records || records.length === 0) {
             return {};
         }

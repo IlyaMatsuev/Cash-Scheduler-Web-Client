@@ -1,9 +1,9 @@
 import {gql} from '@apollo/client';
 
 export default {
-    NOTIFICATIONS_SUBSCRIPTION: gql`
-        subscription {
-            notificationAdded {
+    GET_NOTIFICATIONS: gql`
+        query {
+            allNotifications {
                 id
                 title
                 content

@@ -10,7 +10,7 @@ const NotificationsList = ({notifications, onNotificationRead}) => {
             <Header as="h3" textAlign="center">Notifications</Header>
             <Divider/>
             {notifications.length > 0 && notifications.map(notification => (
-                <Segment key={notification.id} inverted={!notification.read} color="grey" textAlign="center"
+                <Segment key={notification.id} inverted={!notification.isRead} color="grey" textAlign="center"
                          className={styles.notificationEntry} onClick={() => onNotificationRead(notification)}>
                     <Header as="h4">{notification.title}</Header>
                 </Segment>

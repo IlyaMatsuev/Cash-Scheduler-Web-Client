@@ -7,11 +7,12 @@ import DoughnutTransactions from './Charts/DoughnutTransactions/DoughnutTransact
 import TransactionList from './TransactionList/TransactionList';
 import TransactionForm from './TransactionForm/TransactionForm';
 import {onUIErrors} from '../../../../utils/UtilHooks';
-import queries from '../../../../queries';
-import mutations from '../../../../mutations';
 import styles from './Transactions.module.css';
 import errorDefs from '../../../../utils/ErrorDefinitions';
 import {global} from '../../../../config';
+import userQueries from '../../../../queries/users';
+import transactionQueries from '../../../../queries/transactions';
+import transactionMutations from '../../../../mutations/transactions';
 
 
 // TODO: add more charts
@@ -31,19 +32,19 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
 
     const refetchQueries = [
         {
-            query: queries.GET_TRANSACTIONS_BY_MONTH,
+            query: transactionQueries.GET_TRANSACTIONS_BY_MONTH,
             variables: {
                 month: currentDate.month() + 1,
                 year: currentDate.year(),
             },
         }, {
-            query: queries.GET_TRANSACTIONS_BY_MONTH,
+            query: transactionQueries.GET_TRANSACTIONS_BY_MONTH,
             variables: {
                 month: moment(state.selectedTransaction.date).month() + 1,
                 year: moment(state.selectedTransaction.date).year(),
             }
         },
-        {query: queries.GET_USER}
+        {query: userQueries.GET_USER}
     ];
 
 
@@ -51,7 +52,7 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
         loading: transactionsLoading,
         error: transactionsError,
         data: transactionsData
-    } = useQuery(queries.GET_TRANSACTIONS_BY_MONTH, {
+    } = useQuery(transactionQueries.GET_TRANSACTIONS_BY_MONTH, {
         variables: {
             month: currentDate.month() + 1,
             year: currentDate.year()
@@ -59,7 +60,10 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
     });
 
 
-    const [updateTransaction, {loading: updateTransactionLoading}] = useMutation(mutations.UPDATE_TRANSACTION, {
+    const [
+        updateTransaction,
+        {loading: updateTransactionLoading}
+    ] = useMutation(transactionMutations.UPDATE_TRANSACTION, {
         onCompleted: () => onSelectedTransactionToggle(),
         onError: error => onUIErrors(error, setErrors, errors),
         refetchQueries,
@@ -67,13 +71,16 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
             transaction: {
                 id: state.selectedTransaction.id,
                 title: state.selectedTransaction.title,
-                amount: state.selectedTransaction.amount,
+                amount: Number(state.selectedTransaction.amount),
                 date: state.selectedTransaction.date
             }
         }
     });
 
-    const [updateRecurringTransaction, {loading: updateRecurringTransactionLoading}] = useMutation(mutations.UPDATE_RECURRING_TRANSACTION, {
+    const [
+        updateRecurringTransaction,
+        {loading: updateRecurringTransactionLoading}
+    ] = useMutation(transactionMutations.UPDATE_RECURRING_TRANSACTION, {
         onCompleted: () => onSelectedTransactionToggle(),
         onError: error => onUIErrors(error, setErrors, errors),
         refetchQueries,
@@ -81,19 +88,25 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
             transaction: {
                 id: state.selectedTransaction.id,
                 title: state.selectedTransaction.title,
-                amount: state.selectedTransaction.amount
+                amount: Number(state.selectedTransaction.amount)
             }
         }
     });
 
-    const [deleteTransaction, {loading: deleteTransactionLoading}] = useMutation(mutations.DELETE_TRANSACTION, {
+    const [
+        deleteTransaction,
+        {loading: deleteTransactionLoading}
+    ] = useMutation(transactionMutations.DELETE_TRANSACTION, {
         onCompleted: () => onSelectedTransactionToggle(),
         onError: error => onUIErrors(error, setErrors, errors),
         refetchQueries,
         variables: {id: state.selectedTransaction.id}
     });
 
-    const [deleteRecurringTransaction, {loading: deleteRecurringTransactionLoading}] = useMutation(mutations.DELETE_RECURRING_TRANSACTION, {
+    const [
+        deleteRecurringTransaction,
+        {loading: deleteRecurringTransactionLoading}
+    ] = useMutation(transactionMutations.DELETE_RECURRING_TRANSACTION, {
         onCompleted: () => onSelectedTransactionToggle(),
         onError: error => onUIErrors(error, setErrors, errors),
         refetchQueries,
@@ -169,15 +182,16 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
         <Grid padded centered columns={2}>
             <Grid.Column width={10}>
                 <Segment>
-                    <LineTransactions transactions={transactionsData && transactionsData.getTransactionsByMonth}
-                                      recurringTransactions={transactionsData && transactionsData.getRegularTransactionsByMonth}
+                    <LineTransactions transactions={transactionsData && transactionsData.transactionsByMonth}
+                                      recurringTransactions={transactionsData && transactionsData.recurringTransactionsByMonth}
                                       transactionsLoading={transactionsLoading} transactionsError={transactionsError}
                                       isRecurring={isRecurringView}/>
                 </Segment>
                 <Segment>
-                    <DoughnutTransactions transactions={transactionsData && transactionsData.getTransactionsByMonth}
-                                          recurringTransactions={transactionsData && transactionsData.getRegularTransactionsByMonth}
-                                          transactionsLoading={transactionsLoading} transactionsError={transactionsError}
+                    <DoughnutTransactions transactions={transactionsData && transactionsData.transactionsByMonth}
+                                          recurringTransactions={transactionsData && transactionsData.recurringTransactionsByMonth}
+                                          transactionsLoading={transactionsLoading}
+                                          transactionsError={transactionsError}
                                           isRecurring={isRecurringView}/>
                 </Segment>
             </Grid.Column>
@@ -187,8 +201,8 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
                     <Loader inverted/>
                 </Dimmer>
                 <TransactionList date={currentDate} isRecurring={isRecurringView}
-                                 transactions={transactionsData && transactionsData.getTransactionsByMonth}
-                                 recurringTransactions={transactionsData && transactionsData.getRegularTransactionsByMonth}
+                                 transactions={transactionsData && transactionsData.transactionsByMonth}
+                                 recurringTransactions={transactionsData && transactionsData.recurringTransactionsByMonth}
                                  transactionsLoading={transactionsLoading} transactionsError={transactionsError}
                                  onPrevMonth={onPrevMonth} onNextMonth={onNextMonth}
                                  onTransactionSelected={onSelectedTransactionToggle}

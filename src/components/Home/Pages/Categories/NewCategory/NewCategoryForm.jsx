@@ -1,5 +1,6 @@
 import React from 'react';
 import {Button, Container, Divider, Dropdown, Form, Grid} from 'semantic-ui-react';
+import {server} from '../../../../../config';
 
 
 const NewCategoryForm = ({category, transactionTypes, errors, onCategoryChange, onCategoryCreate}) => {
@@ -21,11 +22,14 @@ const NewCategoryForm = ({category, transactionTypes, errors, onCategoryChange, 
                               onChange={onCategoryChange}
                               options={
                                   (transactionTypes && transactionTypes.data
-                                      && transactionTypes.data.getTransactionTypes.map(type => ({
-                                          key: type.typeName,
-                                          text: type.typeName,
-                                          value: type.typeName,
-                                          image: {avatar: true, src: type.iconUrl}
+                                      && transactionTypes.data.transactionTypes.map(type => ({
+                                          key: type.name,
+                                          text: type.name,
+                                          value: type.name,
+                                          image: {
+                                              avatar: true,
+                                              src: `${server.root}${type.iconUrl}`
+                                          }
                                       }))) || []
                               }/>
                 </Grid.Column>

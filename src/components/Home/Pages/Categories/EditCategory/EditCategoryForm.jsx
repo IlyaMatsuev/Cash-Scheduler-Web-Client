@@ -1,6 +1,7 @@
 import React from 'react';
 import {Dropdown, Grid, Input} from 'semantic-ui-react';
 import ErrorsList from '../../../../../utils/ErrorsList/ErrorsList';
+import {server} from '../../../../../config';
 
 const EditCategoryForm = ({category, transactionTypes, errors, onChange}) => {
     return (
@@ -13,14 +14,14 @@ const EditCategoryForm = ({category, transactionTypes, errors, onChange}) => {
                 <Grid.Column>
                     <Dropdown disabled fluid name="transactionTypeName" placeholder="Type" selection
                               loading={transactionTypes.loading || transactionTypes.error}
-                              error={!!errors.transactionTypeName} value={category.transactionTypeName}
+                              error={!!errors.transactionTypeName} value={category.type.name}
                               options={
                                   (transactionTypes && transactionTypes.data
-                                      && transactionTypes.data.getTransactionTypes.map(type => ({
-                                          key: type.typeName,
-                                          text: type.typeName,
-                                          value: type.typeName,
-                                          image: {avatar: true, src: type.iconUrl}
+                                      && transactionTypes.data.transactionTypes.map(type => ({
+                                          key: type.name,
+                                          text: type.name,
+                                          value: type.name,
+                                          image: {avatar: true, src: `${server.root}${type.iconUrl}`}
                                       }))) || []
                               }/>
                 </Grid.Column>

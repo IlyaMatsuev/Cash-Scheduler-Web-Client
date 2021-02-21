@@ -2,9 +2,12 @@ import React from 'react';
 import {Grid, Input, Dropdown, Button} from 'semantic-ui-react';
 import {DateInput} from 'semantic-ui-calendar-react';
 import {useQuery} from '@apollo/client';
-import queries from '../../../../../queries';
 import ErrorsList from '../../../../../utils/ErrorsList/ErrorsList';
 import styles from './TransactionForm.module.css';
+import categoriesQueries from '../../../../../queries/categories';
+import transactionTypesQueries from '../../../../../queries/transactionTypes';
+import {convertToValidIconUrl} from '../../../../../utils/UtilHooks';
+
 
 // TODO: there is already a modal form for creating new transactions. It can be improved to be utilized for editing as well
 const recurringTransactionIntervals = [
@@ -18,9 +21,9 @@ const recurringTransactionIntervals = [
 const TransactionForm = ({isRecurring, transaction, errors, onChange}) => {
 
     // TODO: THIS CAN BE MOVED IN A SINGLE CALL RETRIEVING TRANSACTION TYPES AND ALL USER'S RELATED CATEGORIES
-    const {data: types} = useQuery(queries.GET_TRANSACTION_TYPES);
-    const {data: categories} = useQuery(queries.GET_USER_CATEGORIES, {
-        variables: {typeName: transaction.type}
+    const {data: types} = useQuery(transactionTypesQueries.GET_TRANSACTION_TYPES);
+    const {data: categories} = useQuery(categoriesQueries.GET_USER_CATEGORIES, {
+        variables: {typeName: transaction.category.type.name}
     });
 
     return (
@@ -54,19 +57,19 @@ const TransactionForm = ({isRecurring, transaction, errors, onChange}) => {
                                   search selection placeholder="Category" name="categoryId" error={!!errors.categoryId}
                                   value={transaction.category.id} onChange={onChange} disabled
                                   options={
-                                      (categories && categories.getAllCategories.map(category => ({
+                                      (categories && categories.allCategories.map(category => ({
                                           key: category.id,
                                           value: category.id,
                                           text: category.name,
-                                          image: {avatar: true, src: category.iconUrl}
+                                          image: {avatar: true, src: convertToValidIconUrl(category.iconUrl)}
                                       }))) || []}/>
                         <Dropdown button floating name="type" disabled
-                                  value={transaction.category.transactionType.typeName} onChange={onChange}
+                                  value={transaction.category.type.name} onChange={onChange}
                                   options={
-                                      types && types.getTransactionTypes.map(type => ({
-                                          key: type.typeName,
-                                          text: type.typeName,
-                                          value: type.typeName
+                                      types && types.transactionTypes.map(type => ({
+                                          key: type.name,
+                                          text: type.name,
+                                          value: type.name
                                       }))
                                   }/>
                     </Button.Group>

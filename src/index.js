@@ -15,7 +15,7 @@ import './index.css';
 
 let apolloClient;
 
-const httpLink = createHttpLink({uri: server.apiEndpoint});
+const httpLink = createHttpLink({uri: server.apiHttpEndpoint});
 
 const wsLink = new WebSocketLink({
     uri: server.apiWSEndpoint,
@@ -29,8 +29,9 @@ const wsLink = new WebSocketLink({
 
 const setTokensLink = setContext((_, {headers}) => setAuthHeaders(headers));
 
-const errorLink = onError(({networkError, operation, forward}) => {
-    if (networkError?.statusCode === 401) {
+const errorLink = onError(({networkError, graphQLErrors, operation, forward}) => {
+    if (networkError?.result?.errors[0]?.extensions?.code === '401'
+        || (graphQLErrors?.length > 0 && graphQLErrors[0]?.extensions?.code === '401')) {
         return refreshTokens(apolloClient, operation, forward);
     }
 });

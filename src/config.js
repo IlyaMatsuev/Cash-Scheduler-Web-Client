@@ -1,7 +1,8 @@
 
 export const server = {
-    apiEndpoint: 'https://localhost:8001/graphql',
-    apiWSEndpoint: 'ws://localhost:8000/graphql'
+    root: 'https://localhost:8001',
+    apiHttpEndpoint: 'https://localhost:8001/graphql',
+    apiWSEndpoint: 'wss://localhost:8001/graphql'
 };
 export const auth = {
     emailName: 'email',
@@ -19,6 +20,14 @@ export const global = {
 export const dev = {
     user: {
         email: 'mirotvorec542546@gmail.com',
-        password: 'adminAdmin1@'
+        password: 'adminQ1@'
+    },
+    userRegistration: {
+        firstName: 'Ivan',
+        lastName: 'Ivanov',
+        balance: 1200,
+        email: 'ivan.ivanov@mail.com',
+        password: 'Qwerty1@',
+        confirmPassword: 'Qwerty1@'
     }
 };

@@ -2,11 +2,12 @@ import React from 'react';
 import {Route} from 'react-router-dom';
 import decode from 'jwt-decode';
 import {useQuery} from '@apollo/client';
-import queries from '../queries';
+import userQueries from '../queries/users';
+
 
 const PrivateRoute = ({component: Component, ...props}) => {
 
-    const {loading: loadingUser, data: getUserData, error} = useQuery(queries.GET_USER);
+    const {loading: loadingUser, data: userData, error} = useQuery(userQueries.GET_USER);
 
     const hasTokens = () => {
         const accessToken = localStorage.getItem('accessToken');
@@ -27,7 +28,7 @@ const PrivateRoute = ({component: Component, ...props}) => {
     };
 
     let destination;
-    if (!loadingUser && !error && getUserData?.getUser && hasTokens()) {
+    if (!loadingUser && !error && userData?.user && hasTokens()) {
         destination = <Component {...props} />;
     } else {
         destination = null;

@@ -4,8 +4,9 @@ import Header from '../Header/Header';
 import CurrentPage from '../Pages/CurrentPage/CurrentPage';
 import {useQuery} from '@apollo/client';
 import moment from 'moment';
-import queries from '../../../queries';
 import styles from './HomeWrapper.module.css';
+import userQueries from '../../../queries/users';
+import settingQueries from '../../../queries/settings';
 
 
 const pagesByIndexes = {
@@ -40,8 +41,8 @@ const HomeWrapper = () => {
     };
     const [state, setState] = useState(initialState);
 
-    useQuery(queries.GET_SETTINGS, {
-        onCompleted({getUserSettings: settings}) {
+    const {data: actualUserSettings} = useQuery(settingQueries.GET_SETTINGS, {
+        onCompleted({settings: settings}) {
             settings.forEach(setting => {
                 state.settings[setting.name] = setting.value === 'true';
             });
@@ -50,9 +51,9 @@ const HomeWrapper = () => {
         fetchPolicy: 'cache-and-network'
     });
 
-    const {data: userData} = useQuery(queries.GET_USER, {
-        onCompleted({getUser}) {
-            setState({...state, user: getUser});
+    const {data: userData} = useQuery(userQueries.GET_USER, {
+        onCompleted({user}) {
+            setState({...state, user});
         },
         fetchPolicy: 'cache-and-network'
     });
@@ -87,7 +88,11 @@ const HomeWrapper = () => {
     };
 
     const onCancelSettingsChange = () => {
-        setState({...state, settings: {...initialState.settings, activeUnit: state.settings.activeUnit}});
+        const actualSettings = {};
+        actualUserSettings.settings.forEach(setting => {
+            actualSettings[setting.name] = setting.value === 'true';
+        });
+        setState({...state, settings: {...actualSettings, activeUnit: state.settings.activeUnit}});
     };
 
     const onTransactionPropsChange = ({name, value}) => {
@@ -124,7 +129,7 @@ const HomeWrapper = () => {
             <Sidebar.Pusher dimmed={state.visible} className="fullHeight">
                 <Segment basic className="fullHeight p-0">
                     <Header onToggleMenu={onToggleMenu} showBalance={state.settings.ShowBalance}
-                            actualUser={userData && userData.getUser} user={state.user} onUserChange={onUserChange}
+                            actualUser={userData && userData.user} user={state.user} onUserChange={onUserChange}
                             onBalanceClick={onBalanceClick} settings={state.settings}/>
                     <CurrentPage index={state.pageIndex}
                                  settings={state.settings} onSettingChange={onSettingChange} onCancelSettingsChange={onCancelSettingsChange}

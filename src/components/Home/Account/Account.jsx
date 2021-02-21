@@ -3,11 +3,13 @@ import {Header, Button, Container, Popup, Grid, Divider, Segment} from 'semantic
 import styles from './Account.module.css';
 import UserForm from './UserForm/UserForm';
 import {useMutation, useQuery} from '@apollo/client';
-import mutations from '../../../mutations';
-import queries from '../../../queries';
 import {onUIErrors} from '../../../utils/UtilHooks';
 import NotificationsList from './NotificationsList/NotificationsList';
 import NotificationReadModal from './NotificationReadModal/NotificationReadModal';
+import userQueries from '../../../queries/users';
+import notificationQueries from '../../../queries/notifications';
+import userMutations from '../../../mutations/users';
+import notificationMutations from '../../../mutations/notifications';
 
 
 const Account = ({user, settings, onUserChange}) => {
@@ -20,30 +22,24 @@ const Account = ({user, settings, onUserChange}) => {
     const initErrorsState = {};
     const [errors, setErrors] = useState({});
 
-    // TODO: move it in some particular place with all mutations for all model types
-    const [updateUser, {loading: updateUserLoading}] = useMutation(mutations.UPDATE_USER, {
+    const [updateUser, {loading: updateUserLoading}] = useMutation(userMutations.UPDATE_USER, {
         onError: error => onUIErrors(error, setErrors, errors),
         variables: {
             user: {
                 id: user.id,
                 firstName: user.firstName,
                 lastName: user.lastName,
-                balance: user.balance
+                balance: Number(user.balance)
             }
         },
-        refetchQueries: [{query: queries.GET_USER}]
+        refetchQueries: [{query: userQueries.GET_USER}]
     });
 
 
-    const {data: notifications, loading: notificationsLoading, error: notificationsError} = useQuery(queries.GET_NOTIFICATIONS);
+    const {data: notifications, loading: notificationsLoading, error: notificationsError} = useQuery(notificationQueries.GET_NOTIFICATIONS);
 
-    // TODO: read - unread can be as one method
-    const [readNotification] = useMutation(mutations.READ_NOTIFICATION, {
-        refetchQueries: [{query: queries.GET_NOTIFICATIONS}]
-    });
-
-    const [unreadNotification] = useMutation(mutations.UNREAD_NOTIFICATION, {
-        refetchQueries: [{query: queries.GET_NOTIFICATIONS}]
+    const [toggleReadNotification] = useMutation(notificationMutations.TOGGLE_READ_NOTIFICATION, {
+        refetchQueries: [{query: notificationQueries.GET_NOTIFICATIONS}]
     });
 
     const getAccountHeader = () => {
@@ -61,14 +57,24 @@ const Account = ({user, settings, onUserChange}) => {
     };
 
     const onNotificationRead = selectedNotification => {
-        if (!selectedNotification.read) {
-            readNotification({variables: {id: selectedNotification.id}});
+        if (!selectedNotification.isRead) {
+            toggleReadNotification({
+                variables: {
+                    id: selectedNotification.id,
+                    read: true
+                }
+            });
         }
         setState({...state, notificationReadModalOpened: true, selectedNotification});
     };
 
     const onNotificationUnread = () => {
-        unreadNotification({variables: {id: state.selectedNotification.id}});
+        toggleReadNotification({
+            variables: {
+                id: state.selectedNotification.id,
+                read: false
+            }
+        });
         onNotificationReadModalToggle();
     };
 
@@ -93,7 +99,7 @@ const Account = ({user, settings, onUserChange}) => {
                         </Grid.Column>
                         {settings.TurnNotificationsOn && <Grid.Column>
                             <Segment basic className="content scrolling" loading={notificationsLoading || notificationsError}>
-                                <NotificationsList notifications={notifications && notifications.getAllNotifications}
+                                <NotificationsList notifications={notifications && notifications.allNotifications}
                                                    onNotificationRead={onNotificationRead}/>
                             </Segment>
                         </Grid.Column>}
