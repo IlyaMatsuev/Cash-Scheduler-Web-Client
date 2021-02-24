@@ -1,8 +1,12 @@
 import {gql} from '@apollo/client';
 
 export default {
-    GET_USER_CATEGORIES: gql`
+    GET_ALL_USER_CATEGORIES_WITH_TYPES: gql`
         query($typeName: String) {
+            transactionTypes {
+                name
+                iconUrl
+            }
             allCategories(transactionType: $typeName) {
                 id
                 name
@@ -10,8 +14,12 @@ export default {
             }
         }
     `,
-    GET_CATEGORIES_BY_TYPES: gql`
+    GET_CATEGORIES_WITH_TYPES: gql`
         query {
+            transactionTypes {
+                name
+                iconUrl
+            }
             customCategories {
                 id
                 name

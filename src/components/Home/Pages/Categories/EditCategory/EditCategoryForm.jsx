@@ -3,7 +3,8 @@ import {Dropdown, Grid, Input} from 'semantic-ui-react';
 import ErrorsList from '../../../../../utils/ErrorsList/ErrorsList';
 import {server} from '../../../../../config';
 
-const EditCategoryForm = ({category, transactionTypes, errors, onChange}) => {
+
+const EditCategoryForm = ({category, query, errors, onChange}) => {
     return (
         <Grid padded centered>
             <Grid.Row columns={2}>
@@ -13,23 +14,22 @@ const EditCategoryForm = ({category, transactionTypes, errors, onChange}) => {
                 </Grid.Column>
                 <Grid.Column>
                     <Dropdown disabled fluid name="transactionTypeName" placeholder="Type" selection
-                              loading={transactionTypes.loading || transactionTypes.error}
+                              loading={query.loading || !!query.error}
                               error={!!errors.transactionTypeName} value={category.type.name}
                               options={
-                                  (transactionTypes && transactionTypes.data
-                                      && transactionTypes.data.transactionTypes.map(type => ({
-                                          key: type.name,
-                                          text: type.name,
-                                          value: type.name,
-                                          image: {avatar: true, src: `${server.root}${type.iconUrl}`}
-                                      }))) || []
+                                  (query && query.data && query.data.transactionTypes.map(type => ({
+                                      key: type.name,
+                                      text: type.name,
+                                      value: type.name,
+                                      image: {avatar: true, src: `${server.root}${type.iconUrl}`}
+                                  }))) || []
                               }/>
                 </Grid.Column>
             </Grid.Row>
             <Grid.Row columns={1}>
                 <Grid.Column>
                     <Input fluid name="iconUrl" type="text" placeholder="Icon Url" disabled={!category.isCustom}
-                                error={!!errors.iconUrl} value={category.iconUrl} onChange={onChange}/>
+                           error={!!errors.iconUrl} value={category.iconUrl} onChange={onChange}/>
                 </Grid.Column>
             </Grid.Row>
             <Grid.Row>

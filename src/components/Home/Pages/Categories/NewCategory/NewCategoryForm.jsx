@@ -3,7 +3,7 @@ import {Button, Container, Divider, Dropdown, Form, Grid} from 'semantic-ui-reac
 import {server} from '../../../../../config';
 
 
-const NewCategoryForm = ({category, transactionTypes, errors, onCategoryChange, onCategoryCreate}) => {
+const NewCategoryForm = ({category, query, errors, onCategoryChange, onCategoryCreate}) => {
     return (
         <Form onSubmit={onCategoryCreate}>
             <Container textAlign="center">
@@ -17,12 +17,12 @@ const NewCategoryForm = ({category, transactionTypes, errors, onCategoryChange, 
                 </Grid.Column>
                 <Grid.Column>
                     <Dropdown fluid name="transactionTypeName" placeholder="Type" selection
-                              loading={transactionTypes.loading || transactionTypes.error}
+                              loading={query.loading || query.error}
                               error={errors.transactionTypeName} value={category.transactionTypeName}
                               onChange={onCategoryChange}
                               options={
-                                  (transactionTypes && transactionTypes.data
-                                      && transactionTypes.data.transactionTypes.map(type => ({
+                                  (query && query.data
+                                      && query.data.transactionTypes.map(type => ({
                                           key: type.name,
                                           text: type.name,
                                           value: type.name,

@@ -6,7 +6,6 @@ import {onUIErrors} from '../../../../utils/UtilHooks';
 import CategoriesList from './CategoriesList/CategoriesList';
 import EditCategoryForm from './EditCategory/EditCategoryForm';
 import styles from './Categories.module.css';
-import transactionTypesQueries from '../../../../queries/transactionTypes';
 import categoriesQueries from '../../../../queries/categories';
 import categoryMutations from '../../../../mutations/categories';
 
@@ -32,23 +31,19 @@ const Categories = () => {
     const errorsInitialState = {};
     const [errors, setErrors] = useState(errorsInitialState);
 
-
-    // TODO: THIS CAN BE MOVED IN A SINGLE CALL RETRIEVING TRANSACTION TYPES AND ALL USER'S RELATED CATEGORIES
-    const transactionTypesQuery = useQuery(transactionTypesQueries.GET_TRANSACTION_TYPES);
-    const categoriesQuery = useQuery(categoriesQueries.GET_CATEGORIES_BY_TYPES);
-
+    const categoryWithTypesQuery = useQuery(categoriesQueries.GET_CATEGORIES_WITH_TYPES);
 
     const [createCategory, {loading: createCategoryLoading}] = useMutation(categoryMutations.CREATE_CATEGORY, {
         onCompleted: () => setState(initialState),
         onError: error => onUIErrors(error, setErrors, errors),
-        refetchQueries: [{query: categoriesQueries.GET_CATEGORIES_BY_TYPES}],
+        refetchQueries: [{query: categoriesQueries.GET_CATEGORIES_WITH_TYPES}],
         variables: {category: state.newCategory}
     });
 
     const [updateCategory, {loading: updateCategoryLoading}] = useMutation(categoryMutations.UPDATE_CATEGORY, {
         onCompleted: () => setState(initialState),
         onError: error => onUIErrors(error, setErrors, errors),
-        refetchQueries: [{query: categoriesQueries.GET_CATEGORIES_BY_TYPES}],
+        refetchQueries: [{query: categoriesQueries.GET_CATEGORIES_WITH_TYPES}],
         variables: {
             category: {
                 id: state.category.id,
@@ -61,7 +56,7 @@ const Categories = () => {
     const [deleteCategory, {loading: deleteCategoryLoading}] = useMutation(categoryMutations.DELETE_CATEGORY, {
         onCompleted: () => setState(initialState),
         onError: error => onUIErrors(error, setErrors, errors),
-        refetchQueries: [{query: categoriesQueries.GET_CATEGORIES_BY_TYPES}],
+        refetchQueries: [{query: categoriesQueries.GET_CATEGORIES_WITH_TYPES}],
         variables: {id: state.category.id}
     });
 
@@ -106,10 +101,10 @@ const Categories = () => {
     };
 
 
-    const standardCategoriesTab = <CategoriesList transactionTypes={transactionTypesQuery} categories={categoriesQuery}
-                                                  categoryType="standardCategories" onCategoryClick={onCategoryEditToggle}/>;
-    const customCategoriesTab = <CategoriesList transactionTypes={transactionTypesQuery} categories={categoriesQuery}
-                                                categoryType="customCategories" onCategoryClick={onCategoryEditToggle}/>;
+    const standardCategoriesTab = <CategoriesList query={categoryWithTypesQuery} categoryType="standardCategories"
+                                                  onCategoryClick={onCategoryEditToggle}/>;
+    const customCategoriesTab = <CategoriesList query={categoryWithTypesQuery} categoryType="customCategories"
+                                                onCategoryClick={onCategoryEditToggle}/>;
 
     const panels = [
         {menuItem: 'Standard Categories', render: () => <Tab.Pane>{standardCategoriesTab}</Tab.Pane>},
@@ -125,8 +120,9 @@ const Categories = () => {
                 <Grid.Column width={4}>
                     <Segment loading={createCategoryLoading}>
                         <NewCategoryForm category={state.newCategory} errors={errors}
-                                         transactionTypes={transactionTypesQuery}
-                                         onCategoryChange={onNewCategoryChange} onCategoryCreate={onNewCategoryCreate}/>
+                                         query={categoryWithTypesQuery}
+                                         onCategoryChange={onNewCategoryChange}
+                                         onCategoryCreate={onNewCategoryCreate}/>
                     </Segment>
                 </Grid.Column>
             </Grid>
@@ -142,7 +138,8 @@ const Categories = () => {
                             <Loader />
                         </Dimmer>
                         <EditCategoryForm category={state.category} errors={errors}
-                                          transactionTypes={transactionTypesQuery} onChange={onCategoryEditChange}/>
+                                          query={categoryWithTypesQuery}
+                                          onChange={onCategoryEditChange}/>
                     </Modal.Content>
                     <Modal.Actions>
                         <Button basic color="grey" onClick={onCategoryEditToggle}>

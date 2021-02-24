@@ -25,8 +25,6 @@ export function useLogin(variables, onError) {
 }
 
 export function onUIErrors(error, setErrors, errors) {
-    // TODO: remove console.log
-    console.log(JSON.stringify(error, null, '  '));
     if (error.graphQLErrors?.length > 0 && error.graphQLErrors[0].extensions?.data.fields) {
         const newError = error.graphQLErrors[0];
         newError.data.fields.forEach(fieldName => {

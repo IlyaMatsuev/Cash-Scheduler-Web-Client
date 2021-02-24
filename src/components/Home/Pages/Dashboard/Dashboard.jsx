@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import Calendar from './Calendar/Calendar';
 import {Button, Container, Segment, Modal} from 'semantic-ui-react';
-import TransactionForm from './Transactions/TransactionForm';
+import TransactionForm from '../Transactions/TransactionForm/TransactionForm';
 import styles from './Dashboard.module.css';
 import moment from 'moment';
 import {useMutation, useQuery} from '@apollo/client';
@@ -185,7 +185,7 @@ const Dashboard = ({currentDate, onTransactionPropsChange}) => {
                     <Modal.Header>New Transaction</Modal.Header>
                     <Modal.Content className="modalContainer">
                         <TransactionForm transaction={state.transaction} errors={transactionErrors}
-                                         onChange={onTransactionChange} isRecurring={false}/>
+                                         onChange={onTransactionChange}/>
                     </Modal.Content>
                     <Modal.Actions>
                         <Button basic onClick={onTransactionToggle}>
@@ -203,7 +203,7 @@ const Dashboard = ({currentDate, onTransactionPropsChange}) => {
                     <Modal.Header>New Recurring Transaction</Modal.Header>
                     <Modal.Content className="modalContainer">
                         <TransactionForm transaction={state.transaction} errors={transactionErrors}
-                                         onChange={onTransactionChange} isRecurring={true}/>
+                                         onChange={onTransactionChange} isRecurring/>
                     </Modal.Content>
                     <Modal.Actions>
                         <Button basic onClick={onRecurringTransactionToggle}>

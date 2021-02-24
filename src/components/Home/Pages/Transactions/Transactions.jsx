@@ -1,22 +1,19 @@
 import React, {useState} from 'react';
-import {Button, Confirm, Dimmer, Grid, Loader, Modal, Segment} from 'semantic-ui-react';
+import {Dimmer, Grid, Loader, Segment} from 'semantic-ui-react';
 import moment from 'moment';
 import {useMutation, useQuery} from '@apollo/client';
 import LineTransactions from './Charts/LineTransactions/LineTransactions';
 import DoughnutTransactions from './Charts/DoughnutTransactions/DoughnutTransactions';
 import TransactionList from './TransactionList/TransactionList';
-import TransactionForm from './TransactionForm/TransactionForm';
 import {onUIErrors} from '../../../../utils/UtilHooks';
-import styles from './Transactions.module.css';
 import errorDefs from '../../../../utils/ErrorDefinitions';
 import {global} from '../../../../config';
 import userQueries from '../../../../queries/users';
 import transactionQueries from '../../../../queries/transactions';
 import transactionMutations from '../../../../mutations/transactions';
+import TransactionModal from './TransactionModal/TransactionModal';
 
 
-// TODO: add more charts
-// TODO: add list & charts for recurring transactions
 const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) => {
     const initialState = {
         recurringTransactions: [],
@@ -27,8 +24,7 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
     };
     const [state, setState] = useState(initialState);
 
-    const initialErrorsState = {};
-    const [errors, setErrors] = useState(initialErrorsState);
+    const [errors, setErrors] = useState({});
 
     const refetchQueries = [
         {
@@ -145,7 +141,7 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
             state.selectedTransaction = transaction;
         }
         setState({...state, transactionModalOpened: !state.transactionModalOpened});
-        setErrors(initialErrorsState);
+        setErrors({});
     };
 
     const onSelectedTransactionChange = (event, {name, value}) => {
@@ -154,7 +150,7 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
     };
 
     const onSelectedTransactionSave = () => {
-        setErrors(initialErrorsState);
+        setErrors({});
         if (validateTransaction()) {
             if (isRecurringView) {
                 updateRecurringTransaction();
@@ -178,6 +174,7 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
     };
 
 
+    // TODO: add more charts
     return (
         <Grid padded centered columns={2}>
             <Grid.Column width={10}>
@@ -197,7 +194,10 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
             </Grid.Column>
             <Grid.Column width={6}>
                 <Dimmer inverted
-                        active={updateTransactionLoading || deleteTransactionLoading || updateRecurringTransactionLoading || deleteRecurringTransactionLoading}>
+                        active={updateTransactionLoading
+                            || deleteTransactionLoading
+                            || updateRecurringTransactionLoading
+                            || deleteRecurringTransactionLoading}>
                     <Loader inverted/>
                 </Dimmer>
                 <TransactionList date={currentDate} isRecurring={isRecurringView}
@@ -208,35 +208,14 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
                                  onTransactionSelected={onSelectedTransactionToggle}
                                  onTransactionsViewChange={onTransactionsViewChange}/>
 
-                <div>
-                    <Modal dimmer size="small" className={styles.transactionModal + ' modalContainer'}
-                           closeOnEscape closeOnDimmerClick
-                           open={state.transactionModalOpened} onClose={onSelectedTransactionToggle}>
-                        <Modal.Header>Edit {isRecurringView && 'Recurring'} Transaction</Modal.Header>
-                        <Modal.Content>
-                            <TransactionForm transaction={state.selectedTransaction} errors={errors}
-                                             isRecurring={isRecurringView} onChange={onSelectedTransactionChange}/>
-                        </Modal.Content>
-                        <Modal.Actions>
-                            <Button basic onClick={onSelectedTransactionToggle}>
-                                Cancel
-                            </Button>
-                            <Button basic color="red" disabled={state.category && !state.category.isCustom}
-                                    onClick={onTransactionDeleteToggle}>
-                                Delete
-                                <Confirm className="modalContainer"
-                                         content={`Are you sure you want to delete the transaction?`}
-                                         confirmButton={<Button basic negative>Yes, delete it</Button>}
-                                         open={state.transactionDeleteModalOpened}
-                                         onCancel={onTransactionDeleteToggle} onConfirm={onSelectedTransactionDelete}
-                                />
-                            </Button>
-                            <Button primary loading={updateTransactionLoading} onClick={onSelectedTransactionSave}>
-                                Save
-                            </Button>
-                        </Modal.Actions>
-                    </Modal>
-                </div>
+                <TransactionModal open={state.transactionModalOpened} isRecurring={isRecurringView}
+                                  transaction={state.selectedTransaction} errors={errors}
+                                  onModalToggle={onSelectedTransactionToggle}
+                                  deleteModalOpen={state.transactionDeleteModalOpened}
+                                  onDeleteModalToggle={onTransactionDeleteToggle}
+                                  deleteLoading={deleteTransactionLoading} saveLoading={updateTransactionLoading}
+                                  onChange={onSelectedTransactionChange}
+                                  onSave={onSelectedTransactionSave} onDelete={onSelectedTransactionDelete}/>
             </Grid.Column>
         </Grid>
     );
