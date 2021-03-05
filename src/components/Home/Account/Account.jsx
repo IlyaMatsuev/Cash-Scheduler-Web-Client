@@ -3,17 +3,21 @@ import {Header, Button, Container, Popup, Grid, Divider, Segment} from 'semantic
 import styles from './Account.module.css';
 import UserForm from './UserForm/UserForm';
 import {useMutation, useQuery} from '@apollo/client';
-import {onUIErrors} from '../../../utils/UtilHooks';
+import {isValidNumber, onUIErrors, toFloat} from '../../../utils/UtilHooks';
 import NotificationsList from './NotificationsList/NotificationsList';
 import userQueries from '../../../queries/users';
+import walletQueries from '../../../queries/wallets';
 import userMutations from '../../../mutations/users';
 import settingQueries from '../../../queries/settings';
 
 
-const Account = ({user}) => {
+const Account = ({user, balance}) => {
     const initState = {
         accountPopupOpen: false,
-        user: user
+        user: {
+            ...user,
+            balance
+        }
     };
     const [state, setState] = useState(initState);
 
@@ -33,10 +37,13 @@ const Account = ({user}) => {
                 id: state.user.id,
                 firstName: state.user.firstName,
                 lastName: state.user.lastName,
-                balance: Number(state.user.balance)
+                balance: toFloat(state.user.balance)
             }
         },
-        refetchQueries: [{query: userQueries.GET_USER}]
+        refetchQueries: [
+            {query: userQueries.GET_USER_WITH_BALANCE},
+            {query: walletQueries.GET_WALLETS},
+        ]
     });
 
     const getAccountHeader = () => {
@@ -47,7 +54,10 @@ const Account = ({user}) => {
         }
     }
 
-    const onUserChange = (event, {name, value}) => {
+    const onUserChange = (event, {name, type, value}) => {
+        if (type === 'number' && !isValidNumber(value)) {
+            return;
+        }
         setState({...state, user: {...state.user, [name]: value}});
     };
 

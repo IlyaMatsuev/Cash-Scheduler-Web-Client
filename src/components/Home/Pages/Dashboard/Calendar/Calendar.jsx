@@ -2,6 +2,7 @@ import React from 'react';
 import {Grid, Container} from 'semantic-ui-react';
 import moment from 'moment';
 import styles from './Calendar.module.css';
+import {toFloat} from '../../../../../utils/UtilHooks';
 
 
 const DISPLAY_WEEKS = 6;
@@ -11,7 +12,7 @@ const getSummaryByDate = (transactions, date, type, key = 'date') => {
     const summary = transactions
         .filter(t => t.category.type.name === type && t[key] === date)
         .reduce((a, b) => a + b.amount, 0);
-    return summary > 0 ? summary : null;
+    return summary > 0 ? toFloat(summary) : null;
 };
 
 const getCalendarDays = (targetDate, startDate, transactions, recurringTransactions) => {

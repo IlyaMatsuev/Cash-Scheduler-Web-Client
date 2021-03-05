@@ -1,0 +1,12 @@
+.walletItem {
+    cursor: pointer;
+}
+
+.walletItem:hover {
+    background-color: #f5faff !important;
+}
+
+.defaultLabel {
+    margin-top: .05rem !important;
+    margin-left: .05rem !important;
+}

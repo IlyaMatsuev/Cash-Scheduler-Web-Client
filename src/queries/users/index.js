@@ -5,10 +5,17 @@ export default {
         query {
             user {
                 id
+            }
+        }
+    `,
+    GET_USER_WITH_BALANCE: gql`
+        query {
+            balance
+            user {
+                id
                 firstName
                 lastName
                 email
-                balance
             }
         }
     `,

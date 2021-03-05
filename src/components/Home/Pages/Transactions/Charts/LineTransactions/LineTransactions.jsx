@@ -75,7 +75,7 @@ const LineTransactions = ({transactions = [], recurringTransactions = [], transa
 
     return (
         <Container fluid>
-            <Dimmer active={transactionsLoading || transactionsError} inverted>
+            <Dimmer active={transactionsLoading || !!transactionsError} inverted>
                 <Loader inverted>Loading</Loader>
             </Dimmer>
             {!isRecurring && <Line data={getChartData(transactions)} options={options} height={125}/>}

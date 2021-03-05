@@ -1,7 +1,7 @@
 import {gql} from '@apollo/client';
 
 export default {
-    GET_ALL_USER_CATEGORIES_WITH_TYPES: gql`
+    GET_ALL_USER_CATEGORIES_WITH_TYPES_AND_WALLETS: gql`
         query($typeName: String) {
             transactionTypes {
                 name
@@ -11,6 +11,14 @@ export default {
                 id
                 name
                 iconUrl
+            }
+            wallets {
+                id
+                name
+                currency {
+                    abbreviation
+                    iconUrl
+                }
             }
         }
     `,

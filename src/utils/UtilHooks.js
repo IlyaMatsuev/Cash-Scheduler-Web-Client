@@ -2,7 +2,7 @@ import {useMutation} from '@apollo/client';
 import {useHistory} from 'react-router-dom';
 import userMutations from '../mutations/users';
 import errorDefs from './ErrorDefinitions';
-import {auth, pages, server} from '../config';
+import {auth, global, pages, server} from '../config';
 
 
 export function useLogin(variables, onError) {
@@ -27,14 +27,22 @@ export function useLogin(variables, onError) {
 export function onUIErrors(error, setErrors, errors) {
     if (error.graphQLErrors?.length > 0 && error.graphQLErrors[0].extensions?.data.fields) {
         const newError = error.graphQLErrors[0];
-        newError.data.fields.forEach(fieldName => {
-            errors[fieldName] = newError.message;
-        });
+        if (newError.data.fields) {
+            newError.data.fields.forEach(fieldName => {
+                errors[fieldName] = newError.message;
+            });
+        } else {
+            errors['general'] = newError.message;
+        }
     } else if (Object.keys(error.networkError).length > 0 && error.networkError.result.errors[0].extensions) {
         const newError = error.networkError.result.errors[0];
-        newError.extensions.fields.forEach(fieldName => {
-            errors[fieldName] = newError.message;
-        });
+        if (newError.extensions.fields) {
+            newError.extensions.fields.forEach(fieldName => {
+                errors[fieldName] = newError.message;
+            });
+        } else {
+            errors['general'] = newError.message;
+        }
     } else {
         Object.keys(errors).forEach(errorField => {
             errors[errorField] = errorDefs.CONNECTION_ERROR;
@@ -51,4 +59,18 @@ export function isUrlAbsolute(url) {
 
 export function convertToValidIconUrl(url) {
     return isUrlAbsolute(url) ? url : `${server.root}${url}`
+}
+
+export function isValidNumber(value) {
+    return global.numberInputRegExp.test(value) && !isNaN(Number(value));
+}
+
+export function onNumberInput(event) {
+    if (!isValidNumber(event.target.value)) {
+        event.target.value = event.target.value.slice(0, -1);
+    }
+}
+
+export function toFloat(value) {
+    return Number(Number(value).toFixed(2));
 }

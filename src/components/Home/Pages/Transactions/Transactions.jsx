@@ -5,7 +5,7 @@ import {useMutation, useQuery} from '@apollo/client';
 import LineTransactions from './Charts/LineTransactions/LineTransactions';
 import DoughnutTransactions from './Charts/DoughnutTransactions/DoughnutTransactions';
 import TransactionList from './TransactionList/TransactionList';
-import {onUIErrors} from '../../../../utils/UtilHooks';
+import {isValidNumber, onUIErrors, toFloat} from '../../../../utils/UtilHooks';
 import errorDefs from '../../../../utils/ErrorDefinitions';
 import {global} from '../../../../config';
 import userQueries from '../../../../queries/users';
@@ -40,7 +40,7 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
                 year: moment(state.selectedTransaction.date).year(),
             }
         },
-        {query: userQueries.GET_USER}
+        {query: userQueries.GET_USER_WITH_BALANCE}
     ];
 
 
@@ -67,7 +67,7 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
             transaction: {
                 id: state.selectedTransaction.id,
                 title: state.selectedTransaction.title,
-                amount: Number(state.selectedTransaction.amount),
+                amount: toFloat(state.selectedTransaction.amount),
                 date: state.selectedTransaction.date
             }
         }
@@ -84,7 +84,7 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
             transaction: {
                 id: state.selectedTransaction.id,
                 title: state.selectedTransaction.title,
-                amount: Number(state.selectedTransaction.amount)
+                amount: toFloat(state.selectedTransaction.amount)
             }
         }
     });
@@ -144,7 +144,10 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
         setErrors({});
     };
 
-    const onSelectedTransactionChange = (event, {name, value}) => {
+    const onSelectedTransactionChange = (event, {name, type, value}) => {
+        if (type === 'number' && !isValidNumber(value)) {
+            return;
+        }
         setState({...state, selectedTransaction: {...state.selectedTransaction, [name]: value}});
         setErrors({...errors, [name]: undefined});
     };

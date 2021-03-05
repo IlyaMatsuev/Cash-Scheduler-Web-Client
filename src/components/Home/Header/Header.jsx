@@ -9,11 +9,12 @@ import Account from '../Account/Account';
 import userQueries from '../../../queries/users';
 import settingQueries from '../../../queries/settings';
 import {pages} from '../../../config';
+import {toFloat} from '../../../utils/UtilHooks';
 
 
 const Header = ({client, onToggleMenu, onBalanceClick}) => {
 
-    const {data: userQueryData} = useQuery(userQueries.GET_USER);
+    const {data: userQueryData} = useQuery(userQueries.GET_USER_WITH_BALANCE);
 
     const {data: settingQueryData} = useQuery(settingQueries.GET_SETTING, {
         variables: {
@@ -36,12 +37,12 @@ const Header = ({client, onToggleMenu, onBalanceClick}) => {
                     <Grid.Column>
                         {userQueryData?.user && settingQueryData?.setting && settingQueryData.setting.value === 'true' &&
                             <div className={styles.balanceContainer} onClick={onBalanceClick}>
-                                Balance: <span>{userQueryData.user.balance}</span>
+                                Balance: <span>{toFloat(userQueryData.balance)}</span>
                             </div>
                         }
                     </Grid.Column>
                     <Grid.Column>
-                        {userQueryData?.user && <Account user={userQueryData.user}/>}
+                        {userQueryData?.user && <Account user={userQueryData.user} balance={userQueryData.balance}/>}
                     </Grid.Column>
                     <Grid.Column>
                         <Button inverted color="grey" onClick={onLogOut} loading={loading}>

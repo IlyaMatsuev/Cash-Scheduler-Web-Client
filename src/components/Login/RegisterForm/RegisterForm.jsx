@@ -3,7 +3,7 @@ import {useMutation} from '@apollo/client';
 import {Form, Button, Container, Segment, Header, Message} from 'semantic-ui-react';
 import ErrorsList from '../../../utils/ErrorsList/ErrorsList';
 import errorDefs from '../../../utils/ErrorDefinitions';
-import {onUIErrors, useLogin} from '../../../utils/UtilHooks';
+import {isValidNumber, onUIErrors, toFloat, useLogin} from '../../../utils/UtilHooks';
 import SecretField from '../../../utils/SecretField';
 import userMutations from '../../../mutations/users';
 import {dev} from '../../../config';
@@ -48,7 +48,7 @@ const RegisterForm = ({goToLogin}) => {
         variables: {
             firstName: state.firstName,
             lastName: state.lastName,
-            balance: Number(state.balance),
+            balance: toFloat(state.balance),
             email: state.email,
             password: state.password
         }
@@ -62,8 +62,10 @@ const RegisterForm = ({goToLogin}) => {
         }
     };
 
-    const onChange = event => {
-        const {name, value} = event.target;
+    const onChange = (event, {name, value, type}) => {
+        if (type === 'number' && !isValidNumber(value)) {
+            return;
+        }
         setState({...state, [name]: value});
         setErrors({...errors, [name]: undefined});
     };
@@ -80,7 +82,7 @@ const RegisterForm = ({goToLogin}) => {
                     <Form.Input fluid icon="user" iconPosition="left" placeholder="Last Name" type="text"
                                 name="lastName" value={state.lastName} error={!!errors.lastName} onChange={onChange}/>
                     <Form.Input fluid icon="dollar" iconPosition="left" placeholder="Current Balance" type="number"
-                                name="balance" value={state.balance} error={!!errors.balance} onChange={onChange}/>
+                                name="balance" value={toFloat(state.balance)} error={!!errors.balance} onChange={onChange}/>
 
                     <Form.Input fluid icon="mail" iconPosition="left" placeholder="Email" type="email"
                                 name="email" value={state.email} error={!!errors.email} onChange={onChange}/>

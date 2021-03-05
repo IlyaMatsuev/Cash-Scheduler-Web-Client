@@ -51,6 +51,14 @@ export default {
                     }
                     iconUrl
                 }
+                wallet {
+                    id
+                    name
+                    currency {
+                        abbreviation
+                        iconUrl
+                    }
+                }
                 amount
                 date
             }
@@ -65,6 +73,14 @@ export default {
                         iconUrl
                     }
                     iconUrl
+                }
+                wallet {
+                    id
+                    name
+                    currency {
+                        abbreviation
+                        iconUrl
+                    }
                 }
                 amount
                 date

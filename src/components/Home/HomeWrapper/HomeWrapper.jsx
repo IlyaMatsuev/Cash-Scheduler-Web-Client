@@ -1,22 +1,25 @@
 import React, {useState} from 'react';
-import {Icon, Menu, Segment, Sidebar} from 'semantic-ui-react';
+import {Menu, Segment, Sidebar} from 'semantic-ui-react';
 import Header from '../Header/Header';
 import CurrentPage from '../Pages/CurrentPage/CurrentPage';
 import moment from 'moment';
 import styles from './HomeWrapper.module.css';
+import MenuItem from './MenuItem/MenuItem';
+import {pages} from '../../../config';
 
 
-const pagesByIndexes = {
-    dashboard: 0,
-    transactions: 1,
-    categories: 2,
-    settings: 3
+const pagesConfiguration = {
+    [pages.names.dashboard]: {iconName: 'calendar check outline'},
+    [pages.names.wallets]: {iconName: 'briefcase'},
+    [pages.names.transactions]: {iconName: 'money bill alternate outline'},
+    [pages.names.categories]: {iconName: 'th'},
+    [pages.names.settings]: {iconName: 'setting'}
 };
 
 const HomeWrapper = () => {
     const initialState = {
         visible: false,
-        pageIndex: 0,
+        pageIndex: 1,
         transactions: {
             currentDate: moment(),
             isRecurringView: false
@@ -26,7 +29,7 @@ const HomeWrapper = () => {
 
 
     const onBalanceClick = () => {
-        setState({...state, pageIndex: pagesByIndexes['transactions']});
+        setState({...state, pageIndex: Object.keys(pagesConfiguration).indexOf(pages.names.transactions)});
     };
 
     const onToggleMenu = () => setState({...state, visible: !state.visible});
@@ -34,7 +37,7 @@ const HomeWrapper = () => {
     const onHideMenu = () => setState({...state, visible: false});
 
     const onMenuItemSelected = (event, data) => {
-        setState({...state, visible: false, pageIndex: pagesByIndexes[data.name]});
+        setState({...state, visible: false, pageIndex: Object.keys(pagesConfiguration).indexOf(data.name)});
     };
 
     const onTransactionPropsChange = ({name, value}) => {
@@ -46,29 +49,21 @@ const HomeWrapper = () => {
         <Sidebar.Pushable as={Segment} className={styles.sidebar}>
             <Sidebar as={Menu} animation="slide along" inverted width="wide" vertical dimmed="true"
                      visible={state.visible} onHide={onHideMenu}>
-                <Menu.Item as="a" className="text-center" name="dashboard" onClick={onMenuItemSelected}>
-                    Dashboard
-                    <Icon name="calendar check outline"/>
-                </Menu.Item>
-                <Menu.Item as="a" className="text-center" name="transactions" onClick={onMenuItemSelected}>
-                    Transactions
-                    <Icon name="money bill alternate outline"/>
-                </Menu.Item>
-                <Menu.Item as="a" className="text-center" name="categories" onClick={onMenuItemSelected}>
-                    Categories
-                    <Icon name="th"/>
-                </Menu.Item>
-                <Menu.Item as="a" className="text-center" name="settings" onClick={onMenuItemSelected}>
-                    Settings
-                    <Icon name="setting"/>
-                </Menu.Item>
+                {
+                    Object.keys(pagesConfiguration).map(page => (
+                        <MenuItem key={page} name={page}
+                                  iconName={pagesConfiguration[page].iconName}
+                                  onMenuItemSelected={onMenuItemSelected}/>
+                    ))
+                }
             </Sidebar>
 
             <Sidebar.Pusher dimmed={state.visible} className="fullHeight">
                 <Segment basic className="fullHeight p-0">
                     <Header onToggleMenu={onToggleMenu} onBalanceClick={onBalanceClick}/>
                     <CurrentPage index={state.pageIndex}
-                                 transactionsProps={state.transactions} onTransactionPropsChange={onTransactionPropsChange}/>
+                                 transactionsProps={state.transactions}
+                                 onTransactionPropsChange={onTransactionPropsChange}/>
                 </Segment>
             </Sidebar.Pusher>
         </Sidebar.Pushable>

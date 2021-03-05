@@ -12,10 +12,19 @@ export const auth = {
 };
 export const pages = {
     loginUrl: '/',
-    homeUrl: '/home'
+    homeUrl: '/home',
+    names: {
+        dashboard: 'dashboard',
+        wallets: 'wallets',
+        transactions: 'transactions',
+        categories: 'categories',
+        settings: 'settings'
+    }
 };
 export const global = {
-    dateFormat: 'YYYY-MM-DD'
+    dateFormat: 'YYYY-MM-DD',
+    numberInputRegExp: /^[\d.,]+$/,
+    defaultCurrency: 'USD'
 };
 export const dev = {
     user: {

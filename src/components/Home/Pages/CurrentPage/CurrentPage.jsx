@@ -4,6 +4,7 @@ import Dashboard from '../Dashboard/Dashboard';
 import Transactions from '../Transactions/Transactions';
 import Categories from '../Categories/Categories';
 import Settings from '../Settings/Settings';
+import Wallets from '../Wallets/Wallets';
 
 
 const CurrentPage = ({index, transactionsProps, onTransactionPropsChange}) => {
@@ -11,6 +12,7 @@ const CurrentPage = ({index, transactionsProps, onTransactionPropsChange}) => {
     const pages = [
         <Dashboard currentDate={transactionsProps.currentDate}
                    onTransactionPropsChange={onTransactionPropsChange}/>,
+        <Wallets/>,
         <Transactions currentDate={transactionsProps.currentDate}
                       isRecurringView={transactionsProps.isRecurringView}
                       onTransactionPropsChange={onTransactionPropsChange}/>,

@@ -1,5 +1,6 @@
 import React from 'react';
 import {Button, Form} from 'semantic-ui-react';
+import {toFloat} from '../../../../utils/UtilHooks';
 
 
 const UserForm = ({user, errors, onUserChange, onUserUpdate}) => {
@@ -12,7 +13,7 @@ const UserForm = ({user, errors, onUserChange, onUserUpdate}) => {
             <Form.Input icon="mail" label="Email" type="text" disabled name="emailName"
                         value={user.email}/>
             <Form.Input icon="dollar" label="Balance" type="number" name="balance"
-                        value={user.balance} error={errors.balance} onChange={onUserChange}/>
+                        value={toFloat(user.balance)} error={errors.balance} onChange={onUserChange}/>
             <Button primary fluid>Save</Button>
         </Form>
     );

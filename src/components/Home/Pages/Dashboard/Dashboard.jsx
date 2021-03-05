@@ -5,7 +5,7 @@ import TransactionForm from '../Transactions/TransactionForm/TransactionForm';
 import styles from './Dashboard.module.css';
 import moment from 'moment';
 import {useMutation, useQuery} from '@apollo/client';
-import {onUIErrors} from '../../../../utils/UtilHooks';
+import {isValidNumber, onUIErrors, toFloat} from '../../../../utils/UtilHooks';
 import errorDefs from '../../../../utils/ErrorDefinitions';
 import {global} from '../../../../config';
 import userQueries from '../../../../queries/users';
@@ -49,11 +49,17 @@ const Dashboard = ({currentDate, onTransactionPropsChange}) => {
         refetchQueries: [{
             query: transactionQueries.GET_DASHBOARD_TRANSACTIONS,
             variables: {month: currentDate.month() + 1, year: currentDate.year()}
-        }, {query: userQueries.GET_USER}],
+        }, {
+            query: transactionQueries.GET_TRANSACTIONS_BY_MONTH,
+            variables: {
+                month: moment(state.transaction.date).month() + 1,
+                year: moment(state.transaction.date).year()
+            }
+        }, {query: userQueries.GET_USER_WITH_BALANCE}],
         variables: {
             transaction: {
                 title: state.transaction.title,
-                amount: Number(state.transaction.amount),
+                amount: toFloat(state.transaction.amount),
                 categoryId: state.transaction.categoryId,
                 date: state.transaction.date
             }
@@ -73,11 +79,17 @@ const Dashboard = ({currentDate, onTransactionPropsChange}) => {
         refetchQueries: [{
             query: transactionQueries.GET_DASHBOARD_TRANSACTIONS,
             variables: {month: currentDate.month() + 1, year: currentDate.year()}
-        }, {query: userQueries.GET_USER}],
+        }, {
+            query: transactionQueries.GET_TRANSACTIONS_BY_MONTH,
+            variables: {
+                month: moment(state.transaction.nextTransactionDate).month() + 1,
+                year: moment(state.transaction.nextTransactionDate).year()
+            }
+        }, {query: userQueries.GET_USER_WITH_BALANCE}],
         variables: {
             transaction: {
                 title: state.transaction.title,
-                amount: Number(state.transaction.amount),
+                amount: toFloat(state.transaction.amount),
                 categoryId: state.transaction.categoryId,
                 nextTransactionDate: state.transaction.nextTransactionDate,
                 interval: state.transaction.interval
@@ -143,7 +155,10 @@ const Dashboard = ({currentDate, onTransactionPropsChange}) => {
         }
     };
 
-    const onTransactionChange = (event, {name, value}) => {
+    const onTransactionChange = (event, {name, value, type}) => {
+        if (type === 'number' && !isValidNumber(value)) {
+            return;
+        }
         if (name === 'type') {
             state.transaction.category = '';
         }

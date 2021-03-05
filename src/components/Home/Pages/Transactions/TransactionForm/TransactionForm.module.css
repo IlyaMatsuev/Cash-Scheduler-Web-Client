@@ -2,3 +2,17 @@
     width: 13rem !important;
     border: 1px solid rgba(34, 36, 38, .15) !important;
 }
+
+.categoriesDropdown > div[role="listbox"] {
+    height: 8rem;
+}
+
+.walletsDropdown > div[role="listbox"] {
+    height: 8rem;
+}
+
+.walletsDropdown > div[role="listbox"] > div[role="option"] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap !important;
+}
