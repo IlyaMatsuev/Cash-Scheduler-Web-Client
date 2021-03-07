@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "author": {
     "name": "Ilya Matsuev",
-    "email": "mirotvorec542546@gmail.com",
+    "email": "ilya.matsuev.personal@gmail.com",
     "url": "https://github.com/IlyaMatsuev"
   },
   "engines": {
@@ -24,6 +24,7 @@
     "react-scripts": "^3.4.3",
     "react-semantic-toasts": "^0.6.5",
     "react-spring": "^8.0.27",
+    "react-use-gesture": "^9.1.2",
     "semantic-ui-calendar-react": "^0.15.3",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.0.0",

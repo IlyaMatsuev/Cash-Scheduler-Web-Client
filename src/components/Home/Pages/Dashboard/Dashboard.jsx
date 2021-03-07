@@ -61,6 +61,7 @@ const Dashboard = ({currentDate, onTransactionPropsChange}) => {
                 title: state.transaction.title,
                 amount: toFloat(state.transaction.amount),
                 categoryId: state.transaction.categoryId,
+                walletId: state.transaction.walletId,
                 date: state.transaction.date
             }
         }
@@ -91,6 +92,7 @@ const Dashboard = ({currentDate, onTransactionPropsChange}) => {
                 title: state.transaction.title,
                 amount: toFloat(state.transaction.amount),
                 categoryId: state.transaction.categoryId,
+                walletId: state.transaction.walletId,
                 nextTransactionDate: state.transaction.nextTransactionDate,
                 interval: state.transaction.interval
             }

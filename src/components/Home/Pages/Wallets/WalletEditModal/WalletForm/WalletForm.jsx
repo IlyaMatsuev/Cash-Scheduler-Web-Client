@@ -1,13 +1,11 @@
 import React from 'react';
-import moment from 'moment';
 import {Checkbox, Dropdown, Grid, Input} from 'semantic-ui-react';
-import ErrorsList from '../../../../../utils/ErrorsList/ErrorsList';
-import {convertToValidIconUrl, onNumberInput, toFloat} from '../../../../../utils/UtilHooks';
-import currencyQueries from '../../../../../queries/currencies';
-import currencyMutations from '../../../../../mutations/currencies';
-import {useLazyQuery, useMutation, useQuery} from '@apollo/client';
+import ErrorsList from '../../../../../../utils/ErrorsList/ErrorsList';
+import {convertToValidIconUrl, toFloat} from '../../../../../../utils/UtilHooks';
+import currencyQueries from '../../../../../../queries/currencies';
+import {useQuery} from '@apollo/client';
 import styles from './WalletForm.module.css';
-import {global} from '../../../../../config';
+import ExchangeRatesDropdown from '../../ExchangeRatesDropdown/ExchangeRatesDropdown';
 
 
 const WalletForm = ({wallet, errors, onChange, isEditing}) => {
@@ -16,47 +14,6 @@ const WalletForm = ({wallet, errors, onChange, isEditing}) => {
         loading: currenciesQueryLoading,
         error: currenciesQueryError,
     } = useQuery(currencyQueries.GET_CURRENCIES);
-
-    const [
-        getRates,
-        {data: ratesQueryData, loading: ratesQueryLoading, error: ratesQueryError, called}
-    ] = useLazyQuery(currencyQueries.GET_RATES_BY_SOURCE_AND_TARGET, {
-        variables: {
-            source: wallet.originalCurrency,
-            target: wallet.currencyAbbreviation
-        }
-    });
-
-    const [
-        createExchangeRate,
-        {loading: createExchangeRateLoading, error: createExchangeRateError}
-    ] = useMutation(currencyMutations.CREATE_EXCHANGE_RATE);
-
-
-    const onNewRateAdd = (event, {value}) => {
-        createExchangeRate({
-            variables: {
-                exchangeRate: {
-                    sourceCurrencyAbbreviation: wallet.originalCurrency,
-                    targetCurrencyAbbreviation: wallet.currencyAbbreviation,
-                    exchangeRate: Number(Number(value)?.toFixed(2)),
-                    validFrom: moment().format(global.dateFormat),
-                    validTo: moment().format(global.dateFormat)
-                }
-            },
-            refetchQueries: [{
-                query: currencyQueries.GET_RATES_BY_SOURCE_AND_TARGET,
-                variables: {
-                    source: wallet.originalCurrency,
-                    target: wallet.currencyAbbreviation
-                }
-            }]
-        })
-    };
-
-    if (isEditing && wallet.convertBalance && !called) {
-        getRates();
-    }
 
     return (
         <Grid columns={2} padded centered>
@@ -96,21 +53,10 @@ const WalletForm = ({wallet, errors, onChange, isEditing}) => {
             <Grid.Row>
                 <Grid.Column>
                     {wallet.convertBalance
-                    && <Dropdown deburr scrolling search selection lazyLoad
-                                 loading={
-                                     ratesQueryLoading || createExchangeRateLoading
-                                     || !!ratesQueryError || !!createExchangeRateError}
-                                 placeholder="Exchange Rate" name="exchangeRate"
-                                 allowAdditions additionLabel="Add Exchange Rate: " onAddItem={onNewRateAdd}
-                                 error={!!errors.exchangeRate}
-                                 value={wallet.exchangeRate}
-                                 onChange={onChange} onInput={onNumberInput}
-                                 options={
-                                     (ratesQueryData && ratesQueryData.exchangeRates.map(rate => ({
-                                         key: rate.id,
-                                         text: rate.exchangeRate.toFixed(2),
-                                         value: rate.exchangeRate.toFixed(2)
-                                     }))) || []}
+                    && <ExchangeRatesDropdown value={wallet.exchangeRate} error={!!errors.exchangeRate}
+                                              sourceCurrency={wallet.originalCurrency}
+                                              targetCurrency={wallet.currencyAbbreviation}
+                                              onChange={onChange}
                     />}
                 </Grid.Column>
                 <Grid.Column>

@@ -1,21 +1,23 @@
 import React, {useState} from 'react';
-import {Grid, Segment} from 'semantic-ui-react';
+import {Segment} from 'semantic-ui-react';
 import walletQueries from '../../../../queries/wallets';
 import {useQuery} from '@apollo/client';
-import WalletItem from './WalletItem/WalletItem';
-import colors from './colors';
 import WalletEditModal from './WalletEditModal/WalletEditModal';
 import {isValidNumber} from '../../../../utils/UtilHooks';
-import NewWalletButton from './NewWalletButton/NewWalletButton';
 import {global} from '../../../../config';
+import WalletList from './WalletList/WaleltList';
+import WalletTransferModal from './WalletTransferModal/WalletTransferModal';
 
 
 const Wallets = () => {
     const initState = {
         walletModalOpen: false,
+        walletTransferModalOpen: false,
         isWalletEditing: true,
         newWalletSpinnerActive: false,
-        selectedWallet: {}
+        selectedWallet: {},
+        sourceTransferWallet: {},
+        targetTransferWallet: {}
     };
     const [state, setState] = useState(initState);
 
@@ -25,14 +27,7 @@ const Wallets = () => {
         error: walletsQueryError
     } = useQuery(walletQueries.GET_WALLETS);
 
-    const getItemColor = i => {
-        while (colors.length < i) {
-            i -= colors.length;
-        }
-        return colors[i];
-    }
-
-    const onWalletModalToggle = (wallet = {}, isEditing = true) => {
+    const onWalletEditModalToggle = (wallet = {}, isEditing = true) => {
         setState({
             ...state,
             selectedWallet: {
@@ -43,6 +38,15 @@ const Wallets = () => {
             walletModalOpen: !state.walletModalOpen,
             isWalletEditing: isEditing,
             newWalletSpinnerActive: !isEditing && !state.walletModalOpen
+        });
+    };
+
+    const onWalletTransferModalToggle = (sourceWallet = {}, targetWallet = {}) => {
+        setState({
+            ...state,
+            walletTransferModalOpen: !state.walletTransferModalOpen,
+            sourceTransferWallet: sourceWallet,
+            targetTransferWallet: targetWallet
         });
     };
 
@@ -72,7 +76,7 @@ const Wallets = () => {
     };
 
     const onNewWallet = () => {
-        onWalletModalToggle(
+        onWalletEditModalToggle(
             {
                 name: '',
                 balance: 0,
@@ -89,21 +93,26 @@ const Wallets = () => {
                  className="fullHeight"
                  padded="very"
         >
-            <Grid columns={6}>
-                <NewWalletButton onClick={onNewWallet} loading={state.newWalletSpinnerActive}/>
-                {walletsQueryData && walletsQueryData.wallets.map((wallet, i) => (
-                    <WalletItem key={wallet.id} color={getItemColor(i)}
-                                wallet={wallet} onWalletSelected={onWalletModalToggle}
-                    />))
-                }
-            </Grid>
+            {walletsQueryData &&
+            <WalletList wallets={walletsQueryData.wallets}
+                        newWalletSpinnerActive={state.newWalletSpinnerActive}
+                        onNewWallet={onNewWallet}
+                        onWalletSelected={onWalletEditModalToggle}
+                        onWalletsTransfer={onWalletTransferModalToggle}
+            />}
 
             <WalletEditModal open={state.walletModalOpen}
                              isEditing={state.isWalletEditing}
                              wallet={state.selectedWallet}
                              onWalletChange={onWalletChange}
                              onWalletActionComplete={onWalletActionComplete}
-                             onModalToggle={onWalletModalToggle}
+                             onModalToggle={onWalletEditModalToggle}
+            />
+
+            <WalletTransferModal open={state.walletTransferModalOpen}
+                                 sourceWallet={state.sourceTransferWallet}
+                                 targetWallet={state.targetTransferWallet}
+                                 onModalToggle={onWalletTransferModalToggle}
             />
         </Segment>
     );

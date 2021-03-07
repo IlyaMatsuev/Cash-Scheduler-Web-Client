@@ -1,12 +1,13 @@
 import React from 'react';
-import {Grid, Input, Dropdown, Button, Header} from 'semantic-ui-react';
+import {Grid, Input, Dropdown, Button} from 'semantic-ui-react';
 import {DateInput} from 'semantic-ui-calendar-react';
 import {useQuery} from '@apollo/client';
 import ErrorsList from '../../../../../utils/ErrorsList/ErrorsList';
 import styles from './TransactionForm.module.css';
 import categoriesQueries from '../../../../../queries/categories';
-import {convertToValidIconUrl, onNumberInput, toFloat} from '../../../../../utils/UtilHooks';
+import {convertToValidIconUrl, toFloat} from '../../../../../utils/UtilHooks';
 import {global} from '../../../../../config';
+import WalletsDropdown from '../../Wallets/WalletsDropdown/WalletsDropdown';
 
 
 const recurringTransactionIntervals = [
@@ -19,10 +20,10 @@ const recurringTransactionIntervals = [
 const TransactionForm = ({isRecurring = false, isEditing = false, transaction, errors, onChange}) => {
 
     const {
-        data: categoriesWithTypesAndWallets,
-        loading: categoriesWithTypesAndWalletsLoading,
-        error: categoriesWithTypesAndWalletsError
-    } = useQuery(categoriesQueries.GET_ALL_USER_CATEGORIES_WITH_TYPES_AND_WALLETS, {
+        data: categoriesWithTypes,
+        loading: categoriesWithTypesLoading,
+        error: categoriesWithTypesError
+    } = useQuery(categoriesQueries.GET_ALL_USER_CATEGORIES_WITH_TYPES, {
         variables: {typeName: transaction.type || transaction.category?.type?.name}
     });
 
@@ -56,8 +57,9 @@ const TransactionForm = ({isRecurring = false, isEditing = false, transaction, e
                         <Dropdown className={styles.categoriesDropdown} button deburr fluid scrolling
                                   search selection placeholder="Category" name="categoryId" error={!!errors.categoryId}
                                   value={transaction.category?.id} onChange={onChange} disabled={isEditing}
+                                  loading={categoriesWithTypesLoading || !!categoriesWithTypesError}
                                   options={
-                                      (categoriesWithTypesAndWallets && categoriesWithTypesAndWallets.allCategories.map(category => ({
+                                      (categoriesWithTypes && categoriesWithTypes.allCategories.map(category => ({
                                           key: category.id,
                                           value: category.id,
                                           text: category.name,
@@ -65,8 +67,9 @@ const TransactionForm = ({isRecurring = false, isEditing = false, transaction, e
                                       }))) || []}/>
                         <Dropdown button floating name="type" disabled={isEditing}
                                   value={transaction.type || transaction.category?.type?.name} onChange={onChange}
+                                  loading={categoriesWithTypesLoading || !!categoriesWithTypesError}
                                   options={
-                                      categoriesWithTypesAndWallets && categoriesWithTypesAndWallets.transactionTypes.map(type => ({
+                                      categoriesWithTypes && categoriesWithTypes.transactionTypes.map(type => ({
                                           key: type.name,
                                           text: type.name,
                                           value: type.name
@@ -77,25 +80,10 @@ const TransactionForm = ({isRecurring = false, isEditing = false, transaction, e
             </Grid.Row>
             <Grid.Row>
                 <Grid.Column>
-                    <Dropdown deburr scrolling search selection
-                              loading={categoriesWithTypesAndWalletsLoading || categoriesWithTypesAndWalletsError}
-                              disabled={isEditing} className={styles.walletsDropdown}
-                              placeholder="Wallet" name="walletId"
-                              error={!!errors.walletId}
-                              value={transaction.walletId || transaction.wallet?.id}
-                              onChange={onChange}
-                              options={
-                                  (categoriesWithTypesAndWallets && categoriesWithTypesAndWallets.wallets.map(wallet => ({
-                                      key: wallet.id,
-                                      value: wallet.id,
-                                      text: `${wallet.currency.abbreviation} - ${wallet.name}`,
-                                      content: (
-                                          <Header as="span" size="tiny" textAlign="center">
-                                              {wallet.currency.abbreviation} - {wallet.name}
-                                          </Header>
-                                      ),
-                                      image: {avatar: true, src: convertToValidIconUrl(wallet.currency.iconUrl)}
-                                  }))) || []}
+                    <WalletsDropdown value={transaction.walletId || transaction.wallet?.id}
+                                     error={!!errors.walletId}
+                                     onChange={onChange}
+                                     disabled={isEditing}
                     />
                 </Grid.Column>
                 <Grid.Column>

@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import {Button, Confirm, Modal} from 'semantic-ui-react';
-import WalletForm from '../WalletForm/WalletForm';
+import WalletForm from './WalletForm/WalletForm';
 import walletQueries from '../../../../../queries/wallets';
+import userQueries from '../../../../../queries/users';
 import walletMutations from '../../../../../mutations/wallets';
 import {useMutation} from '@apollo/client';
 import {onUIErrors, toFloat} from '../../../../../utils/UtilHooks';
@@ -25,8 +26,7 @@ const WalletEditModal = ({open, isEditing, wallet, onWalletChange, onWalletActio
                 currencyAbbreviation: wallet.currencyAbbreviation,
                 isDefault: wallet.isDefault
             }
-        },
-        refetchQueries: [{query: walletQueries.GET_WALLETS}]
+        }
     });
 
     const [updateWallet, {loading: updateWalletLoading}] = useMutation(walletMutations.UPDATE_WALLET, {
@@ -42,8 +42,7 @@ const WalletEditModal = ({open, isEditing, wallet, onWalletChange, onWalletActio
                 convertBalance: wallet.convertBalance,
                 exchangeRate: toFloat(wallet.exchangeRate)
             }
-        },
-        refetchQueries: [{query: walletQueries.GET_WALLETS}]
+        }
     });
 
     const [deleteWallet, {loading: deleteWalletLoading}] = useMutation(walletMutations.DELETE_WALLET, {
@@ -73,10 +72,14 @@ const WalletEditModal = ({open, isEditing, wallet, onWalletChange, onWalletActio
     };
 
     const onSave = () => {
+        const refetchQueries = [{query: walletQueries.GET_WALLETS}];
+        if (wallet.isDefault) {
+            refetchQueries.push({query: userQueries.GET_USER_WITH_BALANCE});
+        }
         if (isEditing) {
-            updateWallet();
+            updateWallet({refetchQueries});
         } else {
-            createWallet();
+            createWallet({refetchQueries});
         }
         setErrors({});
     };

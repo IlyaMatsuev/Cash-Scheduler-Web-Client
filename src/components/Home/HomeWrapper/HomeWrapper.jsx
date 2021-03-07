@@ -19,7 +19,7 @@ const pagesConfiguration = {
 const HomeWrapper = () => {
     const initialState = {
         visible: false,
-        pageIndex: 1,
+        pageIndex: 0,
         transactions: {
             currentDate: moment(),
             isRecurringView: false

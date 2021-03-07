@@ -21,5 +21,17 @@ export default {
                 id
             }
         }
-    `
+    `,
+    CREATE_TRANSFER: gql`
+        mutation($transfer: NewTransferInput!) {
+            createTransfer(transfer: $transfer) {
+                sourceWallet {
+                    id
+                }
+                targetWallet {
+                    id
+                }
+            }
+        }
+    `,
 };
