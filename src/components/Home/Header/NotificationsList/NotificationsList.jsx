@@ -6,6 +6,7 @@ import notificationQueries from '../../../../queries/notifications';
 import notificationMutations from '../../../../mutations/notifications';
 import notificationFragments from '../../../../fragments/notifications';
 import NotificationReadModal from './NotificationReadModal/NotificationReadModal';
+import {updateEntityCache} from "../../../../utils/UtilHooks";
 
 
 const NotificationsList = () => {
@@ -23,15 +24,19 @@ const NotificationsList = () => {
         error: notificationsError
     } = useQuery(notificationQueries.GET_NOTIFICATIONS);
 
-    const [toggleReadNotification] = useMutation(notificationMutations.TOGGLE_READ_NOTIFICATION, {
+    const [
+        toggleReadNotification,
+        {loading: toggleNotificationLoading}
+    ] = useMutation(notificationMutations.TOGGLE_READ_NOTIFICATION, {
         update: (cache, result) => {
             if (result?.data) {
                 const updatedNotification = result.data.toggleReadNotification;
-                cache.writeFragment({
-                    id: `UserNotification:${updatedNotification.id}`,
-                    fragment: notificationFragments.TOGGLE_NOTIFICATION,
-                    data: {isRead: updatedNotification.isRead}
-                });
+                updateEntityCache(
+                    cache,
+                    updatedNotification,
+                    notificationFragments.TOGGLE_NOTIFICATION,
+                    {isRead: updatedNotification.isRead}
+                );
                 cache.modify({
                     fields: {
                         unreadNotificationsCount(currentValueRef) {
@@ -71,10 +76,10 @@ const NotificationsList = () => {
 
     return (
         <Popup open={state.notificationsListOpen} position="bottom left" flowing
-            trigger={<Label className={styles.notificationsListPopup} onClick={onNotificationsListToggle}>
-                <Icon name="mail"/>
-                {notifications?.unreadNotificationsCount > 0 ? notifications.unreadNotificationsCount : ''}
-            </Label>}>
+               trigger={<Label className={styles.notificationsListPopup} onClick={onNotificationsListToggle}>
+                   <Icon name="mail"/>
+                   {notifications?.unreadNotificationsCount > 0 ? notifications.unreadNotificationsCount : ''}
+               </Label>}>
             <Popup.Content>
                 <Container fluid className={styles.notificationsListContainer}>
                     <Segment basic className="content scrolling" loading={notificationsLoading || !!notificationsError}>
@@ -88,8 +93,8 @@ const NotificationsList = () => {
                                         className={styles.notificationTitle}>
                                     {notification.title}
                                 </Header>
-                                <Button inverted={!notification.isRead} size="tiny"
-                                        icon={notification.isRead ? 'envelope' : 'envelope open'}
+                                <Button inverted={!notification.isRead} size="tiny" loading={toggleNotificationLoading}
+                                        icon={notification.isRead ? 'envelope open' : 'envelope'}
                                         onClick={() => toggleNotification(notification.id, !notification.isRead)}
                                 />
                             </Segment>

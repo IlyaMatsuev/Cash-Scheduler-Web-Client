@@ -5,6 +5,12 @@ export default {
         mutation($category: NewCategoryInput!) {
             createCategory(category: $category) {
                 id
+                name
+                type {
+                    name
+                }
+                isCustom
+                iconUrl
             }
         }
     `,
@@ -12,6 +18,8 @@ export default {
         mutation($category: UpdateCategoryInput!) {
             updateCategory(category: $category) {
                 id
+                name
+                iconUrl
             }
         }
     `,

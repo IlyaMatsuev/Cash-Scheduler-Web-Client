@@ -5,6 +5,24 @@ export default {
         mutation($transaction: NewTransactionInput!) {
             createTransaction(transaction: $transaction) {
                 id
+                title
+                category {
+                    id
+                    name
+                    type {
+                        name
+                        iconUrl
+                    }
+                    iconUrl
+                }
+                wallet {
+                    id
+                    name
+                    currency {
+                        abbreviation
+                        iconUrl
+                    }
+                }
                 amount
                 date
             }
@@ -14,6 +32,8 @@ export default {
         mutation($transaction: UpdateTransactionInput!) {
             updateTransaction(transaction: $transaction) {
                 id
+                title
+                amount
                 date
             }
         }
@@ -29,13 +49,28 @@ export default {
         mutation($transaction: NewRecurringTransactionInput!) {
             createRegularTransaction(transaction: $transaction) {
                 id
-                amount
-                nextTransactionDate
+                title
                 category {
+                    id
+                    name
                     type {
                         name
+                        iconUrl
+                    }
+                    iconUrl
+                }
+                wallet {
+                    id
+                    name
+                    currency {
+                        abbreviation
+                        iconUrl
                     }
                 }
+                amount
+                date
+                nextTransactionDate
+                interval
             }
         }
     `,
@@ -43,8 +78,8 @@ export default {
         mutation($transaction: UpdateRecurringTransactionInput!) {
             updateRegularTransaction(transaction: $transaction) {
                 id
-                date
-                nextTransactionDate
+                title
+                amount
             }
         }
     `,

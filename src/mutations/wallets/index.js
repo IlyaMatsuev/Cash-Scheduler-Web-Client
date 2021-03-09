@@ -5,6 +5,14 @@ export default {
         mutation($wallet: NewWalletInput!) {
             createWallet(wallet: $wallet) {
                 id
+                name
+                balance
+                currency {
+                    abbreviation
+                    name
+                    iconUrl
+                }
+                isDefault
             }
         }
     `,
@@ -12,6 +20,14 @@ export default {
         mutation($wallet: UpdateWalletInput!) {
             updateWallet(wallet: $wallet) {
                 id
+                name
+                balance
+                currency {
+                    abbreviation
+                    name
+                    iconUrl
+                }
+                isDefault
             }
         }
     `,
@@ -27,9 +43,11 @@ export default {
             createTransfer(transfer: $transfer) {
                 sourceWallet {
                     id
+                    balance
                 }
                 targetWallet {
                     id
+                    balance
                 }
             }
         }

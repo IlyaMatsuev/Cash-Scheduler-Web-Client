@@ -3,6 +3,7 @@
     border: 1px solid rgba(34, 36, 38, .15) !important;
 }
 
+.intervalDropdown > div[role="listbox"],
 .categoriesDropdown > div[role="listbox"] {
     height: 8rem;
 }

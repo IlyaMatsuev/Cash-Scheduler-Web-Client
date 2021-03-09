@@ -12,7 +12,7 @@ import settingQueries from '../../../queries/settings';
 import notificationSubscriptions from '../../../subscriptions/notifications';
 import notificationFragments from '../../../fragments/notifications';
 import {pages, notifications} from '../../../config';
-import {toFloat} from '../../../utils/UtilHooks';
+import {createEntityCache, toFloat} from '../../../utils/UtilHooks';
 import useSound from 'use-sound';
 import {getSetting} from '../../../utils/SettingHelper';
 import newNotificationSound from '../../../sounds/new-notification.mp3';
@@ -31,20 +31,16 @@ const Header = ({client, onToggleMenu, onBalanceClick}) => {
     useSubscription(notificationSubscriptions.ON_NOTIFICATION_CREATED, {
         onSubscriptionData: ({client, subscriptionData}) => {
             const newNotification = subscriptionData.data.onNotificationCreated;
-
+            createEntityCache(
+                client.cache,
+                newNotification,
+                ['notifications'],
+                notificationFragments.NEW_NOTIFICATION,
+                {},
+                true
+            );
             client.cache.modify({
                 fields: {
-                    notifications(existingNotificationRefs = [], {readField}) {
-                        const newNotificationRef = client.cache.writeFragment({
-                            data: newNotification,
-                            fragment: notificationFragments.NEW_NOTIFICATION
-                        });
-
-                        if (existingNotificationRefs.some(ref => readField('id', ref) === newNotification.id)) {
-                            return existingNotificationRefs;
-                        }
-                        return [newNotificationRef, ...existingNotificationRefs];
-                    },
                     unreadNotificationsCount(currentValueRef) {
                         return currentValueRef + 1;
                     }

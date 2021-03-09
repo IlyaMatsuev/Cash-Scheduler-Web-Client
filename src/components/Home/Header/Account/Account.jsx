@@ -2,10 +2,10 @@ import React, {useState} from 'react';
 import {Header, Button, Container, Popup, Divider, Segment} from 'semantic-ui-react';
 import UserForm from './UserForm/UserForm';
 import {useMutation} from '@apollo/client';
-import {isValidNumber, onUIErrors, toFloat} from '../../../../utils/UtilHooks';
-import userQueries from '../../../../queries/users';
+import {isValidNumber, onUIErrors, toFloat, updateEntityCache} from '../../../../utils/UtilHooks';
 import walletQueries from '../../../../queries/wallets';
 import userMutations from '../../../../mutations/users';
+import userFragments from '../../../../fragments/users';
 
 
 const Account = ({user, balance}) => {
@@ -21,6 +21,15 @@ const Account = ({user, balance}) => {
 
     const [updateUser, {loading: updateUserLoading}] = useMutation(userMutations.UPDATE_USER, {
         onError: error => onUIErrors(error, setErrors, errors),
+        update: (cache, result) => {
+            if (result?.data) {
+                const updatedUser = result.data.updateUser;
+                updateEntityCache(cache, updatedUser, userFragments.UPDATED_USER, {
+                    firstName: updatedUser.firstName,
+                    lastName: updatedUser.lastName
+                });
+            }
+        },
         variables: {
             user: {
                 id: state.user.id,
@@ -29,10 +38,7 @@ const Account = ({user, balance}) => {
                 balance: toFloat(state.user.balance)
             }
         },
-        refetchQueries: [
-            {query: userQueries.GET_USER_WITH_BALANCE},
-            {query: walletQueries.GET_WALLETS},
-        ]
+        refetchQueries: [{query: walletQueries.GET_WALLETS}]
     });
 
     const getAccountHeader = () => {

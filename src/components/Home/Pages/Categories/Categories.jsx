@@ -2,12 +2,13 @@ import React, {useState} from 'react';
 import {Button, Container, Grid, Modal, Segment, Tab, Dimmer, Loader, Confirm} from 'semantic-ui-react';
 import NewCategoryForm from './NewCategory/NewCategoryForm';
 import {useMutation, useQuery} from '@apollo/client';
-import {onUIErrors} from '../../../../utils/UtilHooks';
+import {createEntityCache, onUIErrors, removeEntityCache, updateEntityCache} from '../../../../utils/UtilHooks';
 import CategoriesList from './CategoriesList/CategoriesList';
 import EditCategoryForm from './EditCategory/EditCategoryForm';
 import styles from './Categories.module.css';
 import categoriesQueries from '../../../../queries/categories';
 import categoryMutations from '../../../../mutations/categories';
+import categoryFragments from '../../../../fragments/categories';
 
 
 const Categories = () => {
@@ -36,14 +37,37 @@ const Categories = () => {
     const [createCategory, {loading: createCategoryLoading}] = useMutation(categoryMutations.CREATE_CATEGORY, {
         onCompleted: () => setState(initialState),
         onError: error => onUIErrors(error, setErrors, errors),
-        refetchQueries: [{query: categoriesQueries.GET_CATEGORIES_WITH_TYPES}],
+        update: (cache, result) => {
+            if (result?.data) {
+                const createdCategory = result.data.createCategory;
+                createEntityCache(
+                    cache,
+                    createdCategory,
+                    ['customCategories', 'allCategories'],
+                    categoryFragments.NEW_CATEGORY
+                );
+            }
+        },
         variables: {category: state.newCategory}
     });
 
     const [updateCategory, {loading: updateCategoryLoading}] = useMutation(categoryMutations.UPDATE_CATEGORY, {
         onCompleted: () => setState(initialState),
         onError: error => onUIErrors(error, setErrors, errors),
-        refetchQueries: [{query: categoriesQueries.GET_CATEGORIES_WITH_TYPES}],
+        update: (cache, result) => {
+            if (result?.data) {
+                const updatedCategory = result.data.updateCategory;
+                updateEntityCache(
+                    cache,
+                    updatedCategory,
+                    categoryFragments.NEW_CATEGORY,
+                    {
+                        name: updatedCategory.name,
+                        iconUrl: updatedCategory.iconUrl
+                    }
+                );
+            }
+        },
         variables: {
             category: {
                 id: state.category.id,
@@ -56,7 +80,15 @@ const Categories = () => {
     const [deleteCategory, {loading: deleteCategoryLoading}] = useMutation(categoryMutations.DELETE_CATEGORY, {
         onCompleted: () => setState(initialState),
         onError: error => onUIErrors(error, setErrors, errors),
-        refetchQueries: [{query: categoriesQueries.GET_CATEGORIES_WITH_TYPES}],
+        update: (cache, result) => {
+            if (result?.data) {
+                removeEntityCache(
+                    cache,
+                    result.data.deleteCategory,
+                    ['customCategories', 'allCategories']
+                );
+            }
+        },
         variables: {id: state.category.id}
     });
 

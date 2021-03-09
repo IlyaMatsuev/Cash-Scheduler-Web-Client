@@ -5,7 +5,7 @@ import walletQueries from '../../../../../queries/wallets';
 import userQueries from '../../../../../queries/users';
 import walletMutations from '../../../../../mutations/wallets';
 import {useMutation} from '@apollo/client';
-import {onUIErrors, toFloat} from '../../../../../utils/UtilHooks';
+import {onUIErrors, removeEntityCache, toFloat} from '../../../../../utils/UtilHooks';
 
 
 const WalletEditModal = ({open, isEditing, wallet, onWalletChange, onWalletActionComplete, onModalToggle}) => {
@@ -48,8 +48,12 @@ const WalletEditModal = ({open, isEditing, wallet, onWalletChange, onWalletActio
     const [deleteWallet, {loading: deleteWalletLoading}] = useMutation(walletMutations.DELETE_WALLET, {
         onCompleted: () => onWalletActionComplete(),
         onError: error => onUIErrors(error, setErrors, errors),
-        variables: {id: wallet.id},
-        refetchQueries: [{query: walletQueries.GET_WALLETS}]
+        update: (cache, result) => {
+            if (result?.data) {
+                removeEntityCache(cache, result.data.deleteWallet, ['wallets']);
+            }
+        },
+        variables: {id: wallet.id}
     });
 
 

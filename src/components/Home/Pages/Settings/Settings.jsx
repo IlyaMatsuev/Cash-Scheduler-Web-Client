@@ -5,6 +5,7 @@ import {useMutation, useQuery} from '@apollo/client';
 import settingQueries from '../../../../queries/settings';
 import settingMutations from '../../../../mutations/settings';
 import settingFragments from '../../../../fragments/settings';
+import {updateEntityCache} from "../../../../utils/UtilHooks";
 
 
 const Settings = () => {
@@ -26,7 +27,19 @@ const Settings = () => {
     const [
         updateSetting,
         {loading: updateSettingLoading, error: updateSettingError}
-    ] = useMutation(settingMutations.UPDATE_SETTING);
+    ] = useMutation(settingMutations.UPDATE_SETTING, {
+        update: (cache, result) => {
+            if (result?.data) {
+                const updatedSetting = result.data.updateUserSetting;
+                updateEntityCache(
+                    cache,
+                    updatedSetting,
+                    settingFragments.NEW_SETTING_VALUE,
+                    {value: updatedSetting.value}
+                );
+            }
+        }
+    });
 
 
     const onMenuItem = (event, {name}) => {
@@ -39,16 +52,6 @@ const Settings = () => {
                 setting: {
                     name: setting.setting.name,
                     value: String(checked)
-                }
-            },
-            update: (cache, result) => {
-                if (result?.data) {
-                    const updatedSetting = result.data.updateUserSetting;
-                    cache.writeFragment({
-                        id: `UserSetting:${updatedSetting.id}`,
-                        fragment: settingFragments.NEW_SETTING_VALUE,
-                        data: {value: updatedSetting.value}
-                    });
                 }
             }
         })

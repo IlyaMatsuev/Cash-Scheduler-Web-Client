@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
 import {Button, Modal} from 'semantic-ui-react';
+import {useMutation} from '@apollo/client';
 import WalletTransferForm from './WalletTransferForm/WalletTransferForm';
-import {isValidNumber, onUIErrors, toFloat} from '../../../../../utils/UtilHooks';
-import walletQueries from '../../../../../queries/wallets';
+import {isValidNumber, onUIErrors, toFloat, updateEntityCache} from '../../../../../utils/UtilHooks';
 import userQueries from '../../../../../queries/users';
 import walletMutations from '../../../../../mutations/wallets';
-import {useMutation} from '@apollo/client';
+import walletFragments from '../../../../../fragments/wallets';
 
 
 const WalletTransferModal = ({open, sourceWallet, targetWallet, onModalToggle}) => {
@@ -23,6 +23,23 @@ const WalletTransferModal = ({open, sourceWallet, targetWallet, onModalToggle}) 
     const [createTransfer, {loading: createTransferLoading}] = useMutation(walletMutations.CREATE_TRANSFER, {
         onCompleted: () => onTransferModalToggle(),
         onError: error => onUIErrors(error, setErrors, errors),
+        update: (cache, result) => {
+            if (result?.data) {
+                const createdTransfer = result.data.createTransfer;
+                updateEntityCache(
+                    cache,
+                    createdTransfer.sourceWallet,
+                    walletFragments.UPDATE_WALLET_AFTER_TRANSFER,
+                    {balance: createdTransfer.sourceWallet.balance}
+                );
+                updateEntityCache(
+                    cache,
+                    createdTransfer.targetWallet,
+                    walletFragments.UPDATE_WALLET_AFTER_TRANSFER,
+                    {balance: createdTransfer.targetWallet.balance}
+                );
+            }
+        },
         variables: {
             transfer: {
                 sourceWalletId: state.transfer.sourceWalletId || sourceWallet.id,
@@ -31,10 +48,7 @@ const WalletTransferModal = ({open, sourceWallet, targetWallet, onModalToggle}) 
                 exchangeRate: toFloat(state.transfer.exchangeRate)
             }
         },
-        refetchQueries: [
-            {query: walletQueries.GET_WALLETS},
-            {query: userQueries.GET_USER_WITH_BALANCE}
-        ]
+        refetchQueries: [{query: userQueries.GET_USER_WITH_BALANCE}]
     });
 
 

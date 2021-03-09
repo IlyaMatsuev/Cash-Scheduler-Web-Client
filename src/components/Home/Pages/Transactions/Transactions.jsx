@@ -5,12 +5,13 @@ import {useMutation, useQuery} from '@apollo/client';
 import LineTransactions from './Charts/LineTransactions/LineTransactions';
 import DoughnutTransactions from './Charts/DoughnutTransactions/DoughnutTransactions';
 import TransactionList from './TransactionList/TransactionList';
-import {isValidNumber, onUIErrors, toFloat} from '../../../../utils/UtilHooks';
+import {isValidNumber, onUIErrors, removeEntityCache, toFloat, updateEntityCache} from '../../../../utils/UtilHooks';
 import errorDefs from '../../../../utils/ErrorDefinitions';
 import {global} from '../../../../config';
 import userQueries from '../../../../queries/users';
 import transactionQueries from '../../../../queries/transactions';
 import transactionMutations from '../../../../mutations/transactions';
+import transactionFragments from '../../../../fragments/transactions';
 import TransactionModal from './TransactionModal/TransactionModal';
 
 
@@ -23,26 +24,7 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
         selectedTransaction: {}
     };
     const [state, setState] = useState(initialState);
-
     const [errors, setErrors] = useState({});
-
-    const refetchQueries = [
-        {
-            query: transactionQueries.GET_TRANSACTIONS_BY_MONTH,
-            variables: {
-                month: currentDate.month() + 1,
-                year: currentDate.year(),
-            },
-        }, {
-            query: transactionQueries.GET_TRANSACTIONS_BY_MONTH,
-            variables: {
-                month: moment(state.selectedTransaction.date).month() + 1,
-                year: moment(state.selectedTransaction.date).year(),
-            }
-        },
-        {query: userQueries.GET_USER_WITH_BALANCE}
-    ];
-
 
     const {
         loading: transactionsLoading,
@@ -55,14 +37,28 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
         }
     });
 
-
     const [
         updateTransaction,
         {loading: updateTransactionLoading}
     ] = useMutation(transactionMutations.UPDATE_TRANSACTION, {
         onCompleted: () => onSelectedTransactionToggle(),
         onError: error => onUIErrors(error, setErrors, errors),
-        refetchQueries,
+        update: (cache, result) => {
+            if (result?.data) {
+                const updatedTransaction = result.data.updateTransaction;
+                updateEntityCache(
+                    cache,
+                    updatedTransaction,
+                    transactionFragments.UPDATED_TRANSACTION,
+                    {
+                        title: updatedTransaction.title,
+                        amount: updatedTransaction.amount,
+                        date: updatedTransaction.date
+                    }
+                );
+            }
+        },
+        refetchQueries: [{query: userQueries.GET_USER_WITH_BALANCE}],
         variables: {
             transaction: {
                 id: state.selectedTransaction.id,
@@ -79,7 +75,20 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
     ] = useMutation(transactionMutations.UPDATE_RECURRING_TRANSACTION, {
         onCompleted: () => onSelectedTransactionToggle(),
         onError: error => onUIErrors(error, setErrors, errors),
-        refetchQueries,
+        update: (cache, result) => {
+            if (result?.data) {
+                const updatedTransaction = result.data.updateRegularTransaction;
+                updateEntityCache(
+                    cache,
+                    updatedTransaction,
+                    transactionFragments.UPDATED_RECURRING_TRANSACTION,
+                    {
+                        title: updatedTransaction.title,
+                        amount: updatedTransaction.amount
+                    }
+                );
+            }
+        },
         variables: {
             transaction: {
                 id: state.selectedTransaction.id,
@@ -95,7 +104,16 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
     ] = useMutation(transactionMutations.DELETE_TRANSACTION, {
         onCompleted: () => onSelectedTransactionToggle(),
         onError: error => onUIErrors(error, setErrors, errors),
-        refetchQueries,
+        update: (cache, result) => {
+            if (result?.data) {
+                removeEntityCache(
+                    cache,
+                    result.data.deleteTransaction,
+                    ['dashboardTransactions', 'transactionsByMonth']
+                );
+            }
+        },
+        refetchQueries: [{query: userQueries.GET_USER_WITH_BALANCE}],
         variables: {id: state.selectedTransaction.id}
     });
 
@@ -105,7 +123,15 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
     ] = useMutation(transactionMutations.DELETE_RECURRING_TRANSACTION, {
         onCompleted: () => onSelectedTransactionToggle(),
         onError: error => onUIErrors(error, setErrors, errors),
-        refetchQueries,
+        update: (cache, result) => {
+            if (result?.data) {
+                removeEntityCache(
+                    cache,
+                    result.data.deleteRegularTransaction,
+                    ['dashboardRecurringTransactions', 'recurringTransactionsByMonth']
+                );
+            }
+        },
         variables: {id: state.selectedTransaction.id}
     });
 

@@ -52,6 +52,8 @@ export default {
         mutation($user: UpdateUserInput!) {
             updateUser(user: $user) {
                 id
+                firstName
+                lastName
             }
         }
     `

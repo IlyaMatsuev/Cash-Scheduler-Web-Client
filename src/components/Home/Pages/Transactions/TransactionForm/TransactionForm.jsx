@@ -89,6 +89,7 @@ const TransactionForm = ({isRecurring = false, isEditing = false, transaction, e
                 <Grid.Column>
                     {isRecurring &&
                     <Dropdown search selection name="interval" disabled={isEditing}
+                              className={styles.intervalDropdown}
                               error={!!errors.interval} value={transaction.interval} onChange={onChange}
                               options={recurringTransactionIntervals}
                     />}
