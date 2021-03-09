@@ -4,7 +4,7 @@ import {useLazyQuery} from '@apollo/client';
 import {useSpring, animated} from 'react-spring';
 import ErrorsList from '../../../utils/ErrorsList/ErrorsList';
 import {onUIErrors} from '../../../utils/UtilHooks';
-import userQueries from '../../../queries/users';
+import userQueries from '../../../graphql/queries/users';
 
 
 const ForgotPasswordForm = ({goToResetPassword, goBackToLogin}) => {

@@ -1,6 +1,6 @@
 import {useMutation} from '@apollo/client';
 import {useHistory} from 'react-router-dom';
-import userMutations from '../mutations/users';
+import userMutations from '../graphql/mutations/users';
 import errorDefs from './ErrorDefinitions';
 import {auth, global, pages, server} from '../config';
 

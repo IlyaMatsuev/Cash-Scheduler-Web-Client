@@ -5,7 +5,7 @@ import ErrorsList from '../../../utils/ErrorsList/ErrorsList';
 import errorDefs from '../../../utils/ErrorDefinitions';
 import {isValidNumber, onUIErrors, toFloat, useLogin} from '../../../utils/UtilHooks';
 import SecretField from '../../../utils/SecretField';
-import userMutations from '../../../mutations/users';
+import userMutations from '../../../graphql/mutations/users';
 import {dev} from '../../../config';
 
 

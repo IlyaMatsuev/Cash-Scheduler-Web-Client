@@ -3,9 +3,9 @@ import {Header, Button, Container, Popup, Divider, Segment} from 'semantic-ui-re
 import UserForm from './UserForm/UserForm';
 import {useMutation} from '@apollo/client';
 import {isValidNumber, onUIErrors, toFloat, updateEntityCache} from '../../../../utils/UtilHooks';
-import walletQueries from '../../../../queries/wallets';
-import userMutations from '../../../../mutations/users';
-import userFragments from '../../../../fragments/users';
+import walletQueries from '../../../../graphql/queries/wallets';
+import userMutations from '../../../../graphql/mutations/users';
+import userFragments from '../../../../graphql/fragments/users';
 
 
 const Account = ({user, balance}) => {

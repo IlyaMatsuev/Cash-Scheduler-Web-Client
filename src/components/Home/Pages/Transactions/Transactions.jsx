@@ -8,10 +8,10 @@ import TransactionList from './TransactionList/TransactionList';
 import {isValidNumber, onUIErrors, removeEntityCache, toFloat, updateEntityCache} from '../../../../utils/UtilHooks';
 import errorDefs from '../../../../utils/ErrorDefinitions';
 import {global} from '../../../../config';
-import userQueries from '../../../../queries/users';
-import transactionQueries from '../../../../queries/transactions';
-import transactionMutations from '../../../../mutations/transactions';
-import transactionFragments from '../../../../fragments/transactions';
+import userQueries from '../../../../graphql/queries/users';
+import transactionQueries from '../../../../graphql/queries/transactions';
+import transactionMutations from '../../../../graphql/mutations/transactions';
+import transactionFragments from '../../../../graphql/fragments/transactions';
 import TransactionModal from './TransactionModal/TransactionModal';
 
 

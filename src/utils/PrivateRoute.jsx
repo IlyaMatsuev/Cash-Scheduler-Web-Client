@@ -2,7 +2,7 @@ import React from 'react';
 import {Route} from 'react-router-dom';
 import decode from 'jwt-decode';
 import {useQuery} from '@apollo/client';
-import userQueries from '../queries/users';
+import userQueries from '../graphql/queries/users';
 
 
 const PrivateRoute = ({component: Component, ...props}) => {

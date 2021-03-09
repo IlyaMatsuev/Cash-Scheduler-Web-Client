@@ -2,7 +2,7 @@ import React from 'react';
 import {Checkbox, Dropdown, Grid, Input} from 'semantic-ui-react';
 import ErrorsList from '../../../../../../utils/ErrorsList/ErrorsList';
 import {convertToValidIconUrl, toFloat} from '../../../../../../utils/UtilHooks';
-import currencyQueries from '../../../../../../queries/currencies';
+import currencyQueries from '../../../../../../graphql/queries/currencies';
 import {useQuery} from '@apollo/client';
 import styles from './WalletForm.module.css';
 import ExchangeRatesDropdown from '../../ExchangeRatesDropdown/ExchangeRatesDropdown';

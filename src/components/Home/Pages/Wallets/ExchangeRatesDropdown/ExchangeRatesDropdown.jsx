@@ -3,8 +3,8 @@ import {Dropdown} from 'semantic-ui-react';
 import moment from 'moment';
 import {useQuery, useMutation} from '@apollo/client';
 import {onNumberInput, toFloat} from '../../../../../utils/UtilHooks';
-import currencyQueries from '../../../../../queries/currencies';
-import currencyMutations from '../../../../../mutations/currencies';
+import currencyQueries from '../../../../../graphql/queries/currencies';
+import currencyMutations from '../../../../../graphql/mutations/currencies';
 import styles from './ExchangeRatesDropdown.module.css';
 import {global} from '../../../../../config';
 

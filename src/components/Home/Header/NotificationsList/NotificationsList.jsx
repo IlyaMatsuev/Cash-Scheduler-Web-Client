@@ -2,9 +2,9 @@ import React, {useState} from 'react';
 import {Button, Container, Divider, Header, Icon, Label, Popup, Segment} from 'semantic-ui-react';
 import styles from './NotificationsList.module.css';
 import {useMutation, useQuery} from '@apollo/client';
-import notificationQueries from '../../../../queries/notifications';
-import notificationMutations from '../../../../mutations/notifications';
-import notificationFragments from '../../../../fragments/notifications';
+import notificationQueries from '../../../../graphql/queries/notifications';
+import notificationMutations from '../../../../graphql/mutations/notifications';
+import notificationFragments from '../../../../graphql/fragments/notifications';
 import NotificationReadModal from './NotificationReadModal/NotificationReadModal';
 import {updateEntityCache} from "../../../../utils/UtilHooks";
 

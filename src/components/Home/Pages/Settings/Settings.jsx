@@ -2,9 +2,9 @@ import React, {useState} from 'react';
 import {Menu, Grid, Segment} from 'semantic-ui-react';
 import SettingTab from './Tab/SettingTab';
 import {useMutation, useQuery} from '@apollo/client';
-import settingQueries from '../../../../queries/settings';
-import settingMutations from '../../../../mutations/settings';
-import settingFragments from '../../../../fragments/settings';
+import settingQueries from '../../../../graphql/queries/settings';
+import settingMutations from '../../../../graphql/mutations/settings';
+import settingFragments from '../../../../graphql/fragments/settings';
 import {updateEntityCache} from "../../../../utils/UtilHooks";
 
 

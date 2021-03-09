@@ -5,7 +5,7 @@ import WalletsDropdown from '../../WalletsDropdown/WalletsDropdown';
 import {toFloat} from '../../../../../../utils/UtilHooks';
 import ExchangeRatesDropdown from '../../ExchangeRatesDropdown/ExchangeRatesDropdown';
 import {useQuery} from '@apollo/client';
-import walletQueries from '../../../../../../queries/wallets';
+import walletQueries from '../../../../../../graphql/queries/wallets';
 
 
 const WalletTransferForm = ({transfer, sourceWallet, targetWallet, errors, onChange}) => {

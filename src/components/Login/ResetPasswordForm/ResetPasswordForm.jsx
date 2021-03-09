@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Button, Container, Form, Header, Segment} from 'semantic-ui-react';
 import {useMutation} from '@apollo/client';
-import userMutations from '../../../mutations/users';
+import userMutations from '../../../graphql/mutations/users';
 import errorDefs from '../../../utils/ErrorDefinitions';
 import ErrorsList from '../../../utils/ErrorsList/ErrorsList';
 import SecretField from '../../../utils/SecretField';

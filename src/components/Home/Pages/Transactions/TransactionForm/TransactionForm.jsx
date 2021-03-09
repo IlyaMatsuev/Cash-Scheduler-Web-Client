@@ -4,7 +4,7 @@ import {DateInput} from 'semantic-ui-calendar-react';
 import {useQuery} from '@apollo/client';
 import ErrorsList from '../../../../../utils/ErrorsList/ErrorsList';
 import styles from './TransactionForm.module.css';
-import categoriesQueries from '../../../../../queries/categories';
+import categoriesQueries from '../../../../../graphql/queries/categories';
 import {convertToValidIconUrl, toFloat} from '../../../../../utils/UtilHooks';
 import {global} from '../../../../../config';
 import WalletsDropdown from '../../Wallets/WalletsDropdown/WalletsDropdown';

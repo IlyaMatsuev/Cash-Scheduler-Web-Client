@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {Button, Confirm, Modal} from 'semantic-ui-react';
 import WalletForm from './WalletForm/WalletForm';
-import walletQueries from '../../../../../queries/wallets';
-import userQueries from '../../../../../queries/users';
-import walletMutations from '../../../../../mutations/wallets';
+import walletQueries from '../../../../../graphql/queries/wallets';
+import userQueries from '../../../../../graphql/queries/users';
+import walletMutations from '../../../../../graphql/mutations/wallets';
 import {useMutation} from '@apollo/client';
 import {onUIErrors, removeEntityCache, toFloat} from '../../../../../utils/UtilHooks';
 

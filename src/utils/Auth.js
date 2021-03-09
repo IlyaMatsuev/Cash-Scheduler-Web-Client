@@ -1,5 +1,5 @@
 import {fromPromise} from '@apollo/client';
-import userMutations from '../mutations/users';
+import userMutations from '../graphql/mutations/users';
 import {auth, pages} from '../config';
 
 

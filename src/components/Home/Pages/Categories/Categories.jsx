@@ -6,9 +6,9 @@ import {createEntityCache, onUIErrors, removeEntityCache, updateEntityCache} fro
 import CategoriesList from './CategoriesList/CategoriesList';
 import EditCategoryForm from './EditCategory/EditCategoryForm';
 import styles from './Categories.module.css';
-import categoriesQueries from '../../../../queries/categories';
-import categoryMutations from '../../../../mutations/categories';
-import categoryFragments from '../../../../fragments/categories';
+import categoriesQueries from '../../../../graphql/queries/categories';
+import categoryMutations from '../../../../graphql/mutations/categories';
+import categoryFragments from '../../../../graphql/fragments/categories';
 
 
 const Categories = () => {

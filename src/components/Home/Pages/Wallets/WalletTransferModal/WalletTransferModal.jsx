@@ -3,9 +3,9 @@ import {Button, Modal} from 'semantic-ui-react';
 import {useMutation} from '@apollo/client';
 import WalletTransferForm from './WalletTransferForm/WalletTransferForm';
 import {isValidNumber, onUIErrors, toFloat, updateEntityCache} from '../../../../../utils/UtilHooks';
-import userQueries from '../../../../../queries/users';
-import walletMutations from '../../../../../mutations/wallets';
-import walletFragments from '../../../../../fragments/wallets';
+import userQueries from '../../../../../graphql/queries/users';
+import walletMutations from '../../../../../graphql/mutations/wallets';
+import walletFragments from '../../../../../graphql/fragments/wallets';
 
 
 const WalletTransferModal = ({open, sourceWallet, targetWallet, onModalToggle}) => {
