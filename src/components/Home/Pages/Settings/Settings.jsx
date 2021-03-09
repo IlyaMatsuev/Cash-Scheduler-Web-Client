@@ -4,6 +4,7 @@ import SettingTab from './Tab/SettingTab';
 import {useMutation, useQuery} from '@apollo/client';
 import settingQueries from '../../../../queries/settings';
 import settingMutations from '../../../../mutations/settings';
+import settingFragments from '../../../../fragments/settings';
 
 
 const Settings = () => {
@@ -40,16 +41,16 @@ const Settings = () => {
                     value: String(checked)
                 }
             },
-            refetchQueries: [{
-                query: settingQueries.GET_ALL_USER_SETTINGS,
-                variables: {unitName: state.activeUnit}
-            }, {
-                query: settingQueries.GET_SETTINGS,
-                variables: {unitName: state.activeUnit}
-            }, {
-                query: settingQueries.GET_SETTING,
-                variables: {name: setting.setting.name}
-            }]
+            update: (cache, result) => {
+                if (result?.data) {
+                    const updatedSetting = result.data.updateUserSetting;
+                    cache.writeFragment({
+                        id: `UserSetting:${updatedSetting.id}`,
+                        fragment: settingFragments.NEW_SETTING_VALUE,
+                        data: {value: updatedSetting.value}
+                    });
+                }
+            }
         })
     };
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button, Form} from 'semantic-ui-react';
-import {toFloat} from '../../../../utils/UtilHooks';
+import {toFloat} from '../../../../../utils/UtilHooks';
 
 
 const UserForm = ({user, errors, onUserChange, onUserUpdate}) => {

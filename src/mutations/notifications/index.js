@@ -5,6 +5,7 @@ export default {
         mutation($id: Int!, $read: Boolean!) {
             toggleReadNotification(id: $id, read: $read) {
                 id
+                isRead
             }
         }
     `

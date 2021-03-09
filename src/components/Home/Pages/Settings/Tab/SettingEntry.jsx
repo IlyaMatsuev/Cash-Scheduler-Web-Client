@@ -1,5 +1,5 @@
 import React from 'react';
-import {Checkbox, Container, Divider, Header, Input} from 'semantic-ui-react';
+import {Checkbox, Container, Divider, Input} from 'semantic-ui-react';
 import styles from './SettingsEntry.module.css';
 
 
@@ -20,8 +20,6 @@ const SettingEntry = ({setting, onSettingUpdate}) => {
 
     return (
         <Container fluid>
-            <Header as="h2">{setting.setting.sectionName}</Header>
-            <Divider/>
             <SettingInput/>
             <div className={styles.settingDescription}>
                 {setting.setting.description}

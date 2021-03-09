@@ -2,12 +2,12 @@ import React, {useRef} from 'react';
 import {Grid} from 'semantic-ui-react';
 import {useSprings, animated} from 'react-spring';
 import {useDrag} from 'react-use-gesture';
-import NewWalletButton from '../NewWalletButton/NewWalletButton';
+import NewWalletButton from './NewWalletButton/NewWalletButton';
 import WalletItem from './WalletItem/WalletItem';
 import colors from '../colors';
 
 
-const WalletList = ({wallets, onNewWallet, newWalletSpinnerActive, onWalletSelected, onWalletsTransfer}) => {
+const WalletList = ({wallets, onNewWallet, onWalletSelected, onWalletsTransfer}) => {
     const columnsCount = 6;
     const gridRef = useRef(null);
     let allowItemClick = false;
@@ -97,7 +97,7 @@ const WalletList = ({wallets, onNewWallet, newWalletSpinnerActive, onWalletSelec
     return (
         <div ref={gridRef}>
             <Grid columns={columnsCount}>
-                <NewWalletButton onClick={onNewWallet} loading={newWalletSpinnerActive}/>
+                <NewWalletButton onClick={onNewWallet}/>
                 {springs.map(({xys, zIndex, shadow, cursor}, i) => {
                     const animatedStyles = {
                         transform: xys.interpolate((x, y, s) => `translate3d(${x}px, ${y}px, 0) scale(${s})`),

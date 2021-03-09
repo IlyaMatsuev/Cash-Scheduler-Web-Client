@@ -26,6 +26,10 @@ export const global = {
     numberInputRegExp: /^[\d.,]+$/,
     defaultCurrency: 'USD'
 };
+export const notifications = {
+    volume: 0.5,
+    toastDuration: 3000
+};
 export const dev = {
     user: {
         email: 'mirotvorec542546@gmail.com',

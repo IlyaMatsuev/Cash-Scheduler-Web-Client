@@ -8,7 +8,7 @@ import {setContext} from '@apollo/client/link/context';
 import {onError} from '@apollo/client/link/error';
 import Routes from './routes';
 import {refreshTokens, setAuthHeaders} from './utils/Auth';
-import {server, auth} from './config';
+import {server} from './config';
 import 'semantic-ui-css/semantic.min.css';
 import './index.css';
 
@@ -18,12 +18,9 @@ let apolloClient;
 const httpLink = createHttpLink({uri: server.apiHttpEndpoint});
 
 const wsLink = new WebSocketLink({
-    uri: server.apiWSEndpoint,
+    uri: `${server.apiWSEndpoint}`,
     options: {
-        reconnect: true,
-        connectionParams: {
-            authToken: localStorage.getItem(auth.accessTokenName)
-        }
+        reconnect: true
     }
 });
 

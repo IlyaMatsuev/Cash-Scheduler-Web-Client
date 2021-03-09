@@ -1,22 +1,6 @@
 import {gql} from '@apollo/client';
 
 export default {
-    GET_SETTING: gql`
-        query($name: String!) {
-            setting(name: $name) {
-                id
-                value
-                setting {
-                    name
-                    label
-                    unitName
-                    sectionName
-                    valueType
-                    description
-                }
-            }
-        }
-    `,
     GET_SETTINGS: gql`
         query($unitName: String) {
             settings(unitName: $unitName) {

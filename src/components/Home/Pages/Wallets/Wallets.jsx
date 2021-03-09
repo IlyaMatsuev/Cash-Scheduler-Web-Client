@@ -14,7 +14,6 @@ const Wallets = () => {
         walletModalOpen: false,
         walletTransferModalOpen: false,
         isWalletEditing: true,
-        newWalletSpinnerActive: false,
         selectedWallet: {},
         sourceTransferWallet: {},
         targetTransferWallet: {}
@@ -36,8 +35,7 @@ const Wallets = () => {
                 originallyDefault: wallet.isDefault
             },
             walletModalOpen: !state.walletModalOpen,
-            isWalletEditing: isEditing,
-            newWalletSpinnerActive: !isEditing && !state.walletModalOpen
+            isWalletEditing: isEditing
         });
     };
 
@@ -95,7 +93,6 @@ const Wallets = () => {
         >
             {walletsQueryData &&
             <WalletList wallets={walletsQueryData.wallets}
-                        newWalletSpinnerActive={state.newWalletSpinnerActive}
                         onNewWallet={onNewWallet}
                         onWalletSelected={onWalletEditModalToggle}
                         onWalletsTransfer={onWalletTransferModalToggle}

@@ -63,7 +63,8 @@ const HomeWrapper = () => {
                     <Header onToggleMenu={onToggleMenu} onBalanceClick={onBalanceClick}/>
                     <CurrentPage index={state.pageIndex}
                                  transactionsProps={state.transactions}
-                                 onTransactionPropsChange={onTransactionPropsChange}/>
+                                 onTransactionPropsChange={onTransactionPropsChange}
+                    />
                 </Segment>
             </Sidebar.Pusher>
         </Sidebar.Pushable>
