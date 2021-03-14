@@ -7,6 +7,7 @@ import TransactionForm from '../TransactionForm/TransactionForm';
 const TransactionModal = ({
                               open,
                               isRecurring,
+                              isEditing = true,
                               transaction,
                               errors,
                               onModalToggle,
@@ -24,16 +25,17 @@ const TransactionModal = ({
         <Modal dimmer size="small" className={styles.transactionModal + ' modalContainer'}
                closeOnEscape closeOnDimmerClick
                open={open} onClose={onModalToggle}>
-            <Modal.Header>Edit {isRecurring && 'Recurring'} Transaction</Modal.Header>
+            <Modal.Header>{isEditing ? 'Edit' : 'New'} {isRecurring && 'Recurring'} Transaction</Modal.Header>
             <Modal.Content>
-                <TransactionForm transaction={transaction} errors={errors} isEditing
+                <TransactionForm transaction={transaction} errors={errors} isEditing={isEditing}
                                  isRecurring={isRecurring} onChange={onChange}/>
             </Modal.Content>
             <Modal.Actions>
                 <Button basic onClick={onModalToggle}>
                     Cancel
                 </Button>
-                <Button basic color="red" onClick={onDeleteModalToggle} loading={deleteLoading}>
+                {isEditing
+                && <Button basic color="red" onClick={onDeleteModalToggle} loading={deleteLoading}>
                     Delete
                     <Confirm className="modalContainer"
                              content={`Are you sure you want to delete the transaction?`}
@@ -41,7 +43,7 @@ const TransactionModal = ({
                              open={deleteModalOpen}
                              onCancel={onDeleteModalToggle} onConfirm={onDelete}
                     />
-                </Button>
+                </Button>}
                 <Button primary loading={saveLoading} onClick={onSave}>
                     Save
                 </Button>

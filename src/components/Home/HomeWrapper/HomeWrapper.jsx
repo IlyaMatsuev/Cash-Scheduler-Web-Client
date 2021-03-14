@@ -28,8 +28,11 @@ const HomeWrapper = () => {
     const [state, setState] = useState(initialState);
 
 
-    const onBalanceClick = () => {
-        setState({...state, pageIndex: Object.keys(pagesConfiguration).indexOf(pages.names.transactions)});
+    const onSectionClick = sectionName => {
+        const newPageIndex = Object.keys(pagesConfiguration).indexOf(sectionName);
+        if (state.pageIndex !== newPageIndex) {
+            setState({...state, pageIndex: newPageIndex});
+        }
     };
 
     const onToggleMenu = () => setState({...state, visible: !state.visible});
@@ -60,7 +63,7 @@ const HomeWrapper = () => {
 
             <Sidebar.Pusher dimmed={state.visible} className="fullHeight">
                 <Segment basic className="fullHeight p-0">
-                    <Header onToggleMenu={onToggleMenu} onBalanceClick={onBalanceClick}/>
+                    <Header onToggleMenu={onToggleMenu} onSectionClick={onSectionClick}/>
                     <CurrentPage index={state.pageIndex}
                                  transactionsProps={state.transactions}
                                  onTransactionPropsChange={onTransactionPropsChange}

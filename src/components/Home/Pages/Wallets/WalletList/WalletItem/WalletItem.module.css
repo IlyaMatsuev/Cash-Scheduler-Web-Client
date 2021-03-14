@@ -6,7 +6,9 @@
 }
 
 .walletItem:hover {
-    background-color: #f5faff !important;
+    transition: transform 500ms, background-color 1s;
+    transform: scale(1.05);
+    background-color: #D7E1E9 !important;
 }
 
 .defaultLabel {

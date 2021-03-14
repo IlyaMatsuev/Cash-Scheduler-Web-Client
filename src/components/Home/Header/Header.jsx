@@ -19,7 +19,7 @@ import newNotificationSound from '../../../sounds/new-notification.mp3';
 import NotificationsList from './NotificationsList/NotificationsList';
 
 
-const Header = ({client, onToggleMenu, onBalanceClick}) => {
+const Header = ({client, onToggleMenu, onSectionClick}) => {
     const [play] = useSound(newNotificationSound, {
         volume: notifications.volume
     });
@@ -74,13 +74,15 @@ const Header = ({client, onToggleMenu, onBalanceClick}) => {
         <nav className={styles.navbar + ' navbar navbar-dark'}>
             <div className="ml-3">
                 <Button onClick={onToggleMenu} icon="ellipsis horizontal" size="large" inverted/>
-                <a className="navbar-brand ml-3" href={pages.homeUrl}>Cash Scheduler</a>
+                <span className={styles.logo + ' navbar-brand ml-3'} onClick={() => onSectionClick(pages.names.dashboard)}>
+                    Cash Scheduler
+                </span>
             </div>
             <div>
                 <Grid columns={displayUnreadNotifications ? 4 : 3}>
                     <Grid.Column textAlign="center" width={5}>
                         {userQueryData?.user && getSetting('ShowBalance', settingsQueryData) &&
-                            <div className={styles.balanceContainer} onClick={onBalanceClick}>
+                            <div className={styles.balanceContainer} onClick={() => onSectionClick(pages.names.transactions)}>
                                 Balance: <span>{toFloat(userQueryData.balance)}</span>
                             </div>
                         }

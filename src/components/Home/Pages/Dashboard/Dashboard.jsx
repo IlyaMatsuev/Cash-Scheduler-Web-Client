@@ -1,36 +1,19 @@
 import React, {useState} from 'react';
 import Calendar from './Calendar/Calendar';
-import {Button, Container, Segment, Modal} from 'semantic-ui-react';
-import TransactionForm from '../Transactions/TransactionForm/TransactionForm';
+import {Button, Container, Segment} from 'semantic-ui-react';
 import styles from './Dashboard.module.css';
 import moment from 'moment';
-import {useMutation, useQuery} from '@apollo/client';
-import {createEntityCache, isValidNumber, onUIErrors, toFloat} from '../../../../utils/UtilHooks';
-import errorDefs from '../../../../utils/ErrorDefinitions';
-import {global} from '../../../../config';
-import userQueries from '../../../../graphql/queries/users';
+import {useQuery} from '@apollo/client';
 import transactionQueries from '../../../../graphql/queries/transactions';
-import transactionMutations from '../../../../graphql/mutations/transactions';
-import transactionFragments from '../../../../graphql/fragments/transactions';
+import NewTransactionModal from "../Transactions/NewTransactionModal/NewTransactionModal";
 
 
 const Dashboard = ({currentDate, onTransactionPropsChange}) => {
     const initialState = {
-        transactionModalOpened: false,
-        recurringTransactionModalOpened: false,
-        transaction: {
-            title: '',
-            amount: 0,
-            date: moment().format(global.dateFormat),
-            nextTransactionDate: moment().add(1, 'month').format(global.dateFormat),
-            categoryId: 0,
-            type: 'Expense',
-            interval: 'month'
-        }
+        transactionModalOpen: false,
+        isRecurring: false
     };
-    const initialTransactionErrors = {};
     const [state, setState] = useState(initialState);
-    const [transactionErrors, setTransactionErrors] = useState(initialTransactionErrors);
 
     const {
         loading: transactionsLoading,
@@ -39,104 +22,6 @@ const Dashboard = ({currentDate, onTransactionPropsChange}) => {
     } = useQuery(transactionQueries.GET_DASHBOARD_TRANSACTIONS, {
         variables: {month: currentDate.month() + 1, year: currentDate.year()}
     });
-
-    const [
-        createTransaction,
-        {loading: createTransactionLoading}
-    ] = useMutation(transactionMutations.CREATE_TRANSACTION, {
-        onCompleted() {
-            setState({...state, transactionModalOpened: false, transaction: initialState.transaction});
-        },
-        onError(error) {
-            onUIErrors(error, setTransactionErrors, transactionErrors);
-        },
-        update: (cache, result) => {
-            if (result?.data) {
-                createEntityCache(
-                    cache,
-                    result.data.createTransaction,
-                    ['dashboardTransactions', 'transactionsByMonth'],
-                    transactionFragments.NEW_TRANSACTION,
-                    {
-                        dashboardTransactions: {
-                            month: currentDate.month() + 1,
-                            year: currentDate.year()
-                        },
-                        transactionsByMonth: {
-                            month: moment(state.transaction.date).month() + 1,
-                            year: moment(state.transaction.date).year()
-                        }
-                    }
-                )
-            }
-        },
-        refetchQueries: [{query: userQueries.GET_USER_WITH_BALANCE}],
-        variables: {
-            transaction: {
-                title: state.transaction.title,
-                amount: toFloat(state.transaction.amount),
-                categoryId: state.transaction.categoryId,
-                walletId: state.transaction.walletId,
-                date: state.transaction.date
-            }
-        }
-    });
-
-    const [
-        createRecurringTransaction,
-        {loading: createRecurringTransactionLoading}
-    ] = useMutation(transactionMutations.CREATE_RECURRING_TRANSACTION, {
-        onCompleted() {
-            setState({...state, recurringTransactionModalOpened: false, transaction: initialState.transaction});
-        },
-        onError(error) {
-            onUIErrors(error, setTransactionErrors, transactionErrors);
-        },
-        update: (cache, result) => {
-            if (result?.data) {
-                createEntityCache(
-                    cache,
-                    result.data.createRegularTransaction,
-                    ['dashboardRecurringTransactions', 'recurringTransactionsByMonth'],
-                    transactionFragments.NEW_RECURRING_TRANSACTION,
-                    {
-                        dashboardRecurringTransactions: {
-                            month: currentDate.month() + 1,
-                            year: currentDate.year()
-                        },
-                        recurringTransactionsByMonth: {
-                            month: moment(state.transaction.date).month() + 1,
-                            year: moment(state.transaction.date).year()
-                        }
-                    }
-                )
-            }
-        },
-        refetchQueries: [{query: userQueries.GET_USER_WITH_BALANCE}],
-        variables: {
-            transaction: {
-                title: state.transaction.title,
-                amount: toFloat(state.transaction.amount),
-                categoryId: state.transaction.categoryId,
-                walletId: state.transaction.walletId,
-                nextTransactionDate: state.transaction.nextTransactionDate,
-                interval: state.transaction.interval
-            }
-        }
-    });
-
-
-    const validateTransaction = () => {
-        let valid = true;
-        if (!state.transaction.date || moment(state.transaction.date, global.dateFormat).format(global.dateFormat) !== state.transaction.date) {
-            setTransactionErrors({
-                ...initialTransactionErrors,
-                date: errorDefs.INVALID_TRANSACTION_DATE_ERROR
-            });
-            valid = false;
-        }
-        return valid;
-    };
 
 
     const onToday = () => {
@@ -151,50 +36,11 @@ const Dashboard = ({currentDate, onTransactionPropsChange}) => {
         onTransactionPropsChange({name: 'currentDate', value: currentDate.add(1, 'month')});
     };
 
-    const onTransactionToggle = () => {
-        setTransactionErrors(initialTransactionErrors);
-        setState({
-            ...state,
-            transactionModalOpened: !state.transactionModalOpened,
-            transaction: initialState.transaction
-        });
-    };
-
-    const onRecurringTransactionToggle = () => {
-        setTransactionErrors(initialTransactionErrors);
-        setState({
-            ...state,
-            recurringTransactionModalOpened: !state.recurringTransactionModalOpened,
-            transaction: initialState.transaction
-        });
-    };
-
-    const onTransactionSave = () => {
-        setTransactionErrors(initialTransactionErrors);
-        if (validateTransaction()) {
-            createTransaction();
+    const onNewTransactionModalToggle = isRecurring => {
+        if (isRecurring === undefined) {
+            isRecurring = state.isRecurring;
         }
-    };
-
-    const onRecurringTransactionSave = () => {
-        setTransactionErrors(initialTransactionErrors);
-        if (validateTransaction()) {
-            createRecurringTransaction();
-        }
-    };
-
-    const onTransactionChange = (event, {name, value, type}) => {
-        if (type === 'number' && !isValidNumber(value)) {
-            return;
-        }
-        if (name === 'type') {
-            state.transaction.category = '';
-        }
-        if (name === 'interval') {
-            state.transaction.nextTransactionDate = moment().add(1, value).format(global.dateFormat);
-        }
-        setTransactionErrors({...transactionErrors, [name]: undefined});
-        setState({...state, transaction: {...state.transaction, [name]: value}})
+        setState({...state, isRecurring, transactionModalOpen: !state.transactionModalOpen});
     };
 
 
@@ -208,8 +54,8 @@ const Dashboard = ({currentDate, onTransactionPropsChange}) => {
                     <Button icon="chevron right" className="ml-3 mr-2" onClick={onTurnRight}/>
 
                     <Button.Group color="blue" floated="right">
-                        <Button onClick={onTransactionToggle}>Transaction</Button>
-                        <Button onClick={onRecurringTransactionToggle}>Recurring Transaction</Button>
+                        <Button onClick={() => onNewTransactionModalToggle(false)}>Transaction</Button>
+                        <Button onClick={() => onNewTransactionModalToggle(true)}>Recurring Transaction</Button>
                     </Button.Group>
                 </Container>
             </Segment>
@@ -221,44 +67,10 @@ const Dashboard = ({currentDate, onTransactionPropsChange}) => {
                 )}
             </Segment>
 
-            <div>
-                <Modal dimmer size="small" className={styles.transactionModal + ' modalContainer'}
-                       closeOnEscape={true} closeOnDimmerClick={true}
-                       open={state.transactionModalOpened} onClose={onTransactionToggle}>
-                    <Modal.Header>New Transaction</Modal.Header>
-                    <Modal.Content className="modalContainer">
-                        <TransactionForm transaction={state.transaction} errors={transactionErrors}
-                                         onChange={onTransactionChange}/>
-                    </Modal.Content>
-                    <Modal.Actions>
-                        <Button basic onClick={onTransactionToggle}>
-                            Cancel
-                        </Button>
-                        <Button primary loading={createTransactionLoading} onClick={onTransactionSave}>
-                            Save
-                        </Button>
-                    </Modal.Actions>
-                </Modal>
-
-                <Modal dimmer size="small" className={styles.transactionModal + ' modalContainer'}
-                       closeOnEscape={true} closeOnDimmerClick={true}
-                       open={state.recurringTransactionModalOpened} onClose={onRecurringTransactionToggle}>
-                    <Modal.Header>New Recurring Transaction</Modal.Header>
-                    <Modal.Content className="modalContainer">
-                        <TransactionForm transaction={state.transaction} errors={transactionErrors}
-                                         onChange={onTransactionChange} isRecurring/>
-                    </Modal.Content>
-                    <Modal.Actions>
-                        <Button basic onClick={onRecurringTransactionToggle}>
-                            Cancel
-                        </Button>
-                        <Button primary loading={createRecurringTransactionLoading}
-                                onClick={onRecurringTransactionSave}>
-                            Save
-                        </Button>
-                    </Modal.Actions>
-                </Modal>
-            </div>
+            <NewTransactionModal open={state.transactionModalOpen}
+                                 onModalToggle={onNewTransactionModalToggle}
+                                 isRecurring={state.isRecurring}
+            />
         </div>
     );
 };

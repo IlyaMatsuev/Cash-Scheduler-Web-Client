@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 import moment from 'moment';
 import {Button, Container, Divider, Grid, Segment, Header, Item, Placeholder} from 'semantic-ui-react';
 import styles from './TransactionList.module.css';
 import {convertToValidIconUrl} from '../../../../../utils/UtilHooks';
+import NewTransactionModal from '../NewTransactionModal/NewTransactionModal';
 
 
 const TransactionList = ({
@@ -17,6 +18,11 @@ const TransactionList = ({
                              isRecurring,
                              onTransactionsViewChange
 }) => {
+    const initState = {
+        newTransactionModalOpen: false
+    };
+    const [state, setState] = useState(initState);
+
 
     const getTransactionsDaySummary = transactions => {
         return transactions.reduce((a, b) => {
@@ -102,6 +108,10 @@ const TransactionList = ({
         return groups;
     };
 
+    const onNewTransactionModalToggle = () => {
+        setState({...state, newTransactionModalOpen: !state.newTransactionModalOpen});
+    };
+
 
     return (
         <Container fluid className="fullHeight">
@@ -126,12 +136,22 @@ const TransactionList = ({
                         <Button primary circular icon="chevron circle right" size="big" onClick={onNextMonth}/>
                     </Grid.Column>
                 </Grid>
+                <Container fluid className={styles.newTransactionButtonContainer}>
+                    <Button fluid primary onClick={onNewTransactionModalToggle}>
+                        New {isRecurring ? 'Recurring' : ''} Transaction
+                    </Button>
+                </Container>
                 <Divider/>
                 <Container fluid className={styles.transactionsListContainer + ' pt-1'}>
                     {isRecurring && getTransactionsGroups(recurringTransactions, 'nextTransactionDate')}
                     {!isRecurring && getTransactionsGroups(transactions)}
                 </Container>
             </Segment>
+
+            <NewTransactionModal open={state.newTransactionModalOpen}
+                                 onModalToggle={onNewTransactionModalToggle}
+                                 isRecurring={isRecurring}
+            />
         </Container>
     );
 };
