@@ -6,6 +6,8 @@ import {createEntityCache, onUIErrors, removeEntityCache, updateEntityCache} fro
 import CategoriesList from './CategoriesList/CategoriesList';
 import EditCategoryForm from './EditCategory/EditCategoryForm';
 import styles from './Categories.module.css';
+import userQueries from '../../../../graphql/queries/users';
+import walletQueries from '../../../../graphql/queries/wallets';
 import categoriesQueries from '../../../../graphql/queries/categories';
 import categoryMutations from '../../../../graphql/mutations/categories';
 import categoryFragments from '../../../../graphql/fragments/categories';
@@ -89,7 +91,11 @@ const Categories = () => {
                 );
             }
         },
-        variables: {id: state.category.id}
+        variables: {id: state.category.id},
+        refetchQueries: [
+            {query: userQueries.GET_USER_WITH_BALANCE},
+            {query: walletQueries.GET_WALLETS}
+        ]
     });
 
 
