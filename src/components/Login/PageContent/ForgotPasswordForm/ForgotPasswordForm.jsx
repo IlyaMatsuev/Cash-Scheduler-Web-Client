@@ -2,9 +2,9 @@ import React, {useState} from 'react';
 import {Button, Container, Form, Header, Segment} from 'semantic-ui-react';
 import {useLazyQuery} from '@apollo/client';
 import {useSpring, animated} from 'react-spring';
-import ErrorsList from '../../../utils/ErrorsList/ErrorsList';
-import {onUIErrors} from '../../../utils/UtilHooks';
-import userQueries from '../../../graphql/queries/users';
+import ErrorsList from '../../../../utils/ErrorsList/ErrorsList';
+import {onUIErrors} from '../../../../utils/UtilHooks';
+import userQueries from '../../../../graphql/queries/users';
 
 
 const ForgotPasswordForm = ({goToResetPassword, goBackToLogin}) => {

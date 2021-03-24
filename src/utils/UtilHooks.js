@@ -25,10 +25,17 @@ export function useLogin(variables, onError) {
 }
 
 export function onUIErrors(error, setErrors, errors) {
-    if (error.graphQLErrors?.length > 0 && error.graphQLErrors[0].extensions?.data.fields) {
+    if (error.graphQLErrors?.length > 0 && (
+        error.graphQLErrors[0].extensions?.data?.fields
+        || error.graphQLErrors[0].extensions?.fields)
+    ) {
         const newError = error.graphQLErrors[0];
-        if (newError.data.fields) {
-            newError.data.fields.forEach(fieldName => {
+        if (newError.extensions.data?.fields) {
+            newError.extensions.data.fields.forEach(fieldName => {
+                errors[fieldName] = newError.message;
+            });
+        } else if (newError.extensions.fields) {
+            newError.extensions.fields.forEach(fieldName => {
                 errors[fieldName] = newError.message;
             });
         } else {

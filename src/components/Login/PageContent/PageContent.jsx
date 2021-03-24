@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
 import styles from './PageContent.module.css';
 import {Grid} from 'semantic-ui-react';
-import LoginForm from '../LoginForm/LoginForm';
+import LoginForm from './LoginForm/LoginForm';
 import {animated, useSpring} from 'react-spring';
-import RegisterForm from '../RegisterForm/RegisterForm';
-import ForgotPasswordForm from '../ForgotPasswordForm/ForgotPasswordForm';
-import ResetPasswordForm from '../ResetPasswordForm/ResetPasswordForm';
+import RegisterForm from './RegisterForm/RegisterForm';
+import ForgotPasswordForm from './ForgotPasswordForm/ForgotPasswordForm';
+import ResetPasswordForm from './ResetPasswordForm/ResetPasswordForm';
 
 
 const formShownStyle = {

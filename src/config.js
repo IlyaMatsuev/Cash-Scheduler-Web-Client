@@ -10,9 +10,13 @@ export const auth = {
     refreshTokenName: 'refreshToken',
     authType: 'Bearer'
 };
+export const recaptcha = {
+    siteKey: '6LfugI0aAAAAAFxNWHOCsJf8fDm3yWdSaqG2KBzI'
+};
 export const pages = {
     loginUrl: '/',
     homeUrl: '/home',
+    repositoryUrl: 'https://github.com/IlyaMatsuev/Cash-Scheduler-Web-Client',
     names: {
         dashboard: 'dashboard',
         wallets: 'wallets',

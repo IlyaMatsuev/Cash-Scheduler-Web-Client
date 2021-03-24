@@ -1,10 +1,12 @@
 import React, {useState} from 'react';
+import {useQuery} from '@apollo/client';
 import {Button, Container, Form, Grid, Header, Icon, Message, Segment} from 'semantic-ui-react';
-import ErrorsList from '../../../utils/ErrorsList/ErrorsList';
-import {useLogin} from '../../../utils/UtilHooks';
-import SecretField from '../../../utils/SecretField';
-import {onUIErrors} from '../../../utils/UtilHooks';
-import {dev} from '../../../config';
+import salesforceQueries from '../../../../graphql/queries/salesforce';
+import ErrorsList from '../../../../utils/ErrorsList/ErrorsList';
+import {useLogin} from '../../../../utils/UtilHooks';
+import SecretField from '../../../../utils/SecretField';
+import {onUIErrors} from '../../../../utils/UtilHooks';
+import {dev} from '../../../../config';
 
 
 const LoginForm = ({goToRegister, goToRestorePassword}) => {
@@ -17,6 +19,12 @@ const LoginForm = ({goToRegister, goToRestorePassword}) => {
         remember: false,
         passwordShown: false
     });
+
+    const {
+        data: salesforceQueryData,
+        loading: salesforceQueryLoading,
+        error: salesforceQueryError
+    } = useQuery(salesforceQueries.GET_SF_ENDPOINT);
 
     const [login, {loading}] = useLogin(state, error => onUIErrors(error, setErrors, errors));
 
@@ -69,8 +77,19 @@ const LoginForm = ({goToRegister, goToRestorePassword}) => {
                 </Segment>
             </Form>
             <Message>
-                New to us? <Button color="violet" inverted className="compact ml-2" onClick={goToRegister}>Sign
-                Up</Button>
+                New to us?
+                <Button color="violet" inverted className="compact ml-2" onClick={goToRegister}>
+                    Sign Up
+                </Button>
+            </Message>
+            <Message>
+                Employee?
+                <Button as="a" color="teal" className="compact ml-2"
+                        href={salesforceQueryData?.salesforceApiEndpoint}
+                        loading={salesforceQueryLoading || !!salesforceQueryError}
+                >
+                    Sign In Here
+                </Button>
             </Message>
         </Container>
     );
