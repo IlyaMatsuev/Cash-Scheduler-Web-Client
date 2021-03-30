@@ -1,8 +1,10 @@
 import {gql} from '@apollo/client';
 
 export default {
+    GET_DASHBOARD_TRANSACTIONS_QUERY: 'GetDashboardTransactions',
+    GET_TRANSACTIONS_BY_MONTH_QUERY: 'GetTransactionsByMonth',
     GET_DASHBOARD_TRANSACTIONS: gql`
-        query($month: Int!, $year: Int!) {
+        query GetDashboardTransactions($month: Int!, $year: Int!) {
             dashboardTransactions(month: $month, year: $year) {
                 id
                 title
@@ -38,7 +40,7 @@ export default {
         }
     `,
     GET_TRANSACTIONS_BY_MONTH: gql`
-        query($month: Int!, $year: Int!) {
+        query GetTransactionsByMonth($month: Int!, $year: Int!) {
             transactionsByMonth(month: $month, year: $year) {
                 id
                 title

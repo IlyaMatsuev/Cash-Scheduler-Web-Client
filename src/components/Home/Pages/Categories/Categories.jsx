@@ -8,12 +8,13 @@ import EditCategoryForm from './EditCategory/EditCategoryForm';
 import styles from './Categories.module.css';
 import userQueries from '../../../../graphql/queries/users';
 import walletQueries from '../../../../graphql/queries/wallets';
-import categoriesQueries from '../../../../graphql/queries/categories';
+import categoryQueries from '../../../../graphql/queries/categories';
+import transactionQueries from '../../../../graphql/queries/transactions';
 import categoryMutations from '../../../../graphql/mutations/categories';
 import categoryFragments from '../../../../graphql/fragments/categories';
 
 
-const Categories = () => {
+const Categories = ({activeCategoryTabIndex, onCategoryPropsChange}) => {
     const initialState = {
         categoryEditModalOpen: false,
         categoryDeleteConfirmationOpen: false,
@@ -34,7 +35,7 @@ const Categories = () => {
     const errorsInitialState = {};
     const [errors, setErrors] = useState(errorsInitialState);
 
-    const categoryWithTypesQuery = useQuery(categoriesQueries.GET_CATEGORIES_WITH_TYPES);
+    const categoryWithTypesQuery = useQuery(categoryQueries.GET_CATEGORIES_WITH_TYPES);
 
     const [createCategory, {loading: createCategoryLoading}] = useMutation(categoryMutations.CREATE_CATEGORY, {
         onCompleted: () => setState(initialState),
@@ -94,7 +95,9 @@ const Categories = () => {
         variables: {id: state.category.id},
         refetchQueries: [
             {query: userQueries.GET_USER_WITH_BALANCE},
-            {query: walletQueries.GET_WALLETS}
+            {query: walletQueries.GET_WALLETS},
+            transactionQueries.GET_DASHBOARD_TRANSACTIONS_QUERY,
+            transactionQueries.GET_TRANSACTIONS_BY_MONTH_QUERY
         ]
     });
 
@@ -149,11 +152,19 @@ const Categories = () => {
         {menuItem: 'Custom Categories', render: () => <Tab.Pane>{customCategoriesTab}</Tab.Pane>}
     ];
 
+    const onCategoryTabChange = (event, {activeIndex}) => {
+        onCategoryPropsChange({name: 'activeCategoryTabIndex', value: activeIndex});
+        //setState({...state, activeCategoryTabIndex: activeIndex});
+    };
+
     return (
         <Container fluid>
             <Grid padded columns={2}>
                 <Grid.Column width={12}>
-                    <Tab menu={{fluid: true, vertical: true, tabular: true}} panes={panels}/>
+                    <Tab menu={{fluid: true, vertical: true, tabular: true}}
+                         panes={panels} activeIndex={activeCategoryTabIndex}
+                         onTabChange={onCategoryTabChange}
+                    />
                 </Grid.Column>
                 <Grid.Column width={4}>
                     <Segment loading={createCategoryLoading}>

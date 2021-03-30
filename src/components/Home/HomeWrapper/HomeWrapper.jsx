@@ -23,6 +23,9 @@ const HomeWrapper = () => {
         transactions: {
             currentDate: moment(),
             isRecurringView: false
+        },
+        categories: {
+            activeCategoryTabIndex: 0
         }
     };
     const [state, setState] = useState(initialState);
@@ -47,6 +50,10 @@ const HomeWrapper = () => {
         setState({...state, transactions: {...state.transactions, [name]: value}});
     };
 
+    const onCategoryPropsChange = ({name, value}) => {
+        setState({...state, categories: {...state.categories, [name]: value}});
+    };
+
 
     return (
         <Sidebar.Pushable as={Segment} className={styles.sidebar}>
@@ -67,6 +74,8 @@ const HomeWrapper = () => {
                     <CurrentPage index={state.pageIndex}
                                  transactionsProps={state.transactions}
                                  onTransactionPropsChange={onTransactionPropsChange}
+                                 categoriesProps={state.categories}
+                                 onCategoryPropsChange={onCategoryPropsChange}
                     />
                 </Segment>
             </Sidebar.Pusher>

@@ -7,16 +7,20 @@ import Settings from '../Settings/Settings';
 import Wallets from '../Wallets/Wallets';
 
 
-const CurrentPage = ({index, transactionsProps, onTransactionPropsChange}) => {
+const CurrentPage = ({index, transactionsProps, onTransactionPropsChange, categoriesProps, onCategoryPropsChange}) => {
 
     const pages = [
         <Dashboard currentDate={transactionsProps.currentDate}
-                   onTransactionPropsChange={onTransactionPropsChange}/>,
+                   onTransactionPropsChange={onTransactionPropsChange}
+        />,
         <Wallets/>,
         <Transactions currentDate={transactionsProps.currentDate}
                       isRecurringView={transactionsProps.isRecurringView}
-                      onTransactionPropsChange={onTransactionPropsChange}/>,
-        <Categories/>,
+                      onTransactionPropsChange={onTransactionPropsChange}
+        />,
+        <Categories activeCategoryTabIndex={categoriesProps.activeCategoryTabIndex}
+                    onCategoryPropsChange={onCategoryPropsChange}
+        />,
         <Settings/>
     ];
 

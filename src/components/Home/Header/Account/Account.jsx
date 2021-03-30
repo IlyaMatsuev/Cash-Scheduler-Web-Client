@@ -28,6 +28,11 @@ const Account = ({user, balance}) => {
                     firstName: updatedUser.firstName,
                     lastName: updatedUser.lastName
                 });
+                cache.modify({
+                    fields: {
+                        balance: () => toFloat(state.user.balance)
+                    }
+                });
             }
         },
         variables: {
