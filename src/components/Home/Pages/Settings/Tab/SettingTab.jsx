@@ -11,6 +11,10 @@ function groupSettingsBySections(settings) {
     }, Object.create(null));
 }
 
+function getTitleFromCamelCase(name) {
+    return name.replace(/([A-Z])/g, match => ` ${match}`).trim();
+}
+
 const SettingTab = ({settingsQueryData, onSettingUpdate}) => {
 
     const groupedSettings = groupSettingsBySections(settingsQueryData?.settings) || [];
@@ -20,7 +24,7 @@ const SettingTab = ({settingsQueryData, onSettingUpdate}) => {
             {settingsQueryData && settingsQueryData.settingSections?.map(sectionName =>
                 groupedSettings[sectionName]?.length > 0 &&
                 <Container key={sectionName} fluid>
-                    <Header as="h2">{sectionName}</Header>
+                    <Header as="h2">{getTitleFromCamelCase(sectionName)}</Header>
                     <Divider/>
                     {groupedSettings[sectionName]?.map(setting =>
                         <SettingEntry key={setting.setting.name}

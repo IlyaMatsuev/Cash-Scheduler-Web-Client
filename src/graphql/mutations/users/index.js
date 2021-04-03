@@ -48,6 +48,9 @@ export default {
     LOGOUT_USER: gql`
         mutation { logout {id} }
     `,
+    LOGOUT_CONNECTED_APPS: gql`
+        mutation { logoutConnectedApps {id} }
+    `,
     UPDATE_USER: gql`
         mutation($user: UpdateUserInput!) {
             updateUser(user: $user) {

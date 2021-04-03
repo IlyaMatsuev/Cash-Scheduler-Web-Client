@@ -28,5 +28,10 @@ export default {
         query($email: String!, $code: String!) {
             checkCode(email: $email, code: $code)
         }
+    `,
+    GET_APP_TOKEN: gql`
+        query {
+            appToken
+        }
     `
 };

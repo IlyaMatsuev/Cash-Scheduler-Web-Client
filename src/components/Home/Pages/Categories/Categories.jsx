@@ -154,7 +154,6 @@ const Categories = ({activeCategoryTabIndex, onCategoryPropsChange}) => {
 
     const onCategoryTabChange = (event, {activeIndex}) => {
         onCategoryPropsChange({name: 'activeCategoryTabIndex', value: activeIndex});
-        //setState({...state, activeCategoryTabIndex: activeIndex});
     };
 
     return (
