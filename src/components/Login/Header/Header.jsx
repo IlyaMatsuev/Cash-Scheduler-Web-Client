@@ -26,7 +26,7 @@ function Header() {
                 <a className={'navbar-brand ' + styles.link} href={pages.repositoryUrl}>
                     Project Repository
                 </a>
-                <a className={'navbar-brand ' + styles.link} href="" onClick={onBugReport}>
+                <a className={'navbar-brand ' + styles.link} href="#" onClick={onBugReport}>
                     Ask Question / Bug Report
                 </a>
             </nav>

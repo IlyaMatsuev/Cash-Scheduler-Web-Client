@@ -6,7 +6,6 @@ import errorDefs from '../../../../utils/ErrorDefinitions';
 import {isValidNumber, onUIErrors, toFloat, useLogin} from '../../../../utils/UtilHooks';
 import SecretField from '../../../../utils/SecretField';
 import userMutations from '../../../../graphql/mutations/users';
-import {dev} from '../../../../config';
 
 
 const RegisterForm = ({goToLogin}) => {
@@ -14,12 +13,12 @@ const RegisterForm = ({goToLogin}) => {
     const initErrorsState = {email: '', password: '', confirmPassword: ''};
     const [errors, setErrors] = useState(initErrorsState);
     const [state, setState] = useState({
-        firstName: dev.userRegistration.firstName,
-        lastName: dev.userRegistration.lastName,
-        balance: dev.userRegistration.balance,
-        email: dev.userRegistration.email,
-        password: dev.userRegistration.password,
-        confirmPassword: dev.userRegistration.confirmPassword
+        firstName: '',
+        lastName: '',
+        balance: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
     });
 
     const validate = () => {
