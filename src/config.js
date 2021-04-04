@@ -1,8 +1,8 @@
 
 export const server = {
-    root: 'https://localhost:8001',
-    apiHttpEndpoint: 'https://localhost:8001/graphql',
-    apiWSEndpoint: 'wss://localhost:8001/graphql'
+    root: 'https://cash-scheduler-server.azurewebsites.net',
+    apiHttpEndpoint: 'https://cash-scheduler-server.azurewebsites.net/graphql',
+    apiWSEndpoint: 'wss://cash-scheduler-server.azurewebsites.net/graphql'
 };
 export const auth = {
     emailName: 'email',
