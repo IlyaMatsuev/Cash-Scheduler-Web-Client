@@ -6,5 +6,7 @@ node_modules
 Dockerfile
 debug.log
 README.md
-heroku-deploy.sh
 Procfile
+docker-build.sh
+heroku-create-app.sh
+heroku-deploy-docker.sh
