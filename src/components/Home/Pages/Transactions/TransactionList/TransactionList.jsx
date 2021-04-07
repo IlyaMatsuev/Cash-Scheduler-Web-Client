@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import moment from 'moment';
 import {Button, Container, Divider, Grid, Segment, Header, Item, Placeholder} from 'semantic-ui-react';
 import styles from './TransactionList.module.css';
-import {convertToValidIconUrl} from '../../../../../utils/UtilHooks';
+import {convertToValidIconUrl} from '../../../../../utils/GlobalUtils';
 import NewTransactionModal from '../NewTransactionModal/NewTransactionModal';
 
 

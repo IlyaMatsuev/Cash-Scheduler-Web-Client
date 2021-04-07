@@ -2,7 +2,7 @@ import React from 'react';
 import {Grid, Container} from 'semantic-ui-react';
 import moment from 'moment';
 import styles from './Calendar.module.css';
-import {toFloat} from '../../../../../utils/UtilHooks';
+import {toFloat} from '../../../../../utils/GlobalUtils';
 
 
 const DISPLAY_WEEKS = 6;

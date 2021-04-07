@@ -1,7 +1,7 @@
 import React from 'react';
 import {Grid, Header, Image, Item, Segment} from 'semantic-ui-react';
 import styles from './CategoryList.module.css';
-import {convertToValidIconUrl} from '../../../../../utils/UtilHooks';
+import {convertToValidIconUrl} from '../../../../../utils/GlobalUtils';
 
 
 const CategoriesList = ({query, categoryType, onCategoryClick}) => {

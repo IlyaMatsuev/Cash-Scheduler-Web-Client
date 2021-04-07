@@ -1,8 +1,8 @@
 import React from 'react';
 import {Grid, Input} from 'semantic-ui-react';
-import ErrorsList from '../../../../../../utils/ErrorsList/ErrorsList';
+import ErrorsList from '../../../../../../utils/ErrorsList';
 import WalletsDropdown from '../../WalletsDropdown/WalletsDropdown';
-import {toFloat} from '../../../../../../utils/UtilHooks';
+import {toFloat} from '../../../../../../utils/GlobalUtils';
 import ExchangeRatesDropdown from '../../ExchangeRatesDropdown/ExchangeRatesDropdown';
 import {useQuery} from '@apollo/client';
 import walletQueries from '../../../../../../graphql/queries/wallets';

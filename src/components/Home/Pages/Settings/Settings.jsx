@@ -5,7 +5,7 @@ import {useMutation, useQuery} from '@apollo/client';
 import settingQueries from '../../../../graphql/queries/settings';
 import settingMutations from '../../../../graphql/mutations/settings';
 import settingFragments from '../../../../graphql/fragments/settings';
-import {updateEntityCache} from '../../../../utils/UtilHooks';
+import {updateEntityCache} from '../../../../utils/CacheUtils';
 
 
 const Settings = () => {

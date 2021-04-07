@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {useMutation} from '@apollo/client';
 import {Form, Button, Container, Segment, Header, Message} from 'semantic-ui-react';
-import ErrorsList from '../../../../utils/ErrorsList/ErrorsList';
+import ErrorsList from '../../../../utils/ErrorsList';
 import errorDefs from '../../../../utils/ErrorDefinitions';
-import {isValidNumber, onUIErrors, toFloat, useLogin} from '../../../../utils/UtilHooks';
+import {isValidNumber, onUIErrors, toFloat, useLogin} from '../../../../utils/GlobalUtils';
 import SecretField from '../../../../utils/SecretField';
 import userMutations from '../../../../graphql/mutations/users';
 import {dev} from '../../../../config';

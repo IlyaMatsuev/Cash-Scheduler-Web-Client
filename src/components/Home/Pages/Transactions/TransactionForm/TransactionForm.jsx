@@ -2,10 +2,10 @@ import React from 'react';
 import {Grid, Input, Dropdown, Button} from 'semantic-ui-react';
 import {DateInput} from 'semantic-ui-calendar-react';
 import {useQuery} from '@apollo/client';
-import ErrorsList from '../../../../../utils/ErrorsList/ErrorsList';
+import ErrorsList from '../../../../../utils/ErrorsList';
 import styles from './TransactionForm.module.css';
 import categoriesQueries from '../../../../../graphql/queries/categories';
-import {convertToValidIconUrl, toFloat} from '../../../../../utils/UtilHooks';
+import {convertToValidIconUrl, toFloat} from '../../../../../utils/GlobalUtils';
 import {global} from '../../../../../config';
 import WalletsDropdown from '../../Wallets/WalletsDropdown/WalletsDropdown';
 

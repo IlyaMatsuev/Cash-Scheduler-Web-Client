@@ -73,9 +73,9 @@ const ConnectedAppsSetting = () => {
     };
 
     return (
-        <Segment basic fluid loading={appTokenQueryLoading || appTokenQueryError}>
+        <Segment basic loading={appTokenQueryLoading || appTokenQueryError}>
             <Input actionPosition="left"
-                   value={appTokenQueryData?.appToken}
+                   value={appTokenQueryData?.appToken || ''}
                    type={state.isTokenHidden ? 'password' : 'text'}
                    className={styles.input}
                    readOnly

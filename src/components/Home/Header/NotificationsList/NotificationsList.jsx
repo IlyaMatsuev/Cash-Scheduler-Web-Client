@@ -6,7 +6,7 @@ import notificationQueries from '../../../../graphql/queries/notifications';
 import notificationMutations from '../../../../graphql/mutations/notifications';
 import notificationFragments from '../../../../graphql/fragments/notifications';
 import NotificationReadModal from './NotificationReadModal/NotificationReadModal';
-import {updateEntityCache} from "../../../../utils/UtilHooks";
+import {updateEntityCache} from '../../../../utils/CacheUtils';
 
 
 const NotificationsList = () => {

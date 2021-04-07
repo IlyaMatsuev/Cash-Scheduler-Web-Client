@@ -2,7 +2,7 @@ import React from 'react';
 import {Dropdown, Header} from 'semantic-ui-react';
 import {useQuery} from '@apollo/client';
 import walletQueries from '../../../../../graphql/queries/wallets';
-import {convertToValidIconUrl} from '../../../../../utils/UtilHooks';
+import {convertToValidIconUrl} from '../../../../../utils/GlobalUtils';
 import styles from './WalletsDropdown.module.css';
 
 

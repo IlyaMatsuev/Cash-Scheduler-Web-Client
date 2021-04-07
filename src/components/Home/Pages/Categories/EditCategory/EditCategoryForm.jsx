@@ -1,6 +1,6 @@
 import React from 'react';
 import {Dropdown, Grid, Input} from 'semantic-ui-react';
-import ErrorsList from '../../../../../utils/ErrorsList/ErrorsList';
+import ErrorsList from '../../../../../utils/ErrorsList';
 import {server} from '../../../../../config';
 
 

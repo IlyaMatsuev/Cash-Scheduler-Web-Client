@@ -5,7 +5,8 @@ import walletQueries from '../../../../../graphql/queries/wallets';
 import userQueries from '../../../../../graphql/queries/users';
 import walletMutations from '../../../../../graphql/mutations/wallets';
 import {useMutation} from '@apollo/client';
-import {onUIErrors, removeEntityCache, toFloat} from '../../../../../utils/UtilHooks';
+import {onUIErrors, toFloat} from '../../../../../utils/GlobalUtils';
+import {removeEntityCache} from '../../../../../utils/CacheUtils';
 
 
 const WalletEditModal = ({open, isEditing, wallet, onWalletChange, onWalletActionComplete, onModalToggle}) => {

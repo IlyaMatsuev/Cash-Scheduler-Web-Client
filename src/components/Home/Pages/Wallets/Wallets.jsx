@@ -3,7 +3,7 @@ import {Segment} from 'semantic-ui-react';
 import walletQueries from '../../../../graphql/queries/wallets';
 import {useQuery} from '@apollo/client';
 import WalletEditModal from './WalletEditModal/WalletEditModal';
-import {isValidNumber} from '../../../../utils/UtilHooks';
+import {isValidNumber} from '../../../../utils/GlobalUtils';
 import {global} from '../../../../config';
 import WalletList from './WalletList/WaleltList';
 import WalletTransferModal from './WalletTransferModal/WalletTransferModal';

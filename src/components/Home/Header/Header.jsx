@@ -12,9 +12,10 @@ import settingQueries from '../../../graphql/queries/settings';
 import notificationSubscriptions from '../../../graphql/subscriptions/notifications';
 import notificationFragments from '../../../graphql/fragments/notifications';
 import {pages, notifications} from '../../../config';
-import {createEntityCache, toFloat} from '../../../utils/UtilHooks';
+import {toFloat} from '../../../utils/GlobalUtils';
+import {createEntityCache} from '../../../utils/CacheUtils';
 import useSound from 'use-sound';
-import {getSetting} from '../../../utils/SettingHelper';
+import {getSetting} from '../../../utils/SettingUtils';
 import newNotificationSound from '../../../sounds/new-notification.mp3';
 import NotificationsList from './NotificationsList/NotificationsList';
 

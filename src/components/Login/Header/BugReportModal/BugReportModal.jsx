@@ -4,7 +4,7 @@ import {useMutation} from '@apollo/client';
 import {SemanticToastContainer, toast} from 'react-semantic-toasts';
 import ReCAPTCHA from 'react-google-recaptcha';
 import salesforceMutations from '../../../../graphql/mutations/salesforce';
-import {onUIErrors} from '../../../../utils/UtilHooks';
+import {onUIErrors} from '../../../../utils/GlobalUtils';
 import {auth, recaptcha, notifications} from '../../../../config';
 import styles from './BugReportModal.module.css';
 
