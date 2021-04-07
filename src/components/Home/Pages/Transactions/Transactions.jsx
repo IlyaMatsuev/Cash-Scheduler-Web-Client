@@ -1,9 +1,7 @@
 import React, {useState} from 'react';
-import {Dimmer, Grid, Loader, Segment} from 'semantic-ui-react';
+import {Dimmer, Grid, Loader} from 'semantic-ui-react';
 import moment from 'moment';
 import {useMutation, useQuery} from '@apollo/client';
-import LineTransactions from './Charts/LineTransactions/LineTransactions';
-import DoughnutTransactions from './Charts/DoughnutTransactions/DoughnutTransactions';
 import TransactionList from './TransactionList/TransactionList';
 import {isValidNumber, onUIErrors, removeEntityCache, toFloat, updateEntityCache} from '../../../../utils/UtilHooks';
 import errorDefs from '../../../../utils/ErrorDefinitions';
@@ -13,6 +11,7 @@ import transactionQueries from '../../../../graphql/queries/transactions';
 import transactionMutations from '../../../../graphql/mutations/transactions';
 import transactionFragments from '../../../../graphql/fragments/transactions';
 import TransactionModal from './TransactionModal/TransactionModal';
+import Charts from './Charts/Charts';
 
 
 const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) => {
@@ -20,7 +19,6 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
         recurringTransactions: [],
         transactionModalOpened: false,
         transactionDeleteModalOpened: false,
-        isRecurringView: false,
         selectedTransaction: {}
     };
     const [state, setState] = useState(initialState);
@@ -33,7 +31,8 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
     } = useQuery(transactionQueries.GET_TRANSACTIONS_BY_MONTH, {
         variables: {
             month: currentDate.month() + 1,
-            year: currentDate.year()
+            year: currentDate.year(),
+            isRecurring: isRecurringView
         }
     });
 
@@ -203,23 +202,15 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
     };
 
 
-    // TODO: add more charts
     return (
         <Grid padded centered columns={2}>
             <Grid.Column width={10}>
-                <Segment>
-                    <LineTransactions transactions={transactionsData && transactionsData.transactionsByMonth}
-                                      recurringTransactions={transactionsData && transactionsData.recurringTransactionsByMonth}
-                                      transactionsLoading={transactionsLoading} transactionsError={transactionsError}
-                                      isRecurring={isRecurringView}/>
-                </Segment>
-                <Segment>
-                    <DoughnutTransactions transactions={transactionsData && transactionsData.transactionsByMonth}
-                                          recurringTransactions={transactionsData && transactionsData.recurringTransactionsByMonth}
-                                          transactionsLoading={transactionsLoading}
-                                          transactionsError={transactionsError}
-                                          isRecurring={isRecurringView}/>
-                </Segment>
+                <Charts transactions={transactionsData && transactionsData.transactionsByMonth}
+                        recurringTransactions={transactionsData && transactionsData.recurringTransactionsByMonth}
+                        transactionsDelta={transactionsData && transactionsData.transactionsDelta}
+                        transactionsLoading={transactionsLoading} transactionsError={transactionsError}
+                        isRecurring={isRecurringView}
+                />
             </Grid.Column>
             <Grid.Column width={6}>
                 <Dimmer inverted

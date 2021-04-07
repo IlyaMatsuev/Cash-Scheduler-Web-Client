@@ -2,15 +2,28 @@ import React from 'react';
 import {Container, Dimmer, Loader} from 'semantic-ui-react';
 import {Line} from 'react-chartjs-2';
 import moment from 'moment';
+import {global} from '../../../../../../config';
+import {baseColors} from '../ColorUtils';
 
 
 const lineChartColorByType = {
-    'Income': '#7eb3ff',
-    'Expense': '#FF7272'
+    'Income': baseColors.INCOME,
+    'Expense': baseColors.EXPENSE
+};
+
+const chartTypes = {
+    amountSummary: {
+        title: 'Income - Expenses Amount Summary',
+        reducer: (summary, next, ofSameType) => ofSameType ? summary + next.amount : summary
+    },
+    countPerDay: {
+        title: 'Income - Expenses Count Per Day',
+        reducer: (summary, next, ofSameType) => ofSameType ? summary + 1 : summary
+    }
 };
 
 
-const LineTransactions = ({transactions = [], recurringTransactions = [], transactionsLoading, transactionsError, isRecurring}) => {
+const LineTransactions = ({transactions = [], recurringTransactions = [], transactionsLoading, transactionsError, isRecurring, chartType = 'amountSummary'}) => {
 
     const sortTransactionsByDate = (transactions, dateField = 'date') => {
         const transactionsByDate = {};
@@ -28,7 +41,7 @@ const LineTransactions = ({transactions = [], recurringTransactions = [], transa
 
     const getDatasetByTransactionType = (dates, transactionsByDate, type) => {
         const summary = dates.filter(date => transactionsByDate[date]).map(date => transactionsByDate[date].reduce((a, b) => {
-            return b.category.type.name === type ? a + b.amount : a;
+            return chartTypes[chartType].reducer(a, b, b.category.type.name === type);
         }, 0).toFixed(2));
         return {
             data: summary,
@@ -45,7 +58,7 @@ const LineTransactions = ({transactions = [], recurringTransactions = [], transa
         const endInterval = moment(transactionDates[transactionDates.length - 1]).endOf('month').add(1, 'days');
 
         for (let date = beginInterval.clone(); !date.isSame(endInterval, 'day'); date.add(1, 'days')) {
-            const formattedDate = date.format('YYYY-MM-DD');
+            const formattedDate = date.format(global.dateFormat);
             dates.push(formattedDate);
             if (!transactionsByDate[formattedDate]) {
                 transactionsByDate[formattedDate] = [];
@@ -63,7 +76,7 @@ const LineTransactions = ({transactions = [], recurringTransactions = [], transa
 
     const options = {
         title: {
-            text: (isRecurring ? 'Recurring: ' : '') + 'Income - Expenses',
+            text: (isRecurring ? 'Recurring: ' : '') + chartTypes[chartType].title,
             display: true,
             fontSize: 22,
             fontColor: 'rgba(0, 0, 0, .54)'
