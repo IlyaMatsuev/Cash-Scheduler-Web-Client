@@ -3,27 +3,26 @@ import {Container, Dimmer, Loader} from 'semantic-ui-react';
 import {Line} from 'react-chartjs-2';
 import moment from 'moment';
 import {global} from '../../../../../../config';
+import {get} from '../../../../../../utils/TranslationUtils';
 import {baseColors} from '../ColorUtils';
 
 
-const lineChartColorByType = {
-    'Income': baseColors.INCOME,
-    'Expense': baseColors.EXPENSE
-};
-
-const chartTypes = {
-    amountSummary: {
-        title: 'Income - Expenses Amount Summary',
-        reducer: (summary, next, ofSameType) => ofSameType ? summary + next.amount : summary
-    },
-    countPerDay: {
-        title: 'Income - Expenses Count Per Day',
-        reducer: (summary, next, ofSameType) => ofSameType ? summary + 1 : summary
-    }
-};
-
-
 const LineTransactions = ({transactions = [], recurringTransactions = [], transactionsLoading, transactionsError, isRecurring, chartType = 'amountSummary'}) => {
+    const lineChartColorByType = {
+        'Income': baseColors.INCOME,
+        'Expense': baseColors.EXPENSE
+    };
+
+    const chartTypes = {
+        amountSummary: {
+            title: get('amountSummaryChartTitle', 'transactions'),
+            reducer: (summary, next, ofSameType) => ofSameType ? summary + next.amount : summary
+        },
+        countPerDay: {
+            title: get('countPerDayChartTitle', 'transactions'),
+            reducer: (summary, next, ofSameType) => ofSameType ? summary + 1 : summary
+        }
+    };
 
     const sortTransactionsByDate = (transactions, dateField = 'date') => {
         const transactionsByDate = {};
@@ -45,7 +44,7 @@ const LineTransactions = ({transactions = [], recurringTransactions = [], transa
         }, 0).toFixed(2));
         return {
             data: summary,
-            label: type,
+            label: get(type, 'transactionTypes'),
             borderColor: lineChartColorByType[type]
         };
     };
@@ -76,7 +75,7 @@ const LineTransactions = ({transactions = [], recurringTransactions = [], transa
 
     const options = {
         title: {
-            text: (isRecurring ? 'Recurring: ' : '') + chartTypes[chartType].title,
+            text: (isRecurring ? `${get('recurring', 'transactions')}: ` : '') + chartTypes[chartType].title,
             display: true,
             fontSize: 22,
             fontColor: 'rgba(0, 0, 0, .54)'

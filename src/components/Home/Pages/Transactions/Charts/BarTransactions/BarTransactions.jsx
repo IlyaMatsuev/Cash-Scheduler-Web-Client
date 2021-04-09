@@ -3,6 +3,7 @@ import {Container, Dimmer, Loader} from 'semantic-ui-react';
 import {Bar} from 'react-chartjs-2';
 import moment from 'moment';
 import {generateBackgroundColor, generateBorderColor} from '../ColorUtils';
+import {get} from "../../../../../../utils/TranslationUtils";
 
 
 const BarTransactions = ({transactionsDelta = [], transactionsLoading, transactionsError, isRecurring}) => {
@@ -17,7 +18,7 @@ const BarTransactions = ({transactionsDelta = [], transactionsLoading, transacti
         const getType = transaction => transaction.delta > 0 ? 'Income' : 'Expense';
         const sortedTransactions = getSortedTransactions(transactions);
         return {
-            labels: sortedTransactions.map(t => t.month),
+            labels: sortedTransactions.map(t => get(t.month, 'months')),
             datasets: [{
                 data: sortedTransactions.map(t => t.delta),
                 backgroundColor: sortedTransactions.map(t => generateBackgroundColor(getType(t), 0.2)),
@@ -29,7 +30,8 @@ const BarTransactions = ({transactionsDelta = [], transactionsLoading, transacti
 
     const options = {
         title: {
-            text: (isRecurring ? 'Recurring ' : '') + 'Transactions Delta For The Last Year',
+            text: (isRecurring ? `${get('recurring', 'transactions')}: ` : '')
+                + get('deltaPerYearChartTitle', 'transactions'),
             display: true,
             fontSize: 22,
             fontColor: 'rgba(0, 0, 0, .54)'

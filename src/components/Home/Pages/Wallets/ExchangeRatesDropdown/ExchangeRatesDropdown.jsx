@@ -3,6 +3,7 @@ import {Dropdown} from 'semantic-ui-react';
 import moment from 'moment';
 import {useQuery, useMutation} from '@apollo/client';
 import {onNumberInput, toFloat} from '../../../../../utils/GlobalUtils';
+import {get} from '../../../../../utils/TranslationUtils';
 import currencyQueries from '../../../../../graphql/queries/currencies';
 import currencyMutations from '../../../../../graphql/mutations/currencies';
 import styles from './ExchangeRatesDropdown.module.css';
@@ -54,8 +55,10 @@ const ExchangeRatesDropdown = ({sourceCurrency, targetCurrency, value, error, on
                   loading={
                       exchangeRatesQueryLoading || !!exchangeRatesQueryError
                       || createExchangeRateLoading || !!createExchangeRateError}
-                  placeholder="Exchange Rate" name="exchangeRate"
-                  allowAdditions additionLabel="Add Exchange Rate: " onAddItem={onNewRateAdd}
+                  placeholder={get('exchangeRate', 'currencies')}
+                  name="exchangeRate"
+                  allowAdditions additionLabel={`${get('addExchangeRate', 'currencies')}: `}
+                  onAddItem={onNewRateAdd}
                   value={value} error={error}
                   onChange={onChange} onInput={onNumberInput}
                   options={

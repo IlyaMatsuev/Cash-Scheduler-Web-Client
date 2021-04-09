@@ -3,7 +3,7 @@ import {Segment} from 'semantic-ui-react';
 import LineTransactions from './LineTransactions/LineTransactions';
 import DoughnutTransactions from './DoughnutTransactions/DoughnutTransactions';
 import styles from './Charts.module.css';
-import BarTransactions from "./BarTransactions/BarTransactions";
+import BarTransactions from './BarTransactions/BarTransactions';
 
 
 const Charts = ({transactions = [], recurringTransactions = [], transactionsDelta = [], transactionsLoading, transactionsError, isRecurring}) => {

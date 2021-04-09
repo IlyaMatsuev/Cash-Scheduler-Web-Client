@@ -227,7 +227,8 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
                                  transactionsLoading={transactionsLoading} transactionsError={transactionsError}
                                  onPrevMonth={onPrevMonth} onNextMonth={onNextMonth}
                                  onTransactionSelected={onSelectedTransactionToggle}
-                                 onTransactionsViewChange={onTransactionsViewChange}/>
+                                 onTransactionsViewChange={onTransactionsViewChange}
+                />
 
                 <TransactionModal open={state.transactionModalOpened} isRecurring={isRecurringView}
                                   transaction={state.selectedTransaction} errors={errors}
@@ -236,7 +237,8 @@ const Transactions = ({currentDate, isRecurringView, onTransactionPropsChange}) 
                                   onDeleteModalToggle={onTransactionDeleteToggle}
                                   deleteLoading={deleteTransactionLoading} saveLoading={updateTransactionLoading}
                                   onChange={onSelectedTransactionChange}
-                                  onSave={onSelectedTransactionSave} onDelete={onSelectedTransactionDelete}/>
+                                  onSave={onSelectedTransactionSave} onDelete={onSelectedTransactionDelete}
+                />
             </Grid.Column>
         </Grid>
     );

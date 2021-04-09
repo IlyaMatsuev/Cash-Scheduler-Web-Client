@@ -4,15 +4,15 @@ import {useQuery} from '@apollo/client';
 import settingQueries from '../graphql/queries/settings';
 import {getSetting} from '../utils/SettingUtils';
 import {setTheme} from '../utils/GlobalUtils';
+import {setLang} from '../utils/TranslationUtils';
 
 
 const Home = () => {
     const {data: settingsQueryData} = useQuery(settingQueries.GET_SETTINGS);
-    if (getSetting('DarkTheme', settingsQueryData)) {
-        setTheme('dark');
-    } else {
-        setTheme('light');
-    }
+
+    setTheme(getSetting('DarkTheme', settingsQueryData) ? 'dark' : 'light');
+    setLang(getSetting('Language', settingsQueryData, false));
+
     return <HomeWrapper/>;
 };
 

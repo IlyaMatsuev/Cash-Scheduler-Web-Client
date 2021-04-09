@@ -8,8 +8,7 @@ body[theme='dark'] .navbar,
 body[theme='dark'] .pushable > .pusher.dimmed:after,
 body[theme='dark'] .ui.slide.sidebar,
 body[theme='dark'] .ui.page.dimmer,
-body[theme='dark'] .ui.toggle.checkbox > input
-{
+body[theme='dark'] .ui.toggle.checkbox > input {
     filter: invert(1) hue-rotate(180deg);
 }
 
@@ -24,4 +23,8 @@ body[theme='dark'] .ui.page.dimmer > .modalContainer > div {
 
 body[theme='dark'] .ui.button.floating.dropdown[role='listbox'] {
     background-color: #cfcfcf !important;
+}
+
+body[theme='dark'] .ui.toggle.checkbox label:after {
+    background: #3b3b3b linear-gradient(transparent, rgba(0, 0, 0, .05));
 }

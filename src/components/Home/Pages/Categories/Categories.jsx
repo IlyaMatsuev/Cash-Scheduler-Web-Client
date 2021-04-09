@@ -4,6 +4,7 @@ import NewCategoryForm from './NewCategory/NewCategoryForm';
 import {useMutation, useQuery} from '@apollo/client';
 import {onUIErrors} from '../../../../utils/GlobalUtils';
 import {createEntityCache, updateEntityCache, removeEntityCache} from '../../../../utils/CacheUtils';
+import {get} from '../../../../utils/TranslationUtils';
 import CategoriesList from './CategoriesList/CategoriesList';
 import EditCategoryForm from './EditCategory/EditCategoryForm';
 import styles from './Categories.module.css';
@@ -22,7 +23,6 @@ const Categories = ({activeCategoryTabIndex, onCategoryPropsChange}) => {
         newCategory: {
             name: '',
             transactionTypeName: 'Expense',
-            // TODO: implement uploading custom category icons
             iconUrl: ''
         },
         category: {
@@ -149,8 +149,8 @@ const Categories = ({activeCategoryTabIndex, onCategoryPropsChange}) => {
                                                 onCategoryClick={onCategoryEditToggle}/>;
 
     const panels = [
-        {menuItem: 'Standard Categories', render: () => <Tab.Pane>{standardCategoriesTab}</Tab.Pane>},
-        {menuItem: 'Custom Categories', render: () => <Tab.Pane>{customCategoriesTab}</Tab.Pane>}
+        {menuItem: get('standardCategories', 'categories'), render: () => <Tab.Pane>{standardCategoriesTab}</Tab.Pane>},
+        {menuItem: get('customCategories', 'categories'), render: () => <Tab.Pane>{customCategoriesTab}</Tab.Pane>}
     ];
 
     const onCategoryTabChange = (event, {activeIndex}) => {
@@ -180,37 +180,39 @@ const Categories = ({activeCategoryTabIndex, onCategoryPropsChange}) => {
                 <Modal dimmer size="small" className="modalContainer"
                        closeOnEscape={true} closeOnDimmerClick={true}
                        open={state.categoryEditModalOpen} onClose={onCategoryEditToggle}>
-                    <Modal.Header>Edit Category</Modal.Header>
+                    <Modal.Header content={get('editCategory', 'categories')}/>
                     <Modal.Content>
                         <Dimmer active={updateCategoryLoading || deleteCategoryLoading} inverted
                                 className={styles.categoryModalLoader}>
-                            <Loader />
+                            <Loader/>
                         </Dimmer>
                         <EditCategoryForm category={state.category} errors={errors}
                                           query={categoryWithTypesQuery}
                                           onChange={onCategoryEditChange}/>
                     </Modal.Content>
                     <Modal.Actions>
-                        <Button basic color="grey" onClick={onCategoryEditToggle}>
-                            Cancel
-                        </Button>
-                        <Button basic color="red" disabled={state.category && !state.category.isCustom}
-                                onClick={onCategoryDeleteConfirmationToggle}>
-                            Delete
-                            <Confirm className="modalContainer"
-                                     content={
-                                         `You're about to delete the "${state.category.name}" category. 
-                                         All your related transactions will be deleted as well. Proceed?`}
-                                     confirmButton={<Button basic negative>Yes, delete it</Button>}
-                                     open={state.categoryDeleteConfirmationOpen}
-                                     onCancel={onCategoryDeleteConfirmationToggle} onConfirm={onCategoryEditDelete}
-                            />
-                        </Button>
-                        <Button primary loading={false} disabled={state.category && !state.category.isCustom}
-                                onClick={onCategoryEditSave}>
-                            Save
-                        </Button>
+                        <Button basic color="grey" onClick={onCategoryEditToggle}
+                                content={get('cancel')}
+                        />
+                        <Button basic color="red"
+                                disabled={state.category && !state.category.isCustom}
+                                onClick={onCategoryDeleteConfirmationToggle}
+                                content={get('delete')}
+                        />
+                        <Button primary loading={false}
+                                disabled={state.category && !state.category.isCustom}
+                                onClick={onCategoryEditSave}
+                                content={get('save')}
+                        />
                     </Modal.Actions>
+
+                    <Confirm className="modalContainer"
+                             content={get('deleteConfirmMessage', 'categories')}
+                             cancelButton={<Button basic content={get('cancel')}/>}
+                             confirmButton={<Button basic negative content={get('confirmDelete')}/>}
+                             open={state.categoryDeleteConfirmationOpen}
+                             onCancel={onCategoryDeleteConfirmationToggle} onConfirm={onCategoryEditDelete}
+                    />
                 </Modal>
             </div>
         </Container>

@@ -2,6 +2,7 @@ import React from 'react';
 import {Container, Dimmer, Grid, Loader} from 'semantic-ui-react';
 import {Doughnut} from 'react-chartjs-2';
 import {generateBackgroundColor, generateBorderColor} from '../ColorUtils';
+import {get} from '../../../../../../utils/TranslationUtils';
 
 
 const DoughnutTransactions = ({transactions = [], recurringTransactions = [], transactionsLoading, transactionsErrors, isRecurring}) => {
@@ -42,7 +43,7 @@ const DoughnutTransactions = ({transactions = [], recurringTransactions = [], tr
     const getOptions = title => {
         return {
             title: {
-                text: title,
+                text: get(title, 'transactionTypes'),
                 display: true,
                 fontSize: 22,
                 fontColor: 'rgba(0, 0, 0, .54)'
@@ -66,11 +67,11 @@ const DoughnutTransactions = ({transactions = [], recurringTransactions = [], tr
             <Grid columns={2}>
                 <Grid.Column>
                     {!isRecurring && <Doughnut data={getDataByType(transactions, 'Income')}
-                                               options={getOptions('Income')}
+                                               options={getOptions('Incomes')}
                                                height={150}
                     />}
                     {isRecurring && <Doughnut data={getDataByType(recurringTransactions, 'Income')}
-                                              options={getOptions('Recurring Income')}
+                                              options={getOptions('RecurringIncome')}
                                               height={150}
                     />}
                 </Grid.Column>
@@ -80,7 +81,7 @@ const DoughnutTransactions = ({transactions = [], recurringTransactions = [], tr
                                                height={150}
                     />}
                     {isRecurring && <Doughnut data={getDataByType(recurringTransactions, 'Expense')}
-                                              options={getOptions('Recurring Expenses')}
+                                              options={getOptions('RecurringExpenses')}
                                               height={150}
                     />}
                 </Grid.Column>

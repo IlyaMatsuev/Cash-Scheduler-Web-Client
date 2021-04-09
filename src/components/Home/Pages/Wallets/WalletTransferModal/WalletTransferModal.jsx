@@ -4,6 +4,7 @@ import {useMutation} from '@apollo/client';
 import WalletTransferForm from './WalletTransferForm/WalletTransferForm';
 import {isValidNumber, onUIErrors, toFloat} from '../../../../../utils/GlobalUtils';
 import {updateEntityCache} from '../../../../../utils/CacheUtils';
+import {get} from '../../../../../utils/TranslationUtils';
 import userQueries from '../../../../../graphql/queries/users';
 import walletMutations from '../../../../../graphql/mutations/wallets';
 import walletFragments from '../../../../../graphql/fragments/wallets';
@@ -76,21 +77,21 @@ const WalletTransferModal = ({open, sourceWallet, targetWallet, onModalToggle}) 
                closeOnDimmerClick className="modalContainer"
                open={open} onClose={onTransferModalToggle}
         >
-            <Modal.Header>
-                New Transfer
-            </Modal.Header>
+            <Modal.Header content={get('newTransfer', 'wallets')}/>
             <Modal.Content>
                 <WalletTransferForm transfer={state.transfer}
                                     sourceWallet={sourceWallet} targetWallet={targetWallet}
-                                    errors={errors} onChange={onTransferChange}/>
+                                    errors={errors} onChange={onTransferChange}
+                />
             </Modal.Content>
             <Modal.Actions>
-                <Button basic onClick={onTransferModalToggle}>
-                    Cancel
-                </Button>
-                <Button primary onClick={onTransferSave} loading={createTransferLoading}>
-                    Transfer
-                </Button>
+                <Button basic onClick={onTransferModalToggle}
+                        content={get('cancel')}
+                />
+                <Button primary onClick={onTransferSave}
+                        loading={createTransferLoading}
+                        content={get('transfer')}
+                />
             </Modal.Actions>
         </Modal>
     );

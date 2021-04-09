@@ -6,6 +6,7 @@ import settingQueries from '../../../../graphql/queries/settings';
 import settingMutations from '../../../../graphql/mutations/settings';
 import settingFragments from '../../../../graphql/fragments/settings';
 import {updateEntityCache} from '../../../../utils/CacheUtils';
+import {get} from '../../../../utils/TranslationUtils';
 
 
 const Settings = () => {
@@ -46,15 +47,19 @@ const Settings = () => {
         setState({...state, activeUnit: name});
     };
 
-    const onSettingUpdate = (event, {name, checked, value}, setting) => {
+    const onSettingUpdate = (event, {name, type, checked, value}, setting) => {
+        let settingValue = value;
+        if (type === 'checkbox') {
+            settingValue = String(checked)
+        }
         updateSetting({
             variables: {
                 setting: {
                     name: setting.setting.name,
-                    value: String(checked)
+                    value: settingValue
                 }
             }
-        })
+        });
     };
 
 
@@ -66,7 +71,9 @@ const Settings = () => {
                         {settingsQueryData && settingsQueryData.settingUnits?.map(unitName =>
                             <Menu.Item key={unitName} name={unitName}
                                        active={state.activeUnit === unitName}
-                                       onClick={onMenuItem}/>)}
+                                       onClick={onMenuItem}
+                                       content={get(unitName, 'settings')}
+                            />)}
                     </Menu>
                 </Grid.Column>
                 <Grid.Column width={12}>

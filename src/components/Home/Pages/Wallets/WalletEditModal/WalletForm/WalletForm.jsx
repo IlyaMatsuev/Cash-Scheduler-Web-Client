@@ -2,6 +2,7 @@ import React from 'react';
 import {Checkbox, Dropdown, Grid, Input} from 'semantic-ui-react';
 import ErrorsList from '../../../../../../utils/ErrorsList';
 import {convertToValidIconUrl, toFloat} from '../../../../../../utils/GlobalUtils';
+import {get} from '../../../../../../utils/TranslationUtils';
 import currencyQueries from '../../../../../../graphql/queries/currencies';
 import {useQuery} from '@apollo/client';
 import styles from './WalletForm.module.css';
@@ -19,19 +20,26 @@ const WalletForm = ({wallet, errors, onChange, isEditing}) => {
         <Grid columns={2} padded centered>
             <Grid.Row>
                 <Grid.Column>
-                    <Input type="text" name="name" placeholder="Name"
-                           error={!!errors.name} value={wallet.name} onChange={onChange}/>
+                    <Input type="text" name="name"
+                           placeholder={get('walletName', 'wallets')}
+                           error={!!errors.name} value={wallet.name}
+                           onChange={onChange}
+                    />
                 </Grid.Column>
                 <Grid.Column>
-                    <Input type="number" name="balance" placeholder="Balance"
-                           error={!!errors.balance} value={toFloat(wallet.balance)} onChange={onChange}/>
+                    <Input type="number" name="balance"
+                           placeholder={get('walletBalance', 'wallets')}
+                           error={!!errors.balance} value={toFloat(wallet.balance)}
+                           onChange={onChange}
+                    />
                 </Grid.Column>
             </Grid.Row>
             <Grid.Row>
                 <Grid.Column>
                     <Dropdown deburr scrolling search selection lazyLoad className={styles.currencyDropdown}
                               loading={currenciesQueryLoading || !!currenciesQueryError}
-                              placeholder="Currency" name="currencyAbbreviation"
+                              placeholder={get('walletCurrency', 'wallets')}
+                              name="currencyAbbreviation"
                               error={!!errors.currencyAbbreviation}
                               value={wallet.currencyAbbreviation || wallet.currency?.abbreviation}
                               onChange={onChange}
@@ -41,10 +49,12 @@ const WalletForm = ({wallet, errors, onChange, isEditing}) => {
                                       value: currency.abbreviation,
                                       text: currency.abbreviation,
                                       image: {avatar: true, src: convertToValidIconUrl(currency.iconUrl)}
-                                  }))) || []}/>
+                                  }))) || []}
+                    />
                 </Grid.Column>
                 <Grid.Column>
-                    <Checkbox toggle label="Is Default?" name="isDefault" disabled={wallet.originallyDefault}
+                    <Checkbox toggle label={get('walletIsDefault', 'wallets')}
+                              name="isDefault" disabled={wallet.originallyDefault}
                               checked={wallet.isDefault} onChange={onChange}
                     />
                 </Grid.Column>
@@ -61,7 +71,8 @@ const WalletForm = ({wallet, errors, onChange, isEditing}) => {
                 </Grid.Column>
                 <Grid.Column>
                     {wallet.currencyChanged
-                    && <Checkbox toggle label="Convert Balance?" name="convertBalance"
+                    && <Checkbox toggle label={get('walletIsConvertBalance', 'wallets')}
+                                 name="convertBalance"
                                  checked={wallet.convertBalance} onChange={onChange}
                     />}
                 </Grid.Column>

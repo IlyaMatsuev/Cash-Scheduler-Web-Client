@@ -7,6 +7,7 @@ import notificationMutations from '../../../../graphql/mutations/notifications';
 import notificationFragments from '../../../../graphql/fragments/notifications';
 import NotificationReadModal from './NotificationReadModal/NotificationReadModal';
 import {updateEntityCache} from '../../../../utils/CacheUtils';
+import {get} from '../../../../utils/TranslationUtils';
 
 
 const NotificationsList = () => {
@@ -73,17 +74,26 @@ const NotificationsList = () => {
         setState({...state, notificationModalOpen: !state.notificationModalOpen});
     };
 
+    const haveNotifications = () => {
+        return notifications?.unreadNotificationsCount > 0;
+    };
 
     return (
         <Popup open={state.notificationsListOpen} position="bottom left" flowing
-               trigger={<Label className={styles.notificationsListPopup} onClick={onNotificationsListToggle}>
-                   <Icon name="mail"/>
-                   {notifications?.unreadNotificationsCount > 0 ? notifications.unreadNotificationsCount : ''}
-               </Label>}>
+               trigger={
+                   <Label
+                       className={styles.notificationsListPopup + (haveNotifications() ? '' : ` ${styles.noNotifications}`)}
+                       onClick={onNotificationsListToggle}
+                   >
+                       <Icon name="mail"/>
+                       {haveNotifications() ? notifications.unreadNotificationsCount : ''}
+                   </Label>
+               }
+        >
             <Popup.Content>
                 <Container fluid className={styles.notificationsListContainer}>
                     <Segment basic className="content scrolling" loading={notificationsLoading || !!notificationsError}>
-                        <Header as="h3" textAlign="center">Notifications</Header>
+                        <Header as="h3" textAlign="center" content={get('title', 'notifications')}/>
                         <Divider/>
                         {notifications && notifications.notifications.map(notification => (
                             <Segment key={notification.id} inverted={!notification.isRead}

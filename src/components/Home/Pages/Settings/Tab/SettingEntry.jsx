@@ -1,21 +1,27 @@
 import React from 'react';
-import {Checkbox, Container, Divider, Input} from 'semantic-ui-react';
-import ConnectedAppsSetting from './ConnectedAppsSetting/ConnectedAppsSetting';
+import {Container, Divider} from 'semantic-ui-react';
+import ConnectedAppsSetting from './Inputs/ConnectedAppsSetting/ConnectedAppsSetting';
+import LanguageSetting from './Inputs/LanguageSetting/LanguageSetting';
+import Checkbox from './Inputs/Checkbox/Checkbox';
+import Text from './Inputs/Text/Text';
+import {get} from '../../../../../utils/TranslationUtils';
 import styles from './SettingsEntry.module.css';
 
 
 const SettingEntry = ({setting, onSettingUpdate}) => {
-
-    const onChangeHandler = (event, target) => {
+    const onChange = (event, target) => {
         onSettingUpdate(event, target, setting);
     };
 
+    const customSettingsInputs = {
+        ConnectedAppsToken: <ConnectedAppsSetting/>,
+        Language: <LanguageSetting setting={setting} onChange={onChange}/>
+    };
+
     const inputsBySettingValueTypes = {
-        'Checkbox': () => <Checkbox toggle name={setting.setting.name} label={setting.setting.label}
-                                  checked={setting.value === 'true'} onChange={onChangeHandler}/>,
-        'Text': () => <Input type="text" name={setting.setting.name} label={setting.setting.label}
-                           value={setting.value} onChange={onChangeHandler}/>,
-        'Custom': () => <ConnectedAppsSetting/>
+        'Checkbox': () => <Checkbox setting={setting} onChange={onChange}/>,
+        'Text': () => <Text setting={setting} onChange={onChange}/>,
+        'Custom': () => customSettingsInputs[setting.setting.name]
     };
 
     const SettingInput = inputsBySettingValueTypes[setting.setting.valueType];
@@ -24,7 +30,7 @@ const SettingEntry = ({setting, onSettingUpdate}) => {
         <Container fluid>
             <SettingInput/>
             <div className={styles.settingDescription}>
-                {setting.setting.description}
+                {get(setting.setting.description, 'settings')}
             </div>
             <Divider hidden/>
         </Container>
