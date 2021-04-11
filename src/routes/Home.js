@@ -8,7 +8,9 @@ import {setLang} from '../utils/TranslationUtils';
 
 
 const Home = () => {
-    const {data: settingsQueryData} = useQuery(settingQueries.GET_SETTINGS);
+    const {data: settingsQueryData} = useQuery(settingQueries.GET_SETTINGS, {
+        variables: {unitName: 'General'}
+    });
 
     setTheme(getSetting('DarkTheme', settingsQueryData) ? 'dark' : 'light');
     setLang(getSetting('Language', settingsQueryData, false));

@@ -10,7 +10,12 @@
     "settings": "Les Paramètres"
   },
   "notifications": {
-    "title": "Notifications"
+    "title": "Notifications",
+    "successTitle": "Success",
+    "logOutFromConnectedAppsDescription": "Vous vous êtes déconnecté avec succès de toutes les applications connectées qui utilisaient votre jeton.",
+    "newNotificationTitle": "Nouvelle Notification",
+    "deleteAccountTitle": "En File d'Attente Pour Suppression",
+    "deleteAccountDescription": "Votre compte sera définitivement supprimé dans une heure."
   },
   "account": {
     "firstName": "Nom",
@@ -78,12 +83,14 @@
     "Integrations": "Intégrations",
     "Balance": "Équilibre",
     "Appearance": "Apparence",
+    "Dangerous": "Section Dangereuse",
     "Management": "La Gestion",
     "Sound": "Sonner",
     "App Token": "Jeton d'Application",
     "Always show balance in the header": "Toujours afficher l'équilibre dans l'en-tête",
     "Dark Theme": "Thème Sombre",
     "Language": "Langue",
+    "Delete Account": "Supprimer le Compte",
     "Turn notification on": "Activer la notification",
     "Duplicate to email": "Dupliquer dans un e-mail",
     "Turn notification sound on": "Activer le son de notification",
@@ -94,6 +101,7 @@
     "Duplicate all notifications to your email": "Dupliquer toutes les notifications dans votre e-mail",
     "Play sound when a new notification arrives": "Jouez du son à l'arrivée d'une nouvelle notification",
     "Token that can be used for providing access to your account for other apps in order to get them ability to log transactions for you!": "Jeton qui peut être utilisé pour donner accès à votre compte à d'autres applications afin de leur permettre d'enregistrer des transactions pour vous!",
+    "If you don't want to use CashScheduler anymore you can delete account to be sure all your personal data is removed": "Si vous ne souhaitez plus utiliser CashScheduler, vous pouvez supprimer le compte pour être sûr que toutes vos données personnelles sont supprimées",
     "pickLanguage": "Choisissez la langue",
     "copy": "Copie",
     "revival": "La Relance",
@@ -102,7 +110,9 @@
     "logOut": "Quitter Toutes Les Applications Intégrées",
     "logOutConfirmationHeader": "Quittez toutes les applications intégrées",
     "logOutConfirmationMessage": "Voulez-vous vraiment vous déconnecter de toutes les applications connectées?",
-    "confirmLogOut": "Se Déconnecter"
+    "confirmLogOut": "Se Déconnecter",
+    "confirmDeleteAccountMessage": "Confirmez l'action en fournissant un mot de passe",
+    "confirmDeleteAccountInput": "Tapez Votre Mot de Passe Ici"
   },
   "months": {
     "January": "Janvier",

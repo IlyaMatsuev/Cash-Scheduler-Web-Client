@@ -2,6 +2,7 @@ import React from 'react';
 import {Container, Divider} from 'semantic-ui-react';
 import ConnectedAppsSetting from './Inputs/ConnectedAppsSetting/ConnectedAppsSetting';
 import LanguageSetting from './Inputs/LanguageSetting/LanguageSetting';
+import DeleteAccount from './Inputs/DeleteAccount/DeleteAccount';
 import Checkbox from './Inputs/Checkbox/Checkbox';
 import Text from './Inputs/Text/Text';
 import {get} from '../../../../../utils/TranslationUtils';
@@ -15,7 +16,8 @@ const SettingEntry = ({setting, onSettingUpdate}) => {
 
     const customSettingsInputs = {
         ConnectedAppsToken: <ConnectedAppsSetting/>,
-        Language: <LanguageSetting setting={setting} onChange={onChange}/>
+        Language: <LanguageSetting setting={setting} onChange={onChange}/>,
+        DeleteAccount: <DeleteAccount setting={setting}/>
     };
 
     const inputsBySettingValueTypes = {

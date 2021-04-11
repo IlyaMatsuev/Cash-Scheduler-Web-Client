@@ -10,7 +10,12 @@
     "settings": "Настройки"
   },
   "notifications": {
-    "title": "Уведомления"
+    "title": "Уведомления",
+    "successTitle": "Готово",
+    "logOutFromConnectedAppsDescription": "Вы успешно вышли из всех интегрированных приложений, которые использовали ваш токен.",
+    "newNotificationTitle": "Новое Уведомление",
+    "deleteAccountTitle": "Добавлено к Удалению",
+    "deleteAccountDescription": "Ваш аккаунт и все данные будут полностью удалены через час."
   },
   "account": {
     "firstName": "Имя",
@@ -78,12 +83,14 @@
     "Integrations": "Интеграции",
     "Balance": "Баланс",
     "Appearance": "Внешний Вид",
+    "Dangerous": "Опасная Секция",
     "Management": "Управление",
     "Sound": "Звук",
     "App Token": "Токен Приложений",
     "Always show balance in the header": "Всегда показывать баланс в заголовке",
     "Dark Theme": "Темная Тема",
     "Language": "Язык",
+    "Delete Account": "Удалить Аккаунт",
     "Turn notification on": "Включить уведомления",
     "Duplicate to email": "Дублировать на почту",
     "Turn notification sound on": "Включить звук уведомлений",
@@ -94,6 +101,7 @@
     "Duplicate all notifications to your email": "Дублировать уведомления на почту",
     "Play sound when a new notification arrives": "Проигрывать звук при получении нового уведомления",
     "Token that can be used for providing access to your account for other apps in order to get them ability to log transactions for you!": "Токен, который позволит Вам интегрировать CashScheduler с другими приложеними!",
+    "If you don't want to use CashScheduler anymore you can delete account to be sure all your personal data is removed": "Если вы больше не хотите пользоваться CashScheduler, то вы можете удалить свой аккаунт и быть уверенными, что ваши персональные данные удалены",
     "pickLanguage": "Выберите Язык",
     "copy": "Копировать",
     "revival": "Показать",
@@ -102,7 +110,9 @@
     "logOut": "Выйти Из Всех Интегрированных Приложений",
     "logOutConfirmationHeader": "Выход из всех интегрированных приложений",
     "logOutConfirmationMessage": "Вы уверены, что хотите выйти из всех подключенных приложений?",
-    "confirmLogOut": "Выйти"
+    "confirmLogOut": "Выйти",
+    "confirmDeleteAccountMessage": "Подтвердите действие вводом пароля",
+    "confirmDeleteAccountInput": "Введите Свой Пароль Здесь"
   },
   "months": {
     "January": "Январь",

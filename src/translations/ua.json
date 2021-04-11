@@ -10,7 +10,12 @@
     "settings": "Налаштування"
   },
   "notifications": {
-    "title": "Повідомлення"
+    "title": "Повідомлення",
+    "successTitle": "Success",
+    "logOutFromConnectedAppsDescription": "Ви успішно вийшли з усіх підключених програм, які використовували ваш маркер.",
+    "newNotificationTitle": "Нове Повідомлення",
+    "deleteAccountTitle": "У Черзі На Видалення",
+    "deleteAccountDescription": "Ваш обліковий запис буде назавжди видалено через годину."
   },
   "account": {
     "firstName": "Ім'я",
@@ -78,12 +83,14 @@
     "Integrations": "Інтеграції",
     "Balance": "Баланс",
     "Appearance": "Зовнішній Вигляд",
+    "Dangerous": "Небезпечна Секція",
     "Management": "Управління",
     "Sound": "Звук",
     "App Token": "Токен Програмы",
     "Always show balance in the header": "Завжди показувати баланс в заголовку",
     "Dark Theme": "Темна Тема",
     "Language": "Мова",
+    "Delete Account": "Видалити Аккаунт",
     "Turn notification on": "Включити повідомлення",
     "Duplicate to email": "Дублювати на пошту",
     "Turn notification sound on": "Включити звук повідомлень",
@@ -94,6 +101,7 @@
     "Duplicate all notifications to your email": "Дублювати повідомлення на пошту",
     "Play sound when a new notification arrives": "Програвати звук при отриманні нового повідомлення",
     "Token that can be used for providing access to your account for other apps in order to get them ability to log transactions for you!": "Токен, який дозволить Вам інтегрувати CashScheduler з іншими програмами!",
+    "If you don't want to use CashScheduler anymore you can delete account to be sure all your personal data is removed": "Якщо ви більше не хочете користуватися CashScheduler, то ви можете видалити свій аккаунт і бути впевненими, що ваші персональні дані видалені",
     "pickLanguage": "Виберіть мову",
     "copy": "Копіювати",
     "revival": "Показати",
@@ -102,7 +110,9 @@
     "logOut": "Вийти З Всіх Інтегрованих Додатків",
     "logOutConfirmationHeader": "Вихід з усіх інтегрованих програм",
     "logOutConfirmationMessage": "Ви впевнені, що хочете вийти з усіх підключених програм?",
-    "confirmLogOut": "Вийти"
+    "confirmLogOut": "Вийти",
+    "confirmDeleteAccountMessage": "Підтвердьте дію, вказавши пароль",
+    "confirmDeleteAccountInput": "Введіть Тут Свій Пароль"
   },
   "months": {
     "January": "Січень",

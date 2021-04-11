@@ -32,7 +32,7 @@ export const global = {
 };
 export const notifications = {
     volume: 0.5,
-    toastDuration: 3000
+    toastDuration: 5000
 };
 export const dev = {
     user: {

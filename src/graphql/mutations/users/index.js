@@ -59,5 +59,12 @@ export default {
                 lastName
             }
         }
+    `,
+    DELETE_USER: gql`
+        mutation($password: String!) {
+            deleteUser(password: $password) {
+                id
+            }
+        }
     `
 };

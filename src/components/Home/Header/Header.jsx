@@ -54,7 +54,7 @@ const Header = ({client, onToggleMenu, onSectionClick}) => {
                     play();
                 }
                 toast({
-                    title: 'New Notification',
+                    title: get('newNotificationTitle', 'notifications'),
                     description: newNotification.title,
                     type: 'info',
                     icon: 'envelope',

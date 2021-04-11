@@ -30,8 +30,8 @@ const ConnectedAppsSetting = () => {
     ] = useMutation(userMutations.LOGOUT_CONNECTED_APPS, {
         onCompleted: () => {
             toast({
-                title: 'Success',
-                description: 'You\'ve successfully logged out from all connected apps that used your token.',
+                title: get('successTitle', 'notifications'),
+                description: get('logOutFromConnectedAppsDescription', 'notifications'),
                 type: 'success',
                 icon: 'check',
                 color: 'green',
