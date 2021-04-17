@@ -35,5 +35,14 @@ export default {
                 }
             }
         }
+    `,
+    GET_AVAILABLE_LANGUAGES: gql`
+        query {
+            languages {
+                abbreviation
+                name
+                iconUrl
+            }
+        }
     `
 };

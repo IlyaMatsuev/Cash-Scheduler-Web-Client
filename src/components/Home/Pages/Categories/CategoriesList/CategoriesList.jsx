@@ -1,7 +1,8 @@
 import React from 'react';
 import {Grid, Header, Image, Item, Segment} from 'semantic-ui-react';
 import styles from './CategoryList.module.css';
-import {convertToValidIconUrl} from '../../../../../utils/UtilHooks';
+import {convertToValidIconUrl} from '../../../../../utils/GlobalUtils';
+import {get} from '../../../../../utils/TranslationUtils';
 
 
 const CategoriesList = ({query, categoryType, onCategoryClick}) => {
@@ -9,7 +10,7 @@ const CategoriesList = ({query, categoryType, onCategoryClick}) => {
         <Grid columns={2}>
             {query && query.data && query.data.transactionTypes.map(type => (
                 <Grid.Column key={type.name}>
-                    <Header attached="top">{type.name}</Header>
+                    <Header attached="top" content={get(type.name, 'transactionTypes')}/>
                     <Segment attached loading={query.loading || query.error} className={styles.categoryListColumn}>
                         <Item.Group divided>
                             {(query && query.data

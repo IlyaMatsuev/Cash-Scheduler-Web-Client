@@ -1,22 +1,27 @@
 import React from 'react';
 import {Button, Container, Divider, Dropdown, Form, Grid} from 'semantic-ui-react';
 import {server} from '../../../../../config';
+import {get} from '../../../../../utils/TranslationUtils';
 
 
 const NewCategoryForm = ({category, query, errors, onCategoryChange, onCategoryCreate}) => {
     return (
         <Form onSubmit={onCategoryCreate}>
             <Container textAlign="center">
-                <h3>New Category</h3>
+                <h3>{get('newCategory', 'categories')}</h3>
             </Container>
             <Divider hidden/>
             <Grid columns={2} padded>
                 <Grid.Column>
-                    <Form.Input fluid name="name" placeholder="Name" type="text"
-                                error={errors.name} value={category.name} onChange={onCategoryChange}/>
+                    <Form.Input fluid name="name" type="text"
+                                placeholder={get('categoryName', 'categories')}
+                                error={errors.name} value={category.name}
+                                onChange={onCategoryChange}
+                    />
                 </Grid.Column>
                 <Grid.Column>
-                    <Dropdown fluid name="transactionTypeName" placeholder="Type" selection
+                    <Dropdown fluid name="transactionTypeName" selection
+                              placeholder={get('categoryType', 'categories')}
                               loading={query.loading || query.error}
                               error={errors.transactionTypeName} value={category.transactionTypeName}
                               onChange={onCategoryChange}
@@ -24,22 +29,23 @@ const NewCategoryForm = ({category, query, errors, onCategoryChange, onCategoryC
                                   (query && query.data
                                       && query.data.transactionTypes.map(type => ({
                                           key: type.name,
-                                          text: type.name,
                                           value: type.name,
-                                          image: {
-                                              avatar: true,
-                                              src: `${server.root}${type.iconUrl}`
-                                          }
+                                          text: get(type.name, 'transactionTypes'),
+                                          image: {src: `${server.root}${type.iconUrl}`}
                                       }))) || []
-                              }/>
+                              }
+                    />
                 </Grid.Column>
                 <Grid.Column width={16}>
-                    <Form.Input fluid name="iconUrl" type="text" placeholder="Icon Url"
-                                error={errors.iconUrl} value={category.iconUrl} onChange={onCategoryChange}/>
+                    <Form.Input fluid name="iconUrl" type="text"
+                                placeholder={get('categoryIconUrl', 'categories')}
+                                error={errors.iconUrl} value={category.iconUrl}
+                                onChange={onCategoryChange}
+                    />
                 </Grid.Column>
             </Grid>
             <Container textAlign="center">
-                <Button primary>Save</Button>
+                <Button primary content={get('save')}/>
             </Container>
         </Form>
     );

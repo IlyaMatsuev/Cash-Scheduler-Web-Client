@@ -51,14 +51,14 @@ const WalletList = ({wallets, onNewWallet, onWalletSelected, onWalletsTransfer})
         // Getting possible row index of the element under the mouse
         const nextRowIndex = Math.round((y + itemRect.height) / itemRect.height) - 1;
 
-        let dropItemIndex = null;
+        let dropItemIndex;
         // Getting possible index of the hovered wallet
         const possibleNextItemIndex = nextRowIndex * columnsCount + nextColumnIndex;
         if (index !== possibleNextItemIndex && possibleNextItemIndex >= 0 && wallets.length > possibleNextItemIndex) {
             dropItemIndex = possibleNextItemIndex;
         }
 
-        if (dropItemIndex) {
+        if (dropItemIndex || dropItemIndex === 0) {
             sourceTransferWallet = wallets[index];
             targetTransferWallet = wallets[dropItemIndex];
         } else {

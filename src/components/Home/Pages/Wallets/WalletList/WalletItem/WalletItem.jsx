@@ -1,6 +1,6 @@
 import React from 'react';
 import {Container, Label, Header, Image, Segment} from 'semantic-ui-react';
-import {convertToValidIconUrl, toFloat} from '../../../../../../utils/UtilHooks';
+import {convertToValidIconUrl, toFloat} from '../../../../../../utils/GlobalUtils';
 import styles from './WalletItem.module.css';
 
 

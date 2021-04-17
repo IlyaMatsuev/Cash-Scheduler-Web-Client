@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './Header.module.css';
-import {Button, Grid} from 'semantic-ui-react';
+import {Button, Container, Grid} from 'semantic-ui-react';
 import {SemanticToastContainer, toast} from 'react-semantic-toasts';
 import {useMutation, useQuery, useSubscription} from '@apollo/client';
 import userMutations from '../../../graphql/mutations/users';
@@ -12,9 +12,11 @@ import settingQueries from '../../../graphql/queries/settings';
 import notificationSubscriptions from '../../../graphql/subscriptions/notifications';
 import notificationFragments from '../../../graphql/fragments/notifications';
 import {pages, notifications} from '../../../config';
-import {createEntityCache, toFloat} from '../../../utils/UtilHooks';
+import {toFloat} from '../../../utils/GlobalUtils';
+import {createEntityCache} from '../../../utils/CacheUtils';
 import useSound from 'use-sound';
-import {getSetting} from '../../../utils/SettingHelper';
+import {getSetting} from '../../../utils/SettingUtils';
+import {get} from '../../../utils/TranslationUtils';
 import newNotificationSound from '../../../sounds/new-notification.mp3';
 import NotificationsList from './NotificationsList/NotificationsList';
 
@@ -52,7 +54,7 @@ const Header = ({client, onToggleMenu, onSectionClick}) => {
                     play();
                 }
                 toast({
-                    title: 'New Notification',
+                    title: get('newNotificationTitle', 'notifications'),
                     description: newNotification.title,
                     type: 'info',
                     icon: 'envelope',
@@ -80,11 +82,12 @@ const Header = ({client, onToggleMenu, onSectionClick}) => {
             </div>
             <div>
                 <Grid columns={displayUnreadNotifications ? 4 : 3}>
-                    <Grid.Column textAlign="center" width={5}>
+                    <Grid.Column textAlign="center" verticalAlign="middle" width={5}>
                         {userQueryData?.user && getSetting('ShowBalance', settingsQueryData) &&
-                            <div className={styles.balanceContainer} onClick={() => onSectionClick(pages.names.transactions)}>
-                                Balance: <span>{toFloat(userQueryData.balance)}</span>
-                            </div>
+                            <Container className={styles.balanceContainer}
+                                       onClick={() => onSectionClick(pages.names.transactions)}
+                                       content={toFloat(userQueryData.balance)}
+                            />
                         }
                     </Grid.Column>
                     {displayUnreadNotifications
@@ -95,9 +98,11 @@ const Header = ({client, onToggleMenu, onSectionClick}) => {
                         {userQueryData?.user && <Account user={userQueryData.user} balance={userQueryData.balance}/>}
                     </Grid.Column>
                     <Grid.Column textAlign="center" width={6}>
-                        <Button inverted color="grey" onClick={onLogOut} loading={loading}>
-                            Log Out
-                        </Button>
+                        <Button inverted color="grey"
+                                onClick={onLogOut}
+                                loading={loading}
+                                content={get('logOut', 'header')}
+                        />
                     </Grid.Column>
                 </Grid>
             </div>

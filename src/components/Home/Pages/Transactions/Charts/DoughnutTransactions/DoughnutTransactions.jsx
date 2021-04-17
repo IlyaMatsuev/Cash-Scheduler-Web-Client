@@ -1,22 +1,11 @@
 import React from 'react';
 import {Container, Dimmer, Grid, Loader} from 'semantic-ui-react';
 import {Doughnut} from 'react-chartjs-2';
+import {generateBackgroundColor, generateBorderColor} from '../ColorUtils';
+import {get} from '../../../../../../utils/TranslationUtils';
+
 
 const DoughnutTransactions = ({transactions = [], recurringTransactions = [], transactionsLoading, transactionsErrors, isRecurring}) => {
-
-    const generatePieBackgroundColor = type => {
-        let greenBalance = Math.floor(Math.random() * 200);
-        let redBalance = Math.floor(Math.random() * 100);
-        let blueBalance = Math.floor(Math.random() * 200);
-
-        if (type === 'Income') {
-            blueBalance = 255;
-        } else if (type === 'Expense') {
-            redBalance = 255;
-        }
-        return `rgba(${redBalance}, ${greenBalance}, ${blueBalance}, 0.4)`;
-    };
-
     const getSummariesByCategories = transactions => {
         let summariesByCategories = [];
         transactions.reduce((transactionsByCategoriesTemp, transaction) => {
@@ -40,13 +29,12 @@ const DoughnutTransactions = ({transactions = [], recurringTransactions = [], tr
             return {};
         }
         const summariesByCategories = getSummariesByCategories(records);
-        const backgroundColors = summariesByCategories.map(() => generatePieBackgroundColor(type));
         return {
             labels: summariesByCategories.map(t => t.category.name),
             datasets: [{
                 data: summariesByCategories.map(t => t.amount),
-                backgroundColor: backgroundColors,
-                borderColor: backgroundColors.map(c => c.slice(0, c.indexOf(', 0.4)')) + ', 1)'),
+                backgroundColor: summariesByCategories.map(() => generateBackgroundColor(type)),
+                borderColor: summariesByCategories.map(() => generateBorderColor(type)),
                 borderWidth: 1
             }]
         };
@@ -55,14 +43,12 @@ const DoughnutTransactions = ({transactions = [], recurringTransactions = [], tr
     const getOptions = title => {
         return {
             title: {
-                text: title,
+                text: get(title, 'transactionTypes'),
                 display: true,
                 fontSize: 22,
                 fontColor: 'rgba(0, 0, 0, .54)'
             },
-            legend: {
-                display: false
-            },
+            legend: {display: false},
             layout: {
                 padding: {
                     left: 20,
@@ -81,15 +67,23 @@ const DoughnutTransactions = ({transactions = [], recurringTransactions = [], tr
             <Grid columns={2}>
                 <Grid.Column>
                     {!isRecurring && <Doughnut data={getDataByType(transactions, 'Income')}
-                                               options={getOptions('Income')} height={150}/>}
+                                               options={getOptions('Incomes')}
+                                               height={150}
+                    />}
                     {isRecurring && <Doughnut data={getDataByType(recurringTransactions, 'Income')}
-                                               options={getOptions('Recurring Income')} height={150}/>}
+                                              options={getOptions('RecurringIncome')}
+                                              height={150}
+                    />}
                 </Grid.Column>
                 <Grid.Column>
                     {!isRecurring && <Doughnut data={getDataByType(transactions, 'Expense')}
-                                              options={getOptions('Expenses')} height={150}/>}
+                                               options={getOptions('Expenses')}
+                                               height={150}
+                    />}
                     {isRecurring && <Doughnut data={getDataByType(recurringTransactions, 'Expense')}
-                                              options={getOptions('Recurring Expenses')} height={150}/>}
+                                              options={getOptions('RecurringExpenses')}
+                                              height={150}
+                    />}
                 </Grid.Column>
             </Grid>
         </Container>

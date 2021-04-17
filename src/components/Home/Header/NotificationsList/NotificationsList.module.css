@@ -7,6 +7,10 @@
     opacity: .8;
 }
 
+.noNotifications > i {
+    margin: 0 !important;
+}
+
 .notificationsListContainer {
     max-height: 25rem;
     overflow-y: auto;

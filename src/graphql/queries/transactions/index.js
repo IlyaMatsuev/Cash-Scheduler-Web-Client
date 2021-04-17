@@ -40,7 +40,7 @@ export default {
         }
     `,
     GET_TRANSACTIONS_BY_MONTH: gql`
-        query GetTransactionsByMonth($month: Int!, $year: Int!) {
+        query GetTransactionsByMonth($month: Int!, $year: Int!, $isRecurring: Boolean) {
             transactionsByMonth(month: $month, year: $year) {
                 id
                 title
@@ -88,6 +88,10 @@ export default {
                 date
                 nextTransactionDate
                 interval
+            }
+            transactionsDelta(year: $year, isRecurring: $isRecurring) {
+                month
+                delta
             }
         }
     `

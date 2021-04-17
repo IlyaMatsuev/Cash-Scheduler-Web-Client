@@ -5,7 +5,8 @@ import styles from './Dashboard.module.css';
 import moment from 'moment';
 import {useQuery} from '@apollo/client';
 import transactionQueries from '../../../../graphql/queries/transactions';
-import NewTransactionModal from "../Transactions/NewTransactionModal/NewTransactionModal";
+import NewTransactionModal from '../Transactions/NewTransactionModal/NewTransactionModal';
+import {get} from '../../../../utils/TranslationUtils';
 
 
 const Dashboard = ({currentDate, onTransactionPropsChange}) => {
@@ -43,19 +44,23 @@ const Dashboard = ({currentDate, onTransactionPropsChange}) => {
         setState({...state, isRecurring, transactionModalOpen: !state.transactionModalOpen});
     };
 
+    const getCurrentDate = () => {
+        return get(currentDate.format('MMMM'), 'months') + ', ' + currentDate.year();
+    };
+
 
     return (
         <div className="fullHeight">
             <Segment>
                 <Container>
-                    <Button active={currentDate.isSame(moment(), 'month')} onClick={onToday}>Today</Button>
+                    <Button active={currentDate.isSame(moment(), 'month')} onClick={onToday} content={get('today', 'dashboard')}/>
                     <Button icon="chevron left" className="ml-2 mr-3" onClick={onTurnLeft}/>
-                    <span className={styles.displayedDate}>{currentDate.format('MMMM, YYYY')}</span>
+                    <span className={styles.displayedDate}>{getCurrentDate()}</span>
                     <Button icon="chevron right" className="ml-3 mr-2" onClick={onTurnRight}/>
 
                     <Button.Group color="blue" floated="right">
-                        <Button onClick={() => onNewTransactionModalToggle(false)}>Transaction</Button>
-                        <Button onClick={() => onNewTransactionModalToggle(true)}>Recurring Transaction</Button>
+                        <Button onClick={() => onNewTransactionModalToggle(false)} content={get('transaction', 'dashboard')}/>
+                        <Button onClick={() => onNewTransactionModalToggle(true)} content={get('recurringTransaction', 'dashboard')}/>
                     </Button.Group>
                 </Container>
             </Segment>

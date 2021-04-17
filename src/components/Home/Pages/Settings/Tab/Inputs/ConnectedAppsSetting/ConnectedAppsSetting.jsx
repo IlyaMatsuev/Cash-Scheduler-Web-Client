@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
 import {Button, Confirm, Input, Segment} from 'semantic-ui-react';
 import {useQuery, useMutation} from '@apollo/client';
-import userQueries from '../../../../../../graphql/queries/users';
-import userMutations from '../../../../../../graphql/mutations/users';
-import styles from './ConnectedAppsSetting.module.css';
+import userQueries from '../../../../../../../graphql/queries/users';
+import userMutations from '../../../../../../../graphql/mutations/users';
 import {toast} from 'react-semantic-toasts';
-import {notifications} from '../../../../../../config';
+import {get} from '../../../../../../../utils/TranslationUtils';
+import {notifications} from '../../../../../../../config';
+import styles from './ConnectedAppsSetting.module.css';
 
 
 const ConnectedAppsSetting = () => {
@@ -29,8 +30,8 @@ const ConnectedAppsSetting = () => {
     ] = useMutation(userMutations.LOGOUT_CONNECTED_APPS, {
         onCompleted: () => {
             toast({
-                title: 'Success',
-                description: 'You\'ve successfully logged out from all connected apps that used your token.',
+                title: get('successTitle', 'notifications'),
+                description: get('logOutFromConnectedAppsDescription', 'notifications'),
                 type: 'success',
                 icon: 'check',
                 color: 'green',
@@ -73,16 +74,16 @@ const ConnectedAppsSetting = () => {
     };
 
     return (
-        <Segment basic fluid loading={appTokenQueryLoading || appTokenQueryError}>
+        <Segment basic loading={appTokenQueryLoading || appTokenQueryError}>
             <Input actionPosition="left"
-                   value={appTokenQueryData?.appToken}
+                   value={appTokenQueryData?.appToken || ''}
                    type={state.isTokenHidden ? 'password' : 'text'}
                    className={styles.input}
                    readOnly
                    action={
                        <Button color="teal"
                                labelPosition="left"
-                               content="Copy"
+                               content={get('copy', 'settings')}
                                icon={state.isTokenCopied ? 'check' : 'copy'}
                                onClick={onCopyToken}
                        />
@@ -92,24 +93,26 @@ const ConnectedAppsSetting = () => {
                 <Button className={styles.revivalButton}
                         onClick={onRevivalToken}
                         icon={state.isTokenHidden ? 'eye' : 'eye slash'}
-                        content={state.isTokenHidden ? 'Revival' : 'Hide'}
+                        content={get(state.isTokenHidden ? 'revival' : 'hide', 'settings')}
                 />
-                <Button color="grey" icon="refresh" content="Refresh"
+                <Button color="grey" icon="refresh"
+                        content={get('refresh', 'settings')}
                         loading={appTokenQueryLoading}
                         onClick={onRefreshToken}
                 />
-                <Button inverted color="red"
-                        icon="plug" content="Log Out From All Connected Apps"
+                <Button inverted color="red" icon="plug"
+                        content={get('logOut', 'settings')}
                         loading={appsLogoutLoading || appsLogoutError}
                         onClick={onAppsLogOutConfirmToggle}
                 />
                 <Confirm open={state.appsLogoutConfirmModalOpen}
-                         header="Log out from all connected apps"
-                         content="You're about to log out from all connected apps that are linked to your account. Do you want to proceed?"
+                         header={get('logOutConfirmationHeader', 'settings')}
+                         content={get('logOutConfirmationMessage', 'settings')}
                          onCancel={onAppsLogOutConfirmToggle}
                          onConfirm={onAppsLogOut}
                          className="modalContainer"
-                         confirmButton={<Button basic negative content="Log Out"/>}
+                         cancelButton={<Button basic content={get('cancel')}/>}
+                         confirmButton={<Button basic negative content={get('confirmLogOut', 'settings')}/>}
                 />
             </Button.Group>
         </Segment>

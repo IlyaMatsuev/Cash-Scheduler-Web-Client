@@ -14,18 +14,13 @@
 .balanceContainer {
     cursor: pointer;
     color: white;
-    text-align: center;
-    font-size: 16px;
-}
-
-.balanceContainer > span {
     font-size: 18px;
     font-weight: 400;
 }
 
 .notificationsContainer {
     position: absolute;
-    bottom: -1450%;
+    bottom: -1350%;
     left: 75%;
     z-index: 3;
 }

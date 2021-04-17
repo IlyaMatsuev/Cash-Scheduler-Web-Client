@@ -32,19 +32,14 @@ export const global = {
 };
 export const notifications = {
     volume: 0.5,
-    toastDuration: 3000
+    toastDuration: 5000
 };
 export const dev = {
     user: {
+        firstName: 'Ilya',
+        lastName: 'Matsuev',
+        balance: 1200,
         email: 'mirotvorec542546@gmail.com',
         password: 'adminQ1@'
-    },
-    userRegistration: {
-        firstName: 'Ivan',
-        lastName: 'Ivanov',
-        balance: 1200,
-        email: 'ivan.ivanov@mail.com',
-        password: 'Qwerty1@',
-        confirmPassword: 'Qwerty1@'
     }
 };

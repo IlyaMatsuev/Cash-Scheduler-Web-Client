@@ -1,6 +1,7 @@
 import React from 'react';
 import {Container, Divider, Header} from 'semantic-ui-react';
 import SettingEntry from './SettingEntry';
+import {get} from '../../../../../utils/TranslationUtils';
 
 
 function groupSettingsBySections(settings) {
@@ -24,7 +25,7 @@ const SettingTab = ({settingsQueryData, onSettingUpdate}) => {
             {settingsQueryData && settingsQueryData.settingSections?.map(sectionName =>
                 groupedSettings[sectionName]?.length > 0 &&
                 <Container key={sectionName} fluid>
-                    <Header as="h2">{getTitleFromCamelCase(sectionName)}</Header>
+                    <Header as="h2">{get(getTitleFromCamelCase(sectionName), 'settings')}</Header>
                     <Divider/>
                     {groupedSettings[sectionName]?.map(setting =>
                         <SettingEntry key={setting.setting.name}

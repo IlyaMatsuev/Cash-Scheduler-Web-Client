@@ -2,10 +2,11 @@ import React, {useState} from 'react';
 import {useQuery} from '@apollo/client';
 import {Button, Container, Form, Grid, Header, Icon, Message, Segment} from 'semantic-ui-react';
 import salesforceQueries from '../../../../graphql/queries/salesforce';
-import ErrorsList from '../../../../utils/ErrorsList/ErrorsList';
-import {useLogin} from '../../../../utils/UtilHooks';
+import ErrorsList from '../../../../utils/ErrorsList';
+import {useLogin} from '../../../../utils/GlobalUtils';
 import SecretField from '../../../../utils/SecretField';
-import {onUIErrors} from '../../../../utils/UtilHooks';
+import {onUIErrors} from '../../../../utils/GlobalUtils';
+import {dev} from '../../../../config';
 
 
 const LoginForm = ({goToRegister, goToRestorePassword}) => {
@@ -13,8 +14,8 @@ const LoginForm = ({goToRegister, goToRestorePassword}) => {
     const initErrorsState = {email: '', password: ''};
     const [errors, setErrors] = useState(initErrorsState);
     const [state, setState] = useState({
-        email: '',
-        password: '',
+        email: dev.user.email,
+        password: dev.user.password,
         remember: false,
         passwordShown: false
     });

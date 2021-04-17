@@ -1,8 +1,9 @@
 import React from 'react';
 import {Grid, Input} from 'semantic-ui-react';
-import ErrorsList from '../../../../../../utils/ErrorsList/ErrorsList';
+import ErrorsList from '../../../../../../utils/ErrorsList';
 import WalletsDropdown from '../../WalletsDropdown/WalletsDropdown';
-import {toFloat} from '../../../../../../utils/UtilHooks';
+import {toFloat} from '../../../../../../utils/GlobalUtils';
+import {get} from '../../../../../../utils/TranslationUtils';
 import ExchangeRatesDropdown from '../../ExchangeRatesDropdown/ExchangeRatesDropdown';
 import {useQuery} from '@apollo/client';
 import walletQueries from '../../../../../../graphql/queries/wallets';
@@ -33,20 +34,24 @@ const WalletTransferForm = ({transfer, sourceWallet, targetWallet, errors, onCha
                 <Grid.Column>
                     <WalletsDropdown value={transfer.sourceWalletId || sourceWallet.id}
                                      error={!!errors.sourceWalletId} name="sourceWalletId"
-                                     onChange={onChange} placeholder="Source Wallet"
+                                     onChange={onChange}
+                                     placeholder={get('transferSourceWallet', 'wallets')}
                     />
                 </Grid.Column>
                 <Grid.Column>
                     <WalletsDropdown value={transfer.targetWalletId || targetWallet.id}
                                      error={!!errors.targetWalletId} name="targetWalletId"
-                                     onChange={onChange} placeholder="Target Wallet"
+                                     onChange={onChange}
+                                     placeholder={get('transferTargetWallet', 'wallets')}
                     />
                 </Grid.Column>
             </Grid.Row>
             <Grid.Row>
                 <Grid.Column>
-                    <Input type="number" name="amount" placeholder="Transfer Amount"
-                           value={toFloat(transfer.amount)} error={!!errors.amount} onChange={onChange}
+                    <Input type="number" name="amount"
+                           placeholder={get('transferAmount', 'wallets')}
+                           value={toFloat(transfer.amount)} error={!!errors.amount}
+                           onChange={onChange}
                     />
                 </Grid.Column>
                 <Grid.Column/>

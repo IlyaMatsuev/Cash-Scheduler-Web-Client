@@ -2,7 +2,8 @@ import React, {useState} from 'react';
 import moment from 'moment';
 import {Button, Container, Divider, Grid, Segment, Header, Item, Placeholder} from 'semantic-ui-react';
 import styles from './TransactionList.module.css';
-import {convertToValidIconUrl} from '../../../../../utils/UtilHooks';
+import {convertToValidIconUrl} from '../../../../../utils/GlobalUtils';
+import {get} from '../../../../../utils/TranslationUtils';
 import NewTransactionModal from '../NewTransactionModal/NewTransactionModal';
 
 
@@ -50,6 +51,20 @@ const TransactionList = ({
         return transactionsByDate;
     };
 
+    const getCurrentDate = () => {
+        const currentDate = moment(date);
+        return get(currentDate.format('MMMM'), 'months') + ', ' + currentDate.year();
+    };
+
+    const getTransactionGroupDate = date => {
+        return date.date() + ', ' + get(date.format('dddd'), 'weekDays');
+    };
+
+    const getNewTransactionButtonHeader = () => {
+        const label = `new${isRecurring ? 'Recurring' : ''}Transaction`;
+        return get(label, 'transactions');
+    };
+
     const getTransactionGroupByDay = (transactions, date) =>{
         const momentDate = moment(date);
 
@@ -59,7 +74,7 @@ const TransactionList = ({
         return (
             <Container fluid key={date}>
                 <Header attached="top">
-                    {momentDate.format('DD, dddd')}
+                    {getTransactionGroupDate(momentDate)}
                     <Header as="h3" color={summaryColor} floated="right">{daySummary}</Header>
                 </Header>
                 <Segment attached>
@@ -90,7 +105,9 @@ const TransactionList = ({
     const getEmptyMonthMessage = () => {
         return (
             <Placeholder key={0} fluid>
-                <Header textAlign="center" className="mt-3">There are no records for the selected period</Header>
+                <Header textAlign="center" className="mt-3"
+                        content={get('noRecordsMessage', 'transactions')}
+                />
                 {Array(30).fill(0).map((_, i) => <Placeholder.Line key={i}/>)}
             </Placeholder>
         );
@@ -121,15 +138,17 @@ const TransactionList = ({
                         <Button primary circular icon="chevron circle left" size="big" onClick={onPrevMonth}/>
                     </Grid.Column>
                     <Grid.Column width={10} textAlign="center">
-                        <Header>{moment(date).format('MMMM, YYYY')}</Header>
+                        <Header>{getCurrentDate()}</Header>
                         <Button.Group>
-                            <Button color="blue" disabled={!isRecurring} onClick={onTransactionsViewChange}>
-                                Transactions
-                            </Button>
+                            <Button color="blue" disabled={!isRecurring}
+                                    onClick={onTransactionsViewChange}
+                                    content={get('transactionsList', 'transactions')}
+                            />
                             <Button.Or/>
-                            <Button color="teal" disabled={isRecurring} onClick={onTransactionsViewChange}>
-                                Recurring Transactions
-                            </Button>
+                            <Button color="teal" disabled={isRecurring}
+                                    onClick={onTransactionsViewChange}
+                                    content={get('recurringTransactionsList', 'transactions')}
+                            />
                         </Button.Group>
                     </Grid.Column>
                     <Grid.Column width={3} textAlign="center">
@@ -137,9 +156,10 @@ const TransactionList = ({
                     </Grid.Column>
                 </Grid>
                 <Container fluid className={styles.newTransactionButtonContainer}>
-                    <Button fluid primary onClick={onNewTransactionModalToggle}>
-                        New {isRecurring ? 'Recurring' : ''} Transaction
-                    </Button>
+                    <Button fluid primary
+                            onClick={onNewTransactionModalToggle}
+                            content={getNewTransactionButtonHeader()}
+                    />
                 </Container>
                 <Divider/>
                 <Container fluid className={styles.transactionsListContainer + ' pt-1'}>

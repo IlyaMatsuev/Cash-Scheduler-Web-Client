@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
 import {useMutation} from '@apollo/client';
 import {Form, Button, Container, Segment, Header, Message} from 'semantic-ui-react';
-import ErrorsList from '../../../../utils/ErrorsList/ErrorsList';
+import ErrorsList from '../../../../utils/ErrorsList';
 import errorDefs from '../../../../utils/ErrorDefinitions';
-import {isValidNumber, onUIErrors, toFloat, useLogin} from '../../../../utils/UtilHooks';
+import {isValidNumber, onUIErrors, toFloat, useLogin} from '../../../../utils/GlobalUtils';
 import SecretField from '../../../../utils/SecretField';
 import userMutations from '../../../../graphql/mutations/users';
+import {dev} from '../../../../config';
 
 
 const RegisterForm = ({goToLogin}) => {
@@ -13,12 +14,12 @@ const RegisterForm = ({goToLogin}) => {
     const initErrorsState = {email: '', password: '', confirmPassword: ''};
     const [errors, setErrors] = useState(initErrorsState);
     const [state, setState] = useState({
-        firstName: '',
-        lastName: '',
-        balance: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
+        firstName: dev.user.firstName,
+        lastName: dev.user.lastName,
+        balance: dev.user.balance,
+        email: dev.user.email,
+        password: dev.user.password,
+        confirmPassword: dev.user.password
     });
 
     const validate = () => {

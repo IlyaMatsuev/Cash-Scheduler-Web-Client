@@ -11,6 +11,7 @@ import {refreshTokens, setAuthHeaders} from './utils/Auth';
 import {server} from './config';
 import 'semantic-ui-css/semantic.min.css';
 import './index.css';
+import './dark-theme.css';
 
 
 let apolloClient;

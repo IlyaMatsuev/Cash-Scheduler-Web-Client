@@ -5,7 +5,9 @@ import walletQueries from '../../../../../graphql/queries/wallets';
 import userQueries from '../../../../../graphql/queries/users';
 import walletMutations from '../../../../../graphql/mutations/wallets';
 import {useMutation} from '@apollo/client';
-import {onUIErrors, removeEntityCache, toFloat} from '../../../../../utils/UtilHooks';
+import {onUIErrors, toFloat} from '../../../../../utils/GlobalUtils';
+import {removeEntityCache} from '../../../../../utils/CacheUtils';
+import {get} from "../../../../../utils/TranslationUtils";
 
 
 const WalletEditModal = ({open, isEditing, wallet, onWalletChange, onWalletActionComplete, onModalToggle}) => {
@@ -62,6 +64,7 @@ const WalletEditModal = ({open, isEditing, wallet, onWalletChange, onWalletActio
     };
 
     const onDelete = () => {
+        onDeleteModalToggle();
         deleteWallet();
     };
 
@@ -88,35 +91,40 @@ const WalletEditModal = ({open, isEditing, wallet, onWalletChange, onWalletActio
         setErrors({});
     };
 
+    const getHeader = () => {
+        return get(`${isEditing ? 'edit' : 'new'}Wallet`, 'wallets');
+    };
+
 
     return (
         <Modal dimmer size="small" closeOnEscape
                closeOnDimmerClick className="modalContainer"
                open={open} onClose={onToggle}
         >
-            <Modal.Header>
-                {(isEditing ? 'Edit' : 'New') + ' Wallet'}
-            </Modal.Header>
+            <Modal.Header content={getHeader()}/>
             <Modal.Content>
                 <WalletForm wallet={wallet} errors={errors} onChange={onChange} isEditing={isEditing}/>
             </Modal.Content>
             <Modal.Actions>
-                <Button basic onClick={onToggle}>
-                    Cancel
-                </Button>
+                <Button basic onClick={onToggle} content={get('cancel')}/>
                 {isEditing &&
-                <Button basic color="red" onClick={onDeleteModalToggle} loading={deleteWalletLoading}>
-                    Delete
-                    <Confirm className="modalContainer" open={state.deleteConfirmationModalOpen}
-                             content={`Are you sure you want to delete the wallet? All associated transactions will be attached to your default wallet.`}
-                             confirmButton={<Button basic negative>Yes, delete it</Button>}
-                             onCancel={onDeleteModalToggle} onConfirm={onDelete}
-                    />
-                </Button>}
-                <Button primary onClick={onSave} loading={createWalletLoading || updateWalletLoading}>
-                    Save
-                </Button>
+                <Button basic color="red"
+                        onClick={onDeleteModalToggle}
+                        loading={deleteWalletLoading}
+                        content={get('delete')}
+                />}
+                <Button primary onClick={onSave}
+                        loading={createWalletLoading || updateWalletLoading}
+                        content={get('save')}
+                />
             </Modal.Actions>
+
+            <Confirm className="modalContainer" open={state.deleteConfirmationModalOpen}
+                     content={get('deleteConfirmMessage', 'wallets')}
+                     cancelButton={<Button basic content={get('cancel')}/>}
+                     confirmButton={<Button basic negative content={get('confirmDelete')}/>}
+                     onCancel={onDeleteModalToggle} onConfirm={onDelete}
+            />
         </Modal>
     );
 };

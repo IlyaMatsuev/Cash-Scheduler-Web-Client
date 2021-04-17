@@ -3,9 +3,9 @@ import {Button, Container, Form, Header, Segment} from 'semantic-ui-react';
 import {useMutation} from '@apollo/client';
 import userMutations from '../../../../graphql/mutations/users';
 import errorDefs from '../../../../utils/ErrorDefinitions';
-import ErrorsList from '../../../../utils/ErrorsList/ErrorsList';
+import ErrorsList from '../../../../utils/ErrorsList';
 import SecretField from '../../../../utils/SecretField';
-import {onUIErrors} from '../../../../utils/UtilHooks';
+import {onUIErrors} from '../../../../utils/GlobalUtils';
 
 
 const ResetPasswordForm = ({email, code, goBackToLogin}) => {
