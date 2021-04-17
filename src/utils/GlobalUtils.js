@@ -10,11 +10,10 @@ export function useLogin(variables, onError) {
     return useMutation(userMutations.LOGIN_USER, {
         update(proxy, result) {
             localStorage.setItem(auth.accessTokenName, result.data.login.accessToken);
+            localStorage.setItem(auth.emailName, variables.email);
             if (variables.remember) {
-                localStorage.setItem(auth.emailName, variables.email);
                 localStorage.setItem(auth.refreshTokenName, result.data.login.refreshToken);
             } else {
-                localStorage.removeItem(auth.emailName);
                 localStorage.removeItem(auth.refreshTokenName);
             }
             history.push(pages.homeUrl);
