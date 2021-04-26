@@ -6,6 +6,7 @@ import errorDefs from '../../../../utils/ErrorDefinitions';
 import {isValidNumber, onUIErrors, toFloat, useLogin} from '../../../../utils/GlobalUtils';
 import SecretField from '../../../../utils/SecretField';
 import userMutations from '../../../../graphql/mutations/users';
+import UserPolicyAgreementCheckbox from './UserPolicyAgreement/UserPolicyAgreementCheckbox';
 
 
 const RegisterForm = ({goToLogin}) => {
@@ -18,7 +19,8 @@ const RegisterForm = ({goToLogin}) => {
         balance: 0,
         email: '',
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        agreement: false
     });
 
     const validate = () => {
@@ -61,11 +63,15 @@ const RegisterForm = ({goToLogin}) => {
         }
     };
 
-    const onChange = (event, {name, value, type}) => {
+    const onChange = (event, {name, value, checked, type}) => {
         if (type === 'number' && !isValidNumber(value)) {
             return;
         }
-        setState({...state, [name]: value});
+        if (type === 'checkbox') {
+            setState({...state, [name]: checked});
+        } else {
+            setState({...state, [name]: value});
+        }
         setErrors({...errors, [name]: undefined});
     };
 
@@ -90,11 +96,15 @@ const RegisterForm = ({goToLogin}) => {
                                 name="confirmPassword" value={state.confirmPassword} error={!!errors.confirmPassword}
                                 onChange={onChange}/>
 
+                    <UserPolicyAgreementCheckbox agree={state.agreement} onChange={onChange}/>
+
                     <ErrorsList errors={errors}/>
 
-                    <Button color="violet" fluid size="large" loading={registerLoading || loginLoading}>
-                        Register
-                    </Button>
+                    <Button color="violet" fluid size="large"
+                            loading={registerLoading || loginLoading}
+                            disabled={!state.agreement}
+                            content="Register"
+                    />
                 </Segment>
             </Form>
             <Message>
